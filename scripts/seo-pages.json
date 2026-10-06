@@ -84,8 +84,8 @@
   {
     "file": "analytics/index.html",
     "path": "/analytics",
-    "title": "Meridian \u2014 Commerce intelligence | decisionos",
-    "description": "Best-in-class eCommerce intelligence delivered through software: proactive signals and a live analyst grounded in business and market context.",
+    "title": "Meridian eCommerce analytics demo | decisionos",
+    "description": "Explore a working eCommerce analytics and voice analyst demo using illustrative commerce data. Ask sales questions, see SQL-backed charts, and test follow-ups.",
     "type": "WebPage"
   }
 ]

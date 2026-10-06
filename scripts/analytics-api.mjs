@@ -5,7 +5,7 @@ export async function analyticsSession(req,res,generate=false){
  if(req.method!=='POST'){res.setHeader('Allow','POST');return json(res,405,{error:'Use POST'});}
  const origin=req.headers.origin;
  const expectedHost=req.headers.host;
- if(!origin||!['https://decisionos.me','https://www.decisionos.me',`http://${expectedHost}`].includes(origin)){return json(res,403,{error:'Invalid origin'});}
+ if(!origin||!['https://decisionos.me','https://www.decisionos.me','https://decisionaxis.co','https://www.decisionaxis.co',`http://${expectedHost}`].includes(origin)){return json(res,403,{error:'Invalid origin'});}
  const caller=req.headers['x-forwarded-for']?.split(',')[0]?.trim()||req.socket.remoteAddress;
  const now=Date.now();for(const [id,entry] of recent)if(now-entry.start>60000)recent.delete(id);
  const bucket=recent.get(caller)||{start:now,count:0};if(bucket.count>=10)return json(res,429,{error:'Please wait a minute before starting another session.'});bucket.count++;recent.set(caller,bucket);
