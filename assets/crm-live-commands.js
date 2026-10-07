@@ -4,7 +4,7 @@ const LEAD=/^(?:ok(?:ay)?|so|now|and|then|yes|yeah|yep|alright|all right|right|h
 // Intent is recognised anywhere in the sentence. Reply wins over dismissal so "reply saying not interested" drafts, never dismisses.
 const REPLY=/\b(?:reply|replies|respond|response|answer|write back|get back to|draft|compose|write (?:a |an )?(?:quick |short |brief )?(?:email|note|message|response|reply)|send (?:them |him |her )?(?:a |an )?(?:quick |short |brief )?(?:reply|response|note))\b/;
 const NOT_IMPORTANT=/\b(?:not important|unimportant|not relevant|irrelevant|not needed|no longer relevant|not interested|ignore|dismiss|discard|remove|get rid of|junk|spam|trash)\b/;
-const DONE=/\b(?:done|complete|completed|finish|finished|handled|taken care of|resolve|resolved|archive|check (?:it |this |that )?off|tick (?:it |this |that )?off|wrap (?:it |this |that )?up|wrapped up)\b/;
+const DONE=/\bas read\b|\bmark(?:ed)? (?:it |this |that )?read\b|\b(?:done|complete|completed|finish|finished|handled|taken care of|resolve|resolved|archive|check (?:it |this |that )?off|tick (?:it |this |that )?off|wrap (?:it |this |that )?up|wrapped up)\b/;
 const SELECT=/\b(?:go to|goto|go back|select|show|open|highlight|pick|jump to|move to|switch to|focus on|look at|bring up|pull up|find)\b/;
 const CONTENT=/\b(?:saying|that says|telling (?:them|him|her)|to say|and say|and tell (?:them|him|her)|with)\s+(.+)$/;
 const PRONOUN=new Set(['it','its','this','that','selected','current','same']);
@@ -20,7 +20,7 @@ export function resolveCommand(utterance,cards,selectedId=null){
  const selected=cards.find(c=>c.id===selectedId);
  if(/^scroll\s+(?:down|up)\b|^(?:page|scroll)\s+(?:down|up)$/.test(text))return {action:'scroll',direction:text.includes('down')?'down':'up'};
  if(/\b(?:who (?:is|was) (?:it|this|that) (?:written|sent) to|recipient)\b/.test(text))return selected?{action:'recipient',id:selectedId}:{error:'Select a visible card first.'};
- if(/\b(?:do not|dont|don t|cancel|never mind|nevermind|not yet|hold on)\b|\bnot (?:done|complete|completed|finished|handled)\b/.test(text))return {error:'No action taken.'};
+ if(/\b(?:do not|dont|don t|cancel|never mind|nevermind|not yet|hold on)\b|\bnot (?:done|complete|completed|finished|handled)\b/.test(text))return {error:'No action taken.',negated:true};
  if(/^(?:should|would|what|whats|is|are|was|did|do i|can i|could i|why|how|when|where)\b/.test(text))return {error:'Please give an explicit command. No action taken.'};
  const reply=REPLY.exec(text);
  if(!reply&&/\b(?:send|email it now)\b/.test(text))return {error:'Review the draft and click Send this reply. Voice never sends.'};
@@ -44,11 +44,11 @@ export function resolveCommand(utterance,cards,selectedId=null){
  if(target){
   const matches=cards.filter(c=>{const title=clean(c.title+' '+(c.company||''));return title.includes(target)||title.replaceAll(' ','').includes(target.replaceAll(' ',''))||target.split(' ').filter(w=>w.length>2).every(w=>title.includes(w));});
   if(matches.length===1)return targetCard(matches[0],{action:action||'select',...extra});
-  if(matches.length>1)return {action,...extra,error:'Which matching card do you mean? Use its visible number.'};
+  if(matches.length>1)return {action,...extra,target,options:matches.slice(0,3).map(c=>String(c.title).split(/\s+/).slice(0,3).join(' ')),error:'Which matching card do you mean? Use its visible number.'};
   // Leftover words that resemble no visible title are speech-recognition noise ("market is done"):
   // a clear action then applies to the selected card. Otherwise JEV classifies the target (and intent, if none was heard).
   if(selected&&action&&action!=='select'&&target.split(' ').every(misheard))return targetCard(selected,{action,...extra});
-  return {action,...extra,ask:true,classify:!action,error:'Which displayed card? Say its number or title.'};
+  return {action,...extra,target,ask:true,classify:!action,error:'Which displayed card? Say its number or title.'};
  }
  if(selected&&(pronoun||action&&action!=='select'))return targetCard(selected,{action:action||'select',...extra});
  return {action,...extra,error:selected||!pronoun&&!action?'Which displayed card? Say its number or title.':'Select a visible card first.'};
