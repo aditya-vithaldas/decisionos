@@ -2,12 +2,23 @@
 
 ## Required Git checkpoints
 
-- During substantial work, make coherent checkpoint commits after meaningful,
-  validated milestones. Keep each commit focused and usable rather than saving
-  only a final tiny fix while leaving its implementation untracked.
-- Commit and push completed, verified changes to the configured remote on the
-  applicable existing branch. The owner has requested this as the normal
-  project workflow. Report actual commit IDs, push status and remaining edits.
+- After every coherent mid-size change or validated milestone, commit and push
+  task-related work as a checkpoint. Do this regularly during substantial work,
+  not only at the end or after days of uncommitted implementation.
+- After completed work passes appropriate checks, merge into `main` and push
+  `main` routinely. Do not leave delivered work solely on a feature branch. The
+  owner has authorized this normal checkpoint/push/completion-merge workflow;
+  no fresh permission is needed for those routine steps. Report actual commit
+  IDs, push status, main-merge status and remaining edits or blockers.
+- Inspect actual remote refs and the whole merge diff first. Never merge
+  knowingly failing, incomplete or unrelated work, or another agent's active
+  changes. Respect branch protections and required reviews/checks; use a PR
+  when required and report the concrete blocker rather than bypassing it or
+  silently leaving completed work unmerged. Check automatic deployment effects
+  separately; a routine Git merge does not itself authorize a new deployment.
+- Use a verified GitHub-linked author identity for future commits. The owner's
+  verified identity is Aditya Vithaldas <aditya.vithaldas@gmail.com>. Do not use
+  an automatically inferred machine email or rewrite existing commit authors.
 - Before staging, inspect status and diff. Stage only the authorized task's
   implementation, required assets, tests and documentation. Preserve unrelated
   changes and do not silently include another task's work.
@@ -18,8 +29,8 @@
 - Verify changes in proportion to their risk. Reuse recorded passing checks for
   unchanged code; do not claim they cover a different snapshot. Run focused
   checks for new code and inspect the staged diff before committing.
-- Do not amend/rewrite history, force push, reset user changes, merge unrelated
-  branches, or create a PR without an explicit request. If a push is rejected,
+- Do not amend/rewrite history, force push, reset user changes, or merge unrelated
+  branches. If a push is rejected,
   report the conflict and preserve the work rather than overwriting the remote.
 
 ## Deployment traceability
