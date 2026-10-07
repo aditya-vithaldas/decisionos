@@ -13,6 +13,9 @@ function run(command,args){
 
 run('npm',['ci','--prefix',product]);
 run('npm',['run','build:portfolio','--prefix',product]);
+run('npm',['exec','--prefix',product,'--','vite','build','--config','products/meridian/vite.commerce.config.ts']);
 await rm('analytics',{recursive:true,force:true});
 await cp(`${product}/dist-portfolio`,'analytics',{recursive:true});
+await rm('commerce',{recursive:true,force:true});
+await cp(`${product}/dist-commerce`,'commerce',{recursive:true});
 console.log('Built Meridian from products/meridian into /analytics.');
