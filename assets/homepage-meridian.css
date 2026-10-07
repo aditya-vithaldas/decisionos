@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+:root{--ink:#15233d;--muted:#69758a;--accent:#2870d7;--line:#e0e8f2;--paper:#f7faff;--surface:#fff;--page-width:1160px;--font-sans:'Plus Jakarta Sans',sans-serif}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:#15233d;background:radial-gradient(ellipse at 80% 13%,rgba(0,245,212,.1),transparent 25%),radial-gradient(ellipse at 97% 25%,rgba(131,56,236,.08),transparent 25%),#f7faff}
+.page-shell{width:min(calc(100% - 80px),1160px)}
+.site-header{gap:24px;min-height:94px}.site-header nav{font-size:.8rem;gap:12px 18px}
+.monogram{border-radius:11px;background:linear-gradient(135deg,#00cbae,#3a86ff,#8338ec);color:white}
+.hero{grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:30px;padding:56px 0 42px;align-items:center}
+.hero h1{font-size:clamp(2.65rem,4.55vw,3.95rem);line-height:1.05;letter-spacing:-.058em;font-weight:800}
+.hero h1 br{display:none}.hero .blue{color:#2870d7}
+.hero .swarm-landing{height:auto;border:0;border-radius:0;background:none;overflow:visible;min-width:0}
+.hero .preserved-hero-art{display:block;width:100%;height:auto;filter:drop-shadow(0 20px 24px rgba(54,70,111,.07))}
+.hero .swarm-center{position:static;inset:auto;margin-top:16px;align-items:center;text-align:center;gap:8px}
+.hero .swarm-center strong{font-size:1.5rem;font-weight:800;letter-spacing:-.04em}
+.hero .swarm-center>span:last-child{font-size:.875rem;color:#69758a}
+.button.primary{background:linear-gradient(100deg,#00a995,#2584f4,#8338ec);border-radius:18px;box-shadow:0 18px 42px rgba(58,134,255,.18)}
+.service-offerings .service-row{border-radius:23px;border-color:#e0e8f2;box-shadow:0 15px 40px rgba(47,67,104,.05);background:rgba(255,255,255,.9)}
+.service-offerings .service-row h3{font-weight:700}
+.enter{animation:none}
+@media(max-width:900px){.site-header{flex-wrap:wrap;padding-block:18px}.site-header nav{width:100%;justify-content:flex-start;gap:12px 18px}.hero h1{font-size:clamp(2.5rem,4.8vw,3.5rem)}}
+@media(max-width:650px){.page-shell{width:calc(100% - 40px)}.hero{grid-template-columns:1fr;padding:34px 0;gap:30px}.hero h1{font-size:clamp(2.2rem,8.8vw,3.25rem)}.hero .swarm-landing{height:auto;max-width:420px;margin-inline:auto}.site-header nav{font-size:.75rem;gap:12px 16px}.site-header nav a{font-size:.75rem}.site-header .contact-button{margin-left:0}.hero .swarm-center{margin-top:12px}.hero .swarm-center strong{font-size:1.35rem}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
