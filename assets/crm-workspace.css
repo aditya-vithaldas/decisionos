@@ -58,3 +58,13 @@
 #scan-progress>span{transition:width .45s ease-out}
 @media (max-width:640px){.speed-hero{padding:18px 18px 16px;border-radius:20px}.speed-detail{font-size:15px}}
 @media (prefers-reduced-motion:reduce){.speed-hero{animation:none}#scan-progress>span{transition:none}}
+
+.speed-hero{transition:padding .4s ease,border-radius .4s ease}
+.speed-hero.compact{padding:12px 56px 12px 20px;border-radius:18px;display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap}
+.speed-hero.compact[hidden]{display:none}
+.speed-hero.compact .speed-number{font-size:40px}
+.speed-hero.compact .speed-unit{font-size:16px}
+.speed-hero.compact .speed-rate,.speed-hero.compact .speed-detail,.speed-hero.compact .speed-kicker{margin:0}
+.speed-hero.compact .speed-bar{display:none}
+.speed-hero.compact .speed-note{flex-basis:100%;margin:0}
+.speed-hero.compact .speed-close{top:50%;transform:translateY(-50%)}

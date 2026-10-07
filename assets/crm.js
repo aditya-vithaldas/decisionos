@@ -1,5 +1,7 @@
 const $ = id => document.getElementById(id);
 let account, preview, leads = [], selected, draft, returnFocus, prompts = [], replyOrder=[];
+// Live voice can name any card on the board: on-screen cards first (so "the first one" is what you see), then the rest in board order.
+function liveCardIds(){const seen=new Set(visibleCardIds());for(const e of document.querySelectorAll('.mail-card[data-actionable="true"],#cluster-email-cards .email-paper[data-actionable="true"]'))seen.add(`gmail-${e.dataset.threadId}`);return [...seen];}
 function visibleCardIds(){return [...document.querySelectorAll('.mail-card[data-actionable="true"],#cluster-email-cards .email-paper[data-actionable="true"]')].filter(e=>{const r=e.getBoundingClientRect();return r.left<innerWidth&&r.right>0&&Math.max(0,Math.min(r.bottom,innerHeight)-Math.max(r.top,0))>=Math.min(r.height,innerHeight)*.2;}).sort((a,b)=>{const x=a.getBoundingClientRect(),y=b.getBoundingClientRect();return Math.abs(x.top-y.top)<24?x.left-y.left:x.top-y.top;}).map(e=>`gmail-${e.dataset.threadId}`);}
 let activeTab = 'sales', scanning = false, stopRequested = false;
 let scanRun = 0;
@@ -169,12 +171,12 @@ function speedFrame(){const t=speed.target,shown=speed.shown,ease=motionPreferen
   $('speed-hero').style.setProperty('--speed-progress',String(t.total?Math.min(1,shown.count/t.total):0));
   speed.frame=speed.running||shown.count!==t.count||(t.rate!=null&&shown.rate!==t.rate)?requestAnimationFrame(speedFrame):0;}
 function speedUpdate(values){Object.assign(speed.target,values);if(!speed.frame)speed.frame=requestAnimationFrame(speedFrame);}
-function speedStart(scan){Object.assign(speed,{started:performance.now(),running:true,shown:{count:scan.scanned||0,rate:0},target:{count:scan.scanned||0,total:scan.sourceTotal||0,rate:null}});const hero=$('speed-hero');hero.hidden=false;hero.classList.remove('complete');$('speed-kicker').textContent='Classifying with JEV';$('speed-note').textContent='';speedUpdate({});}
+function speedStart(scan){clearTimeout(speed.compact);$('speed-hero').classList.remove('compact');Object.assign(speed,{started:performance.now(),running:true,shown:{count:scan.scanned||0,rate:0},target:{count:scan.scanned||0,total:scan.sourceTotal||0,rate:null}});const hero=$('speed-hero');hero.hidden=false;hero.classList.remove('complete');$('speed-kicker').textContent='Classifying with JEV';$('speed-note').textContent='';speedUpdate({});}
 function speedFinish(scan){if(!speed.running)return;speed.running=false;speed.end=performance.now();const t=scan.timings||{},hero=$('speed-hero');
   if(!t.modelMs){$('speed-kicker').textContent=scan.cached?'Loaded saved results':'No new emails classified';$('speed-note').textContent=scan.cached?'Saved results make no model calls.':'';speedUpdate({count:scan.scanned||0});return;}
   hero.classList.toggle('complete',Boolean(scan.complete));$('speed-kicker').textContent=scan.complete?`${(t.jevThreads||0).toLocaleString()} emails classified`:'Paused';
   const total=t.totalMs||speed.end-speed.started;$('speed-note').textContent=`JEV classification ${(t.modelMs/1000).toFixed(2)}s in ${t.jevRequests||0} parallel requests · end to end ${(total/1000).toFixed(1)}s, ${Math.round((scan.scanned||0)*1000/total)}/s including storage and page updates`;
-  speedUpdate({count:scan.scanned||0,rate:(t.jevThreads||0)*1000/t.modelMs});}
+  speedUpdate({count:scan.scanned||0,rate:(t.jevThreads||0)*1000/t.modelMs});speed.compact=setTimeout(()=>{if(!speed.running)hero.classList.add('compact');},6000);}
 $('speed-close').addEventListener('click',()=>{$('speed-hero').hidden=true;});
 // Cards glide from their previous positions after each batch (FLIP, transform/opacity only, on-screen cards only).
 function flipCards(before){let fresh=0;for(const card of document.querySelectorAll('.mail-card[data-thread-id]')){const now=card.getBoundingClientRect();if(now.bottom<0||now.top>innerHeight)continue;const old=before.get(card.dataset.threadId);
@@ -281,7 +283,7 @@ $('source-choice').addEventListener('change', () => { const gmail = $('source-ch
 $('show-sheet').addEventListener('click', () => { if (!account.sheetsConnected) { location.href = '/crm/api/oauth/start'; return; } $('sheet-onboarding').hidden = false; $('sheet-url').focus(); });
 const leadBody = () => ({ source: selected.source || 'sheet', kind: selected.kind, id: selected.id, row: selected.row, email: selected.email, name: selected.name });
 function openLead(lead, card, loadLetter=true) {
-  replyOrder=visibleCardIds();
+  replyOrder=liveCardIds();
   document.querySelector('.lead-panel').dataset.threadId=lead.threadId||'';
   document.querySelector('.lead-panel').classList.remove('reply-mode');
   selected = lead; draft = null; returnFocus = card;
@@ -308,7 +310,7 @@ $('discard-mail').addEventListener('click',event=>busy(event.currentTarget,async
 },true));
 function closeLead() { $('lead-overlay').hidden = true; document.body.style.overflow = ''; returnFocus?.focus(); }
 async function disposeMail(item,value) {
-  const order=$('lead-overlay').hidden?visibleCardIds():replyOrder;
+  const order=$('lead-overlay').hidden?liveCardIds():replyOrder;
   await api('/workspace/disposition',{id:item.id,lastMessageId:item.lastMessageId,status:value});
   const removed=[];for(const [tab,scan] of Object.entries(scans)) for(const [id,candidate] of scan.items) if(candidate.threadId===item.threadId && candidate.lastMessageId===item.lastMessageId) {removed.push([tab,id,candidate]);scan.items.delete(id);scan.sourceKeys?.delete(id);scan.sourceTotal=scan.sourceKeys?.size;}
   if(selected?.id===item.id && !$('lead-overlay').hidden)closeLead();renderWorkspace();status('');document.dispatchEvent(new CustomEvent('crm:processed',{detail:{id:item.id,lastMessageId:item.lastMessageId,order}}));
@@ -402,7 +404,7 @@ start();
 async function checkSharedMailbox(){if(!account?.gmailConnected || scanning || document.visibilityState!=='visible')return;const due=sharedMailbox.nextCheck || sharedMailbox.lastFetchedAt+5*60000;if(Date.now()<due)return;if(!sharedMailbox.lastFetchedAt && !sharedMailbox.cursor)return;await scanWorkspace('fetch',true);}
 setInterval(()=>void checkSharedMailbox(),15000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void checkSharedMailbox();});
 import('/assets/crm-live.js').then(({mountLive})=>mountLive({api,commandPreview:location.hostname==='127.0.0.1',
- context:()=>({tab:activeTab,fetchId:scans[activeTab].fetchId,cards:(!$('lead-overlay').hidden && selected?[selected]:visibleCardIds().map(id=>scans[activeTab].items.get(id))).filter(item=>item&&!['Unsorted','Other'].includes(item.stage)).slice(0,100).map(item=>({id:item.id,lastMessageId:item.lastMessageId,title:item.subject||item.title,who:item.company||item.name||'',tab:activeTab}))}),
+ context:()=>({tab:activeTab,fetchId:scans[activeTab].fetchId,cards:(!$('lead-overlay').hidden && selected?[selected]:liveCardIds().map(id=>scans[activeTab].items.get(id))).filter(item=>item&&!['Unsorted','Other'].includes(item.stage)).slice(0,100).map(item=>({id:item.id,lastMessageId:item.lastMessageId,title:item.subject||item.title,who:item.company||item.name||'',tab:activeTab}))}),
  target:id=>!$('lead-overlay').hidden&&selected?.id===id?document.querySelector('.lead-panel'):document.querySelector(`.mail-card[data-thread-id="${id.slice(6)}"],#cluster-email-cards .email-paper[data-thread-id="${id.slice(6)}"]`),
  reply:(id,intent)=>{const item=scans[activeTab].items.get(id);if(!item)throw Error('Displayed card changed.');openLead(item,document.querySelector(`.mail-card[data-thread-id="${item.threadId}"]`),true);openReplyComposer();$('reply-intent').value=intent;return {subject:item.subject||item.title,from:item.email||item.name,excerpt:(item.excerpt||item.quote||'').slice(0,2000)};},
  dispose:(id,value)=>{const item=scans[activeTab].items.get(id);if(!item)throw Error('Displayed card changed.');return disposeMail(item,value);},
