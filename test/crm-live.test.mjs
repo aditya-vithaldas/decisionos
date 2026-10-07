@@ -20,13 +20,13 @@ test('Live tokens use Gemini3.8 only; current view proof isolates user/tab/card 
  await assert.rejects(flow('validate','alice',config,{...cards[0],tab:'jobs',view:session.view}),/changed/);
  await assert.rejects(flow('validate','alice',config,{tab:'sales',view:session.view,id:'unknown'}),/changed/);
  await flow('context','alice',config,{tab:'sales',cards});assert.equal(requests,1,'view refresh does not invoke a model');
- await assert.rejects(flow('session','alice',config,{tab:'sales',cards:[{...cards[0],lastMessageId:'changed'}]}),/could not load/);
+ await assert.rejects(flow('session','alice',config,{tab:'sales',cards:[{...cards[0],lastMessageId:'changed'}]}),/could not verify/);
 });
 test('Live automatically validates saved visible cards in every tab after an old Fetch token expires; no Gmail/model sync',async()=>{
  const config={sessionSecret:'x'.repeat(40)},reads=[];
  const flow=createCrmLive({...security,key:()=>'',firestore:async path=>{reads.push(path);if(path.startsWith('alice/')&&path.includes('/gmail_leads/'))return {lead:JSON.stringify({...cards[0],threadId:cards[0].id.slice(6),kind:path.split('/').at(-1).split('-')[0]})};return null;},request:async()=>{throw Error('No provider call during sync');}});
  for(const tab of ['sales','jobs','actions','finance','clusters']){const result=await flow('context','alice',config,{tab,cards:[cards[0]],fetchId:'expired-token'});assert.equal((await flow('validate','alice',config,{...cards[0],tab,view:result.view})).allowed,true);}
- assert.ok(reads.every(path=>path.startsWith('alice/')));await assert.rejects(flow('context','bob',config,{tab:'sales',cards:[cards[0]]}),/could not load/);
+ assert.ok(reads.every(path=>path.startsWith('alice/')));await assert.rejects(flow('context','bob',config,{tab:'sales',cards:[cards[0]]}),/could not verify/);
  const shared=createCrmLive({...security,key:()=>'',firestore:async path=>path.endsWith('/shared')?{metadata:JSON.stringify({uid:'alice',versions:{[cards[0].id.slice(6)]:cards[0].lastMessageId}})}:null});assert.ok((await shared('context','alice',config,{tab:'finance',cards:[cards[0]]})).view);
 });
 test('spoken intent is recognised anywhere in the sentence and acts on the selected card without asking which one',()=>{
@@ -54,4 +54,12 @@ test('JEV identification knows the selected card and only returns a confident in
   answers.intent.confidence=.4;result=await flow('identify','alice',config,{view,tab:'sales',utterance:'this can wait',selectedId:cards[1].id,classify:true});assert.equal(result.action,null,'uncertain intent never mutates');
   result=await flow('identify','alice',config,{view,tab:'sales',utterance:'the advisor one'});assert.equal(sent.questions.intent,undefined,'intent is only classified when asked');assert.equal(sent.questions.target.criteria.selected,undefined);assert.equal(result.id,null,'selected is not a valid answer without a selection');
  }finally{if(previous===undefined)delete process.env.TYPESAFE_API_KEY;else process.env.TYPESAFE_API_KEY=previous;}
+});
+test('Live leaves out a card it cannot verify instead of failing the whole board',async()=>{
+ const config={sessionSecret:'x'.repeat(40)},stale={...cards[1],lastMessageId:'changed'};
+ const flow=createCrmLive({...security,key:()=>'',firestore:async path=>path.includes('/gmail_leads/')&&path.endsWith(cards[0].id)?{lead:JSON.stringify({threadId:cards[0].id.slice(6),lastMessageId:cards[0].lastMessageId,kind:'sales'})}:null});
+ const result=await flow('context','alice',config,{tab:'sales',cards:[cards[0],stale]});assert.deepEqual(result.excluded,[stale.id]);
+ assert.equal((await flow('validate','alice',config,{tab:'sales',view:result.view,...cards[0]})).allowed,true);
+ await assert.rejects(flow('validate','alice',config,{tab:'sales',view:result.view,...stale}),/changed/,'an excluded card can never be acted on');
+ await assert.rejects(flow('context','alice',config,{tab:'sales',cards:[stale]}),/could not verify/);
 });
