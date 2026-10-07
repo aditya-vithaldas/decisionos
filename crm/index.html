@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#f5f8ff">
+  <title>Gmail workspace | Decision Axis</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/crm.css">
+  <link rel="stylesheet" href="/assets/crm-workspace.css">
+  <script src="/assets/crm.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <a class="brand" href="/"><span class="brand-mark">d<span>↗</span></span><span>Decision Axis <small>Gmail workspace</small></span></a>
+      <div class="header-actions"><a href="/crm/privacy.html">Privacy</a><span id="account-label"></span><button id="disconnect" type="button" hidden>Disconnect Google</button><button id="logout" type="button" hidden>Sign out</button></div>
+    </header>
+    <main>
+      <p id="app-status" class="app-status" role="status" aria-live="polite">Checking your connection…</p>
+      <section id="signed-out" class="minimal-entry" hidden>
+        <h1>Your private Gmail workspace.</h1><p>Sales, applications, actions and email themes. Sign in to work with your own mailbox.</p>
+        <a class="primary-action" href="/crm/api/oauth/start?gmail=1">Connect Gmail <span aria-hidden="true">↗</span></a>
+        <p class="entry-privacy">Nothing is sent without your review and approval. <a href="/crm/privacy.html">Privacy &amp; permissions</a></p>
+      </section>
+      <section id="sheet-onboarding" class="onboarding" hidden>
+        <div><p class="eyebrow">02 / Your source of truth</p><h2>Choose your customer sheet.</h2><p>Paste the Google Sheets link. You will review the column mapping before anything is changed.</p></div>
+        <div class="setup-panel">
+          <label for="sheet-url">Google Sheets URL</label>
+          <div class="inline-field"><input id="sheet-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/…"><button id="preview-sheet" type="button">Preview sheet</button></div>
+          <div id="sheet-details" hidden>
+            <p id="sheet-title" class="sheet-title"></p>
+            <label for="sheet-tab">Tab</label><select id="sheet-tab"></select>
+            <p class="help">Confirm which columns contain the customer details. Unmapped fields stay untouched.</p>
+            <div id="mapping-fields" class="mapping-fields"></div>
+            <label class="check"><input id="add-columns" type="checkbox"> If needed, add only “Decision Axis stage” and “Decision Axis last contact” columns to this tab.</label>
+            <button id="connect-sheet" class="primary-action" type="button">Connect this sheet <span aria-hidden="true">↗</span></button>
+          </div>
+        </div>
+      </section>
+      <section id="workspace" class="workspace" hidden>
+        <div class="workspace-tabs" role="tablist" aria-label="Gmail workspace"><button id="tab-sales" role="tab" aria-selected="true" aria-controls="mail-workspace" data-workspace-tab="sales">Sales &amp; CRM</button><button id="tab-jobs" role="tab" aria-selected="false" aria-controls="mail-workspace" tabindex="-1" data-workspace-tab="jobs">Job Hunting</button><button id="tab-actions" role="tab" aria-selected="false" aria-controls="mail-workspace" tabindex="-1" data-workspace-tab="actions">To-do &amp; Actions</button><button id="tab-finance" role="tab" aria-selected="false" aria-controls="mail-workspace" tabindex="-1" data-workspace-tab="finance">Bills &amp; Finance</button><button id="tab-clusters" role="tab" aria-selected="false" aria-controls="mail-workspace" tabindex="-1" data-workspace-tab="clusters">Clustering</button></div>
+        <div class="workspace-head"><p id="source-label" hidden></p><div class="workspace-actions"><button id="fetch-mail" type="button">Fetch Mail</button><button id="refresh-board" type="button" disabled>Analyze Mail</button><a id="connect-gmail" href="/crm/api/oauth/start?gmail=1">Connect Gmail</a></div></div>
+        <details id="prompt-details" class="prompt-details"><summary>Refine your analysis · private prompt library</summary><div id="prompt-library" class="setup-panel prompt-library">
+          <div><p class="eyebrow">Your prompt library</p><label for="prompt-choice">Start from a template</label><select id="prompt-choice"></select><p class="help">Illustrative starters are editable examples. Your saved prompts are private to your account.</p></div>
+          <div><label for="prompt-title">Prompt name</label><input id="prompt-title" maxlength="80"><label for="prompt-text">Edit or augment the question</label><textarea id="prompt-text" rows="5" maxlength="3000"></textarea><label for="prompt-search">Optional Gmail search</label><input id="prompt-search" maxlength="500" placeholder="e.g. proposal OR consulting OR collaboration"><p class="help">Narrow the recent-mail sample using Gmail search words or operators. Leave blank for the latest threads.</p><div class="prompt-actions"><button id="save-prompt" type="button">Save changes</button><button id="duplicate-prompt" type="button">Save a copy</button><button id="new-prompt" type="button">Add a prompt</button></div><p id="prompt-status" class="help" role="status"></p></div>
+        </div></details>
+        <p id="selected-prompt" class="board-note" hidden></p>
+<div id="mail-workspace" role="tabpanel" aria-labelledby="tab-sales"><div class="scan-progress"><div id="scan-progress" role="progressbar" aria-label="Mailbox scan progress; total unknown" aria-valuemin="0" hidden><span aria-hidden="true"></span></div><button id="stop-scan" type="button" hidden>Stop scan</button><span id="scan-stage" role="status" aria-live="polite"></span><span id="scan-summary" hidden></span></div><details id="processing-details" hidden><summary>Timing details</summary><p id="processing-metrics"></p></details><p id="provider-status" role="status"></p><div id="mail-results"></div><section id="cluster-emails" hidden><h3 id="cluster-title"></h3><button id="close-cluster" type="button">Close theme</button><div id="cluster-email-cards"></div></section></div>
+        <div id="sheet-board" class="board" aria-label="Lead opportunities" hidden>
+          <section class="lane hot"><h3>Hot <span id="hot-count">0</span></h3><p>Follow-up signals worth checking now.</p><div id="hot-leads" class="lead-list"></div></section>
+          <section class="lane moderate"><h3>Moderate <span id="moderate-count">0</span></h3><p>Good candidates for a thoughtful next step.</p><div id="moderate-leads" class="lead-list"></div></section>
+          <section class="lane cold"><button id="toggle-cold" type="button" aria-expanded="false">Cold <span id="cold-count">0</span> <span aria-hidden="true">⌄</span></button><p>Quietly waiting. Open when you need them.</p><div id="cold-leads" class="lead-list" hidden></div></section>
+        </div>
+        <details class="optional-sheet"><summary>Other sources</summary><label for="source-choice">Source <select id="source-choice"><option value="gmail">Gmail</option><option value="sheet">Google Sheets</option></select></label><a href="/crm/api/oauth/start">Grant Sheets access</a><button id="show-sheet" type="button">Choose a sheet</button></details>
+      </section>
+    </main>
+  </div>
+  <div id="lead-overlay" class="overlay" hidden>
+    <div class="scrim" data-close></div>
+    <aside class="lead-panel" role="dialog" aria-modal="true" aria-labelledby="lead-title">
+      <button class="close" type="button" data-close aria-label="Close lead details">×</button>
+      <section class="reply-source"><p class="eyebrow">Original email / <span id="lead-row"></span></p><a id="lead-source" target="_blank" rel="noopener noreferrer" hidden>Open source conversation ↗</a>
+      <h2 id="lead-title"></h2><p id="lead-reason"></p><article id="letter-body" class="mail-letter" aria-live="polite"></article>
+      <div class="detail-block"><h3>Why this is here</h3><ul id="lead-evidence"></ul></div>
+      <div class="detail-block"><label for="lead-stage">Stage</label><select id="lead-stage"><option>Hot</option><option>Moderate</option><option>Cold</option><option>Done</option></select><button id="save-stage" type="button">Update stage</button></div></section><section class="reply-compose">
+<div class="detail-block"><h3>Proposed response</h3><p id="reply-proposal"></p><button id="create-draft" type="button">Reply</button><button id="discard-mail" type="button">Remove from all tabs</button><button id="mark-done" type="button">Done</button><button id="mark-unimportant" type="button">Not important</button><section id="reply-questions" hidden><label id="reply-question" for="reply-intent">What should this reply achieve?</label><input id="reply-intent" maxlength="1000"><label for="reply-timing">Any timing or detail to include? (optional)</label><input id="reply-timing" maxlength="300"><button id="generate-reply" type="button">Prepare brief reply</button></section><div id="draft-editor" hidden><p id="draft-to"></p><label for="draft-subject">Subject</label><input id="draft-subject" maxlength="180"><label for="draft-message">Message</label><textarea id="draft-message" rows="4" maxlength="5000"></textarea><label class="check"><input id="approve-send" type="checkbox"> I have reviewed and approve sending this exact message.</label><button id="send-draft" class="send-action" type="button">Send this reply</button></div></div>
+      <div id="history-block" class="detail-block" hidden><h3>Recent Gmail context</h3><button id="load-history" type="button">Check correspondence</button><ul id="history-list"></ul></div>
+      <p id="lead-status" class="lead-status" role="status" aria-live="polite"></p></section>
+    </aside>
+  </div>
+</body>
+</html>
