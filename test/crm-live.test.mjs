@@ -29,3 +29,29 @@ test('Live automatically validates saved visible cards in every tab after an old
  assert.ok(reads.every(path=>path.startsWith('alice/')));await assert.rejects(flow('context','bob',config,{tab:'sales',cards:[cards[0]]}),/could not load/);
  const shared=createCrmLive({...security,key:()=>'',firestore:async path=>path.endsWith('/shared')?{metadata:JSON.stringify({uid:'alice',versions:{[cards[0].id.slice(6)]:cards[0].lastMessageId}})}:null});assert.ok((await shared('context','alice',config,{tab:'finance',cards:[cards[0]]})).view);
 });
+test('spoken intent is recognised anywhere in the sentence and acts on the selected card without asking which one',()=>{
+ const [glg,alpha]=cards,act=(phrase,selected=glg.id)=>{const r=resolveCommand(phrase,cards,selected);return r.error?`error:${r.ask?'jev':r.error}`:`${r.action}:${r.id}`;};
+ for(const phrase of ['okay mark it as done','now mark this as done','mark done please','mark this as complete','complete it','I\'ve handled this','done.'])assert.equal(act(phrase),`done:${glg.id}`,phrase);
+ for(const phrase of ['this is not important','Okay, not important.','get rid of this','not relevant'])assert.equal(act(phrase),`notImportant:${glg.id}`,phrase);
+ for(const phrase of ['reply now','draft a reply to it','write a reply','and reply to it','yes reply','send a reply'])assert.equal(act(phrase),`reply:${glg.id}`,phrase);
+ assert.equal(act('go to the GLG project',alpha.id),`select:${glg.id}`);assert.equal(act('mark Alpha Insights as not important'),`notImportant:${alpha.id}`);assert.equal(act('next one'),`select:${alpha.id}`);
+ const reply=resolveCommand('Reply to Alpha, saying we are not interested!',cards,glg.id);assert.equal(reply.action,'reply');assert.equal(reply.id,alpha.id,'guidance words are content, not a dismissal or target');assert.equal(reply.replyIntent,'we are not interested');
+ for(const phrase of ["don't mark it done",'not done yet','is this done?','send it','cancel that'])assert.match(act(phrase),/^error:(?!jev)/,phrase);
+ assert.equal(act('Okay. Market is done.'),`done:${glg.id}`,'misheard words that resemble no card do not trigger Which one');assert.equal(act('mark Alpha as done'),`done:${alpha.id}`);assert.equal(act('mark the advisor one done'),'error:jev','an unknown name still goes to JEV');
+ assert.equal(act('go to the next project'),`select:${alpha.id}`);assert.equal(resolveCommand('Tell them we are interested and ask for their availability next week.',cards,glg.id).classify,true,'next week is reply guidance, not navigation');
+ const vague=resolveCommand('this can wait',cards,glg.id);assert.equal(vague.ask,true);assert.equal(vague.classify,true,'no command word: JEV classifies intent');
+ assert.match(act('mark it done',null),/Select a visible card first/);
+});
+test('JEV identification knows the selected card and only returns a confident intent',async()=>{
+ const config={sessionSecret:'x'.repeat(40)};let sent;
+ const answers={target:{choice:'selected',confidence:.92},intent:{choice:'notImportant',confidence:.88}};
+ const flow=createCrmLive({...security,key:()=>'',firestore:async()=>({metadata:JSON.stringify({versions:Object.fromEntries(cards.map(c=>[c.id.slice(6),c.lastMessageId]))})}),request:async(url,options)=>{sent=JSON.parse(options.body);return new Response(JSON.stringify({answers}));}});
+ const previous=process.env.TYPESAFE_API_KEY;process.env.TYPESAFE_API_KEY='fixture';
+ try{
+  const {view}=await flow('context','alice',config,{tab:'sales',cards});
+  let result=await flow('identify','alice',config,{view,tab:'sales',utterance:'this can wait',selectedId:cards[1].id,classify:true});
+  assert.equal(result.id,cards[1].id);assert.equal(result.action,'notImportant');assert.match(sent.questions.target.criteria.selected,/Alpha Insights/);assert.ok(!('send' in sent.questions.intent.criteria));
+  answers.intent.confidence=.4;result=await flow('identify','alice',config,{view,tab:'sales',utterance:'this can wait',selectedId:cards[1].id,classify:true});assert.equal(result.action,null,'uncertain intent never mutates');
+  result=await flow('identify','alice',config,{view,tab:'sales',utterance:'the advisor one'});assert.equal(sent.questions.intent,undefined,'intent is only classified when asked');assert.equal(sent.questions.target.criteria.selected,undefined);assert.equal(result.id,null,'selected is not a valid answer without a selection');
+ }finally{if(previous===undefined)delete process.env.TYPESAFE_API_KEY;else process.env.TYPESAFE_API_KEY=previous;}
+});
