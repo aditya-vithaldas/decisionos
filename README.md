@@ -4,6 +4,17 @@ This repository contains the current portfolio homepage, case studies, service p
 
 Run `npm run build` to generate the static site. Run `npm run dev` to preview it locally.
 
+## Git checkpoints and deployment traceability
+
+Follow [AGENTS.md](AGENTS.md) for repository work. During substantial changes,
+make coherent checkpoint commits after meaningful, validated milestones. Commit
+and push completed, verified task changes to the configured remote on the
+applicable existing branch; do not leave deployed implementation only in an
+uncommitted working tree. Preserve unrelated user edits, and never commit
+credentials, OAuth tokens, private mailbox data, reviewer captures, or generated
+build output. Record the source commit and deployed revision/image for releases;
+inherited Cloud Run commit labels are not proof of a clean source snapshot.
+
 The root Dockerfile packages the current site and presentation together. Publish from the main branch after checking the homepage, case studies, presentation, and referenced assets. Do not publish an older checkout or the archived application as the current site.
 
 The presentation is available at `/toptal-application.html`; `/toptal-application` redirects to it. The original application remains under `archive/` for reference and is excluded from the production build.
