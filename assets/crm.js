@@ -157,7 +157,30 @@ function applySharedMailbox(data){
   }
   let updated=$('mailbox-updated');if(!updated){updated=element('p',undefined,'crm-live-status');updated.id='mailbox-updated';document.querySelector('.workspace-head').after(updated);}updated.textContent=`Shared mailbox · ${data.fetched} stored threads · updated ${new Date(sharedMailbox.lastFetchedAt).toLocaleTimeString()} · checks every 5 minutes while active`;
 }
-function updateAnalysisProgress(scan,count,total=scan.sourceTotal){const bar=$('scan-progress');bar.hidden=false;bar.setAttribute('aria-label','Classified stored mail');const known=Number.isFinite(total)&&total>=0;bar.classList.toggle('indeterminate',!known);if(known){const reviewed=Math.max(0,Math.min(total,count));bar.style.setProperty('--analysis-progress',`${total?reviewed/total*100:0}%`);bar.setAttribute('aria-valuenow',String(reviewed));bar.setAttribute('aria-valuemax',String(Math.max(1,total)));bar.setAttribute('aria-valuetext',`${reviewed} of ${total} eligible threads reviewed`);}else{bar.removeAttribute('aria-valuenow');bar.removeAttribute('aria-valuemax');bar.setAttribute('aria-valuetext','Eligible total unknown');}}
+// Speed panel: the headline is JEV's measured classification throughput. Displayed values ease toward
+// the latest measured targets every animation frame, so numbers and the bar move smoothly between updates.
+const speed={target:{count:0,total:0,rate:null},shown:{count:0,rate:0},started:0,end:0,running:false,frame:0};
+function speedFrame(){const t=speed.target,shown=speed.shown,ease=motionPreference.matches?1:.16;
+  shown.count+=(t.count-shown.count)*ease;if(Math.abs(t.count-shown.count)<.5)shown.count=t.count;
+  if(t.rate!=null){shown.rate+=(t.rate-shown.rate)*ease;if(Math.abs(t.rate-shown.rate)<.5)shown.rate=t.rate;}
+  $('speed-count').textContent=Math.round(shown.count).toLocaleString();$('speed-total').textContent=t.total?t.total.toLocaleString():'?';
+  $('speed-rate').textContent=t.rate==null?'–':Math.round(shown.rate).toLocaleString();
+  $('speed-time').textContent=(((speed.running?performance.now():speed.end)-speed.started)/1000).toFixed(1);
+  $('speed-hero').style.setProperty('--speed-progress',String(t.total?Math.min(1,shown.count/t.total):0));
+  speed.frame=speed.running||shown.count!==t.count||(t.rate!=null&&shown.rate!==t.rate)?requestAnimationFrame(speedFrame):0;}
+function speedUpdate(values){Object.assign(speed.target,values);if(!speed.frame)speed.frame=requestAnimationFrame(speedFrame);}
+function speedStart(scan){Object.assign(speed,{started:performance.now(),running:true,shown:{count:scan.scanned||0,rate:0},target:{count:scan.scanned||0,total:scan.sourceTotal||0,rate:null}});const hero=$('speed-hero');hero.hidden=false;hero.classList.remove('complete');$('speed-kicker').textContent='Classifying with JEV';$('speed-note').textContent='';speedUpdate({});}
+function speedFinish(scan){if(!speed.running)return;speed.running=false;speed.end=performance.now();const t=scan.timings||{},hero=$('speed-hero');
+  if(!t.modelMs){$('speed-kicker').textContent=scan.cached?'Loaded saved results':'No new emails classified';$('speed-note').textContent=scan.cached?'Saved results make no model calls.':'';speedUpdate({count:scan.scanned||0});return;}
+  hero.classList.toggle('complete',Boolean(scan.complete));$('speed-kicker').textContent=scan.complete?`${(t.jevThreads||0).toLocaleString()} emails classified`:'Paused';
+  const total=t.totalMs||speed.end-speed.started;$('speed-note').textContent=`JEV classification ${(t.modelMs/1000).toFixed(2)}s in ${t.jevRequests||0} parallel requests · end to end ${(total/1000).toFixed(1)}s, ${Math.round((scan.scanned||0)*1000/total)}/s including storage and page updates`;
+  speedUpdate({count:scan.scanned||0,rate:(t.jevThreads||0)*1000/t.modelMs});}
+$('speed-close').addEventListener('click',()=>{$('speed-hero').hidden=true;});
+// Cards glide from their previous positions after each batch (FLIP, transform/opacity only, on-screen cards only).
+function flipCards(before){let fresh=0;for(const card of document.querySelectorAll('.mail-card[data-thread-id]')){const now=card.getBoundingClientRect();if(now.bottom<0||now.top>innerHeight)continue;const old=before.get(card.dataset.threadId);
+  if(old){const dx=old.left-now.left,dy=old.top-now.top;if(Math.abs(dx)+Math.abs(dy)>1)card.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:'none'}],{duration:420,easing:'cubic-bezier(.2,.8,.2,1)'});}
+  else card.animate([{opacity:0,transform:'translateY(10px) scale(.98)'},{opacity:1,transform:'none'}],{duration:320,delay:Math.min(fresh++,12)*25,easing:'ease-out',fill:'backwards'});}}
+function updateAnalysisProgress(scan,count,total=scan.sourceTotal){const bar=$('scan-progress');bar.hidden=false;bar.setAttribute('aria-label','Classified stored mail');const known=Number.isFinite(total)&&total>=0;bar.classList.toggle('indeterminate',!known);if(known){const reviewed=Math.max(0,Math.min(total,count));bar.style.setProperty('--analysis-progress',`${total?reviewed/total*100:0}%`);bar.setAttribute('aria-valuenow',String(reviewed));bar.setAttribute('aria-valuemax',String(Math.max(1,total)));bar.setAttribute('aria-valuetext',`${reviewed} of ${total} eligible threads reviewed`);}if(speed.running)speedUpdate({count:known?Math.max(0,Math.min(total,count)):count,total:known?total:speed.target.total});else{bar.removeAttribute('aria-valuenow');bar.removeAttribute('aria-valuemax');bar.setAttribute('aria-valuetext','Eligible total unknown');}}
 $('close-cluster').addEventListener('click', () => { $('cluster-emails').hidden = true; document.querySelector('.paper-stack[aria-expanded="true"]')?.focus(); });
 $('stop-scan').addEventListener('click', () => { stopRequested = true; $('stop-scan').textContent = 'Stopping after this batch…'; });
 async function scanWorkspace(operation = 'analyze',automatic=false) {
@@ -171,7 +194,7 @@ async function scanWorkspace(operation = 'analyze',automatic=false) {
     Object.assign(scan, { complete: false, scanned: 0, timings: { gmailMs: 0, modelMs: 0, storeMs: 0, cacheHits: 0 }, prompt: $('prompt-details').open ? $('prompt-text').value : '', blocker: '', attempted: true, cached: false });
     if (operation === 'fetch') {sharedMailbox.originTab=tab;Object.assign(scan, { fetchComplete: false, analyzeCursor: null });}
   }
-  $('scan-progress').classList.remove('complete');$('scan-progress').hidden=operation!=='analyze';if(operation==='analyze')updateAnalysisProgress(scan,scan.scanned); $('stop-scan').hidden = false; $('stop-scan').textContent = 'Stop scan';
+  $('scan-progress').classList.remove('complete');$('scan-progress').hidden=operation!=='analyze';if(operation==='analyze'){speedStart(scan);updateAnalysisProgress(scan,scan.scanned);} $('stop-scan').hidden = false; $('stop-scan').textContent = 'Stop scan';
   $('refresh-board').disabled = true; document.querySelectorAll('[data-workspace-tab]').forEach(b => b.disabled = true);
   $('fetch-mail').disabled = true;
   const started = performance.now();
@@ -193,7 +216,7 @@ async function scanWorkspace(operation = 'analyze',automatic=false) {
     } catch { /* The scan's own response owns actionable errors; polling never invents progress. */ }
     finally { polling = false; }
   }
-  const progressTimer = setInterval(pollProgress, 1500);
+  const progressTimer = setInterval(pollProgress, 500);
   try {
     do {
       status('');
@@ -209,17 +232,15 @@ async function scanWorkspace(operation = 'analyze',automatic=false) {
       scan.cached = Boolean(data.cached);
       for (const name of ['gmailMs','modelMs','storeMs','cacheHits','jevMs','jevRequests','jevThreads','geminiMs','geminiRequests']) scan.timings[name] = (scan.timings[name] || 0) + (data.timings?.[name] || 0);
       scan.timings.totalMs = performance.now() - started;
+      if (operation === 'analyze' && scan.timings.modelMs) speedUpdate({ rate: scan.timings.jevThreads * 1000 / scan.timings.modelMs });
       $('source-label').textContent = `Gmail · ${((performance.now() - started) / 1000).toFixed(1)}s${data.cached ? ' · saved results' : ''}`; renderWorkspace();
-      if (operation === 'analyze' && !data.cached && !motionPreference.matches) for (const item of data.items.filter(i=>i.stage!=='Unsorted').slice(0,6)) {
-        const old = before.get(item.threadId), target = [...document.querySelectorAll('.mail-card[data-thread-id]')].find(e=>e.dataset.threadId===item.threadId);
-        if (old && target) target.animate([{opacity:.65},{opacity:1}],{duration:240,easing:'ease-out'});
-      }
+      if (!data.cached && !motionPreference.matches) flipCards(before);
       if(operation==='analyze'&&unsortedStack&&!data.cached&&!motionPreference.matches){const results=$('mail-results'),bounds=results.getBoundingClientRect(),layer=element('div',undefined,'sorting-layer');layer.setAttribute('aria-hidden','true');results.append(layer);for(const theme of [...new Set(data.items.filter(i=>!['Unsorted','Other'].includes(i.stage)).map(i=>tab==='clusters'?i.theme:i.stage))].slice(0,3)){const target=tab==='clusters'?[...results.querySelectorAll('.paper-stack')].find(e=>e.dataset.stage===theme):[...results.querySelectorAll('.lane')].find(e=>e.querySelector('h3')?.textContent.startsWith(`${theme} ·`));if(!target)continue;const end=target.getBoundingClientRect(),paper=element('span',undefined,'sorting-paper');Object.assign(paper.style,{position:'absolute',left:`${unsortedStack.left-bounds.left+20}px`,top:`${unsortedStack.top-bounds.top+20}px`});layer.append(paper);const flight=paper.animate([{transform:'translate(0,0)',opacity:.6},{transform:`translate(${end.left-unsortedStack.left}px,${end.top-unsortedStack.top}px)`,opacity:0}],{duration:400,easing:'ease-out'});const remove=()=>{paper.remove();if(!layer.childElementCount)layer.remove();};flight.onfinish=remove;flight.oncancel=remove;}if(!layer.childElementCount)layer.remove();}
     } while (scan.cursor && !stopRequested);
     if(operation==='fetch'){sharedMailbox.failures=0;sharedMailbox.nextCheck=Date.now()+5*60000;}
     status(scan.complete ? '' : 'Scan paused. Continue when ready.');
   } catch (error) {if(operation==='fetch'){sharedMailbox.complete=false;sharedMailbox.failures++;sharedMailbox.nextCheck=Date.now()+Math.min(30*60000,60000*2**Math.min(sharedMailbox.failures-1,5));}status(`${error.message} Completed batches remain visible; run again to retry.`); }
-  finally { clearInterval(progressTimer); scanRun++; scanning = false;if(operation==='analyze'&&scan.complete){$('scan-progress').classList.add('complete');const fadeRun=scanRun;setTimeout(()=>{if(!scanning&&scanRun===fadeRun)$('scan-progress').hidden=true;},300);}else $('scan-progress').hidden=true; $('stop-scan').hidden = true; $('refresh-board').disabled = !scan.fetchId; $('fetch-mail').disabled = sharedMailbox.complete; document.querySelectorAll('[data-workspace-tab]').forEach(b => b.disabled = false); renderWorkspace(); selectTab(activeTab); }
+  finally { clearInterval(progressTimer); scanRun++; scanning = false;if(operation==='analyze')speedFinish(scan);if(operation==='analyze'&&scan.complete){$('scan-progress').classList.add('complete');const fadeRun=scanRun;setTimeout(()=>{if(!scanning&&scanRun===fadeRun)$('scan-progress').hidden=true;},300);}else $('scan-progress').hidden=true; $('stop-scan').hidden = true; $('refresh-board').disabled = !scan.fetchId; $('fetch-mail').disabled = sharedMailbox.complete; document.querySelectorAll('[data-workspace-tab]').forEach(b => b.disabled = false); renderWorkspace(); selectTab(activeTab); }
 }
 function selectTab(tab) {
   activeTab = tab; document.querySelectorAll('[data-workspace-tab]').forEach(b => { const active = b.dataset.workspaceTab === tab; b.setAttribute('aria-selected', String(active)); b.tabIndex = active ? 0 : -1; });
