@@ -1,9 +1,9 @@
 # Contact form
 
-Published on September 12, 2026, revision `chatpm-00104-jmk`.
+The Decision Axis homepage has a deployed contact form with name, company, email address, and inquiry fields. The server stores valid submissions in the project's Firestore `(default)` database under `contact_submissions`. The visitor sees a success message only after the submission is stored. Every new record starts with `notificationStatus: pending`.
 
-The homepage contact section includes exactly three required visible fields: name, email address, and message. All contact links in published pages target that section. FormSubmit delivers to `aditya@decisionos.me`, confirmed by the owner. Reply-To uses the visitor's email. Default provider CAPTCHA and a hidden honeypot are enabled. Success redirects to the noindex `/thanks.html` page.
+Direct notification through Resend is optional. If `RESEND_API_KEY` and a verified `CONTACT_FROM_EMAIL` are configured, the server attempts an immediate email to `aditya.vithaldas@gmail.com` after storage and marks the record `accepted` when the provider accepts it. If email is unconfigured or fails, the record remains `pending` for the twice-daily Gmail digest; the visitor still gets a truthful saved acknowledgement. `CONTACT_FIRESTORE_PROJECT` is optional; otherwise the Cloud Run project ID is read from the metadata service. The Cloud Run service account needs Firestore document write permission. Do not place provider keys in source or client code.
 
-Build, public routes, form field requirements, destination, redirect, and desktop/mobile layouts checked. An empty submission was blocked by native browser validation. One setup-test submission was sent from the public form; FormSubmit displayed “Check Your Email” and confirmed it sent an activation link. Owner activation and a post-activation delivery check remain pending.
+The local heartbeat `decision-axis-inquiry-digest` is scheduled for 09:00 and 17:00 Europe/Berlin. It uses `scripts/contact-digest.mjs` to reserve pending records in Firestore, searches Gmail Sent for that batch ID before sending, and marks records `digest_sent` only after Gmail confirms the message. It sends nothing when the collection is empty. This is a scheduled digest, not an immediate visitor-facing email guarantee.
 
-Cloud Build: `889077cb-6e9c-4e3a-95f5-83217206764a`.
+The replacement was deployed to Cloud Run on 2026-10-06. The public form and its validation route were verified live; storage behavior is covered by mock-backed tests, and Firestore/Gmail access was verified read-only. No real inquiry or email has been sent by this implementation. Perform an end-to-end storage check before relying on delivery of an actual inquiry.

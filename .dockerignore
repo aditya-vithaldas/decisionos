@@ -5,6 +5,17 @@
 !scripts/build.mjs
 !scripts/build-meridian.mjs
 !scripts/serve.mjs
+!scripts/contact-api.mjs
+!scripts/crm-api.mjs
+!scripts/crm-opportunities.mjs
+!scripts/crm-gmail.mjs
+!scripts/crm-prompts.mjs
+!scripts/feedback-api.mjs
+!feedback/
+!feedback/**
+!scripts/commerce-api.mjs
+!crm/
+!crm/**
 !index.html
 !design-system.html
 !assets/
@@ -34,6 +45,7 @@
 products/meridian/node_modules/
 products/meridian/dist/
 products/meridian/dist-portfolio/
+products/meridian/dist-commerce/
 products/meridian/.vinext/
 products/meridian/.wrangler/
 !scripts/analytics-api.mjs

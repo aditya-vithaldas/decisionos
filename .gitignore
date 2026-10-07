@@ -2,4 +2,6 @@ dist/
 node_modules/
 .DS_Store
 /analytics/
+/commerce/
+/products/meridian/dist-commerce/
 /.cache/

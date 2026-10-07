@@ -1,9 +1,10 @@
 [
+  {"file":"projects/image-object-pipeline.html","path":"/projects/image-object-pipeline.html","title":"Image Object Pipeline Quality Assurance | Decision Axis","description":"Ten sourced product photographs, visual catalog claims and actual OpenAI Decisions probabilities. Deliberate mismatches are labeled, never manipulated scores.","type":"WebPage"},
   {
     "file": "index.html",
     "path": "/",
-    "title": "eCommerce & AI Product Consulting | decisionos",
-    "description": "eCommerce product consulting, AI-first experiences, executive product direction and full-stack MVP building with Aditya Vithaldas. From strategy to launch.",
+    "title": "Decision Axis | eCommerce and B2B products and solutions",
+    "description": "eCommerce and B2B products and solutions that help you stand out from the crowd. Decision Axis connects product strategy, design, and engineering.",
     "image": "assets/consumer-to-mvp-crayon.png",
     "type": "WebPage"
   },
@@ -14,6 +15,35 @@
     "description": "Explore working commerce and analytics concepts: voice-first discovery, photo-first selling, focused shopping screens, and an analyst in the conversation.",
     "image": "assets/commerce-live-home.png",
     "type": "CollectionPage"
+  },
+  {
+    "file": "projects/agent-harness.html",
+    "path": "/projects/agent-harness.html",
+    "title": "Agent harness setup: what does it actually mean? | Decision Axis",
+    "description": "A practical guide to setting up an agent harness in Slack: permitted context, maintained Markdown playbooks, distinct reviewer perspectives and approval-gated workflows.",
+    "type": "Article",
+    "service": "Agent harness setup for your organization"
+  },
+  {
+    "file": "projects/live-feedback.html",
+    "path": "/projects/live-feedback.html",
+    "title": "Live usability feedback for eCommerce | Decision Axis",
+    "description": "Create a private usability study, hear think-aloud feedback, and review timestamped likes, comments and friction. Explicit consent and private reports.",
+    "type": "WebPage"
+  },
+  {
+    "file": "projects/micro-crm.html",
+    "path": "/projects/micro-crm.html",
+    "title": "Gmail Micro CRM and follow-up prompts | Decision Axis",
+    "description": "A Gmail-first Micro CRM with editable private prompt templates, grounded prospect suggestions, source-thread evidence and reviewed outreach. Google Sheets optional.",
+    "type": "WebPage"
+  },
+  {
+    "file": "commerce/index.html",
+    "path": "/commerce/",
+    "title": "Loop voice commerce search and browse demo | Decision Axis",
+    "description": "Explore an illustrative eCommerce storefront, browse products and try voice product discovery. This demonstration does not process purchases.",
+    "type": "WebPage"
   },
   {
     "file": "projects/commerce.html",

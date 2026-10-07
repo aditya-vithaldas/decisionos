@@ -1,116 +1,105 @@
-# decisionos — Connected practice
+# Decision Axis · Meridian design standard
+Updated 6 October 2026. Canonical reference for product interfaces, including the Gmail workspace at /crm.
 
-Version 0.1. The living reference is `design-system.html`; shared implementation tokens live in `assets/styles.css`.
+## Reference and cascade
+Verified live reference: https://decisionaxis.co/analytics. Without a demo parameter this is the Meridian portal; /analytics?demo=1 opens the analytics workspace. These are related surfaces, not identical layouts.
+Source: products/meridian/app/portal.css and portal.tsx (portal), analytics.css and experience.tsx (workspace). Read the final matching CSS declarations: analytics.css contains superseded dark/neutral themes before the current light commerce workspace. Do not copy its initial lime/dark palette.
+This guide replaces the earlier portfolio-specific cobalt/crayon specification for product UI. Portfolio illustration assets need not be regenerated or mistaken for screenshots.
 
-## Positioning
-
-decisionos is a Fractional Product Builder with 15 years across design, development, and product management. The promise: go to market quickly, with less fuss. Connect business transformation goals to a focused MVP through end-to-end ownership from strategy to launch. The experience statement is supplied by the user; it does not imply the firm has operated for 15 years. Company history, project outcomes, metrics, and availability are intentionally left for the next content discussion.
-
-## Visual thesis
-
-Contemporary editorial simplicity: strong sans-serif typography, five core tones, generous negative space, fine rules, and a softly flowing particle swarm. Emphasize clarity and ownership rather than decoration.
-
-## Palette
-
-| Token | Color | Role |
+## Verified palette
+| Role | Portal | Analytics workspace |
 | --- | --- | --- |
-| `--ink` | `#17191F` | Primary text, dark surfaces |
-| `--accent` | `#204DFF` | Primary action, key phrase |
-| `--muted` | `#5F6572` | Secondary copy |
-| `--paper` | `#F7F8FA` | Canvas |
-| `--surface` | `#FFFFFF` | Elevated surface |
+| Ink | #15233d | #17233b |
+| Muted copy | #69758a; hero #5c6880 | #6d788d; card copy #758196 |
+| Base canvas | gradient below | #f7faff |
+| Surface | rgba(255,255,255,.83) | #ffffff |
+| Border | rgba(255,255,255,.9) | #e0e8f2 / #dfe7f1 |
+| Turquoise | #00f5d4; CTA #00cbae | #00f5d4; practical teal #00bca5 / #008d7a |
+| Blue | #3a86ff; CTA #2584f4 | #3a86ff / #2870d7 |
+| Violet | #8338ec | #8338ec / #7130d2 |
+| Coral | #ff6b5b | #ff6b5b / #e8594d |
+| Amber | — | #ffc94a / #9f7100 |
 
-Borders, light accent surfaces and interaction shades support these five tones. Color never carries information alone. Use ink or slate for body text on paper/white, white on cobalt/ink. Cobalt is an emphasis, not a background for every section.
+Use teal, blue, violet, coral and amber to differentiate signals, always with text labels. Colors are not evidence of status by themselves. Dark text is used on light surfaces; white labels only on sufficiently dark buttons.
 
-## Typography
+## Typography: verified
+Plus Jakarta Sans is the UI family, loaded through Google Fonts with sans-serif fallback. Portal weights 500/600/700/800; DM Mono 500 for small provenance/indices. Grand Hotel is exclusively the portal's handwritten editorial kicker, not functional navigation.
+Portal headline: clamp(44px,5.2vw,80px), line-height 1.01, tracking -.058em; below 900px clamp(42px,10vw,64px).
+Portal body: 18–23px hero, 14px proof-card copy; proof headings 22px. Analytics signal headings: 700 20px/1.25, tracking -.025em; proactive item titles 17px/1.35, tracking -.015em; body 11–13px; navigation 700 14px.
+Product adaptation: no hero-sized headings in task views. One label per navigation item; do not repeat the selected tab as another large heading.
 
-Helvetica Neue → Helvetica → Arial → sans-serif. System monospace is reserved for small indices and specification labels. No external font request. Display uses medium weight, approximately −0.065em tracking, 1.01–1.1 line height, and responsive sizes of 56–110px. Section titles are 32–50px. Body copy is 16–18px, with line height 1.6–1.75. Navigation and buttons are 14px or larger on desktop. Small labels are secondary information.
+## Background and motion: verified portal
+Canvas:
+```css
+background:
+ radial-gradient(circle at 80% 9%,rgba(0,245,212,.34),transparent 23%),
+ radial-gradient(circle at 98% 45%,rgba(131,56,236,.24),transparent 34%),
+ linear-gradient(135deg,#fbffff 0%,#eef8ff 48%,#f8f1ff 100%);
+```
+Four decorative SVG paths, viewBox 0 0 1000 700, preserveAspectRatio none, gradient stops turquoise at 0 / blue at .45 / violet at 1. No particle swarm or autonomous looping field is present in the current portal.
+Path i uses:
+```text
+M-40 (130+i*145) C210 (70+i*120),390 (560-i*80),(x*10) (y*7)
+S820 (160+i*100),1060 (95+i*150)
+```
+Initial pointer focus x=78%, y=36%. Source updates focus relative to the portal on pointer move. Path stroke 1.2px, round caps, opacity .23; second path 2px/.17; third .1. CSS d transition .25s ease.
+Verified analytics transitions: card entrance answer-in .35s ease (opacity +8px rise); view transitions .3s out / .38s cubic-bezier(.2,.8,.2,1) in; quiet request indicator entrance .22s; spinner 1.1s linear. Voice orb uses conic turquoise/blue/violet field and 12s rotation where active.
+Reduced-motion rule in analytics disables animations, transitions and smooth scrolling. Portal CSS removes path transition, but its pointer handler lacks a JavaScript reduced-motion guard. CRM does not render or update decorative background paths: its gradient remains static. Purposeful card sorting respects reduced motion.
 
-## Layout and elements
+## Navigation and layouts: verified
+Portal header 82px, horizontal gutter clamp(24px,5vw,84px); brand 24px/800; icon 34px with 11px radius and turquoise→blue→violet fill. Header background rgba(255,255,255,.48), blur 22px, fine ink .08 dividing rule.
+Portal hero max-width 1500px, two columns 1.05fr/.95fr, minimum second column 410px; current top padding 48px. At 900px one column; at 560px navigation height 70px.
+Analytics desktop: 60px header, 260px left rail, minmax(0,1fr) main. Rail padding 28px 20px 22px, main 32px clamp(24px,4vw,64px) 100px. Below 900px rail becomes horizontal; below 560px details are hidden and cards use 20px padding.
+Selected analytics navigation: radius 16px, padding 13px 12px, color #174965, gradient from rgba(0,245,212,.13) to rgba(58,134,255,.1), inset 1px rgba(58,134,255,.1) border. Inactive text #68758a.
+NEW CRM adaptation: five semantic tabs: Sales & CRM, Job Hunting, To-do & Actions, Bills & Finance, Clustering. Two-column tab grid on phones. The CRM gradient is static: no pointer-following background or parallax. Fetch Mail retrieves encrypted account-scoped source snapshots without model calls; subsequent fetches append changed versions with a timestamp overlap. Analyze Mail exclusively uses JEV classification of stored snippets: no Gemini extraction, theme generation or Gmail refetch. Cluster starter topics avoid automatic generation. Source Unsorted cards form a compact side stack; up to six representative transform/opacity flights per completed batch blend into category styling without delaying requests or storage, and reduced motion disables them. Small stage/count/time labels remain secondary; folded details distinguish classification wall time, overlapping provider request time, storage and end-to-end time. Info shows actual returned questions and probabilities. Nonmatching topics disappear from that lens, not from stored mail. Done, Not important and Discard hide that exact mail version across all five tabs, with Undo, never changing Gmail. Reply asks one or two contextual questions, generates a brief editable draft only on explicit request, and Send this reply approves the exact reviewed message without a redundant checkbox.
 
-Spacing steps: 8, 16, 24, 32, 48, 64, 96, 128px. Canvas maximum: 1440px. Desktop gutters: 56px; tablet: 32px; phone: 20px. Two-column compositions collapse at 760px. Primary controls have 8px corners; diagram cards 14px. Use one primary action per section, semantic anchors, visible focus rings, and a skip link. Use a fine dividing rule before introducing a new card container.
+### Shared mailbox, Live and processing exceptions
 
-## Motion
+One account-scoped fourteen-day encrypted source cache serves all five tabs. Sales, Actions and Finance analyze its seven-day subset; Clustering uses fourteen days. Jobs preserves already grounded older records but does not automatically refetch 180 days. Fetch disables when the shared scan completes; Analyze remains available in every tab. While the signed-in page is visible, a model-free incremental check runs approximately every five minutes, with account-level overlap protection and retry backoff. New versions appear Unsorted; polling never classifies them automatically.
 
-- Entrance: once, 650ms, 14px rise, ease-out; adjacent elements stagger by 100–180ms.
-- Hover: 180ms, at most 2px translation for controls.
-- Pointer: desktop fine pointers only, bounded ±28px horizontal and ±18px vertical influence on the swarm, eased via requestAnimationFrame. Release pointer influence on exit or window blur.
-- Ambient swarm: slow continuous flow, 144 particles on desktop and 60 on mobile. A loose shared current, restrained cobalt/slate opacity, no flashing or long trails. Fine pointers gently displace the field.
-- Performance: cap canvas pixel ratio at 2 and drawing at 30 fps. Pause when offscreen or the document is hidden.
-- Controls: accessible pause/resume buttons control all swarm instances on the page.
-- Touch: fewer particles and no pointer attraction; all content and actions remain available.
-- Reduced motion: show a still swarm and disable animation, smooth scrolling, hover translation and pointer response. Listen for preference changes during the session.
+Analyze uses a full-viewport-width, four-pixel top progress bar: actual reviewed / eligible source count, including completed uncertain decisions. Unknown totals remain indeterminate; only true completion fades the bar. It never follows pointer motion or blocks requests. Bills & Finance has a third Payment failures lane; literal source amounts, references, failure dates and retry instructions are shown when available. Missing facts remain unknown; the application never retries a payment.
 
-## Content and next steps
+Fetch, Analyze and Live share the same 42px dark pill controls, 12px labels and 999px radius, including verified 390px layouts. Live starts microphone capture only after an explicit click and stops tracks on Stop/navigation. It uses Gemini 3.8 Live with short-lived server-constrained tokens. Visible-card ordinal/name selection and scrolling are local; ambiguous semantic selection uses one bounded JEV decision and declines uncertain targets. Context is the current viewport or open letter, not the whole mailbox. Reply is brief, editable and explicit; voice never sends email automatically. Provider connection checks are not a physical microphone/voice latency test.
 
-Keep claims specific and verifiable. The landing page is a preliminary application of the system; refine the introduction and add real experience and selected work in a subsequent pass. Do not invent client logos, impact numbers or project case studies.
+## Cards, buttons, forms: verified values
 
-## Source and delivery
+Live selection is a dedicated visual state, not a synthetic card click. Select / highlight / go to only add a persistent blue outline, turquoise halo and light tinted surface to the exact current actionable card; redraws restore that state. Success is acknowledged only after the target ID, visible bounds and painted outline are verified across animation frames. Missing or stale targets do not receive success acknowledgments. The typed-command test control is local-development only, not part of the public demo. Bare Done, Not important, Reply and this/it/that use the valid selected ID; that pointer advances after confirmed removal. Voice success says only “Done.” A blank reply asks only “What should I say?” Audio is withheld unless its transcription matches the grounded acknowledgment.
 
-The original Git-tracked project is preserved byte-for-byte at `archive/chatpm`. It is not copied into the portfolio build. There is no active Sites integration. The root Dockerfile supports the existing Google Cloud Run deployment. Publishing to GitHub is separate from any live deployment.
+Each completed spoken input dispatches once; incremental transcript fragments never mutate cards. A model tool call uses fresh direct ASR, with a bounded spelling repair only for an explicitly heard action on the same selected card; negation and unrelated speech never qualify. If the model omits its tool call, the completed direct transcript still goes through the identical validated UI handler. A result is never reused for a later turn. Exact Gemini acknowledgment audio is preferred; if the model supplies unrelated narration, the client speaks only the verified short phrase using the browser voice rather than injecting additional model turns. The entire Live module/worklet dependency graph is content-versioned so a refreshed entry cannot retain old children.
 
-## Illustration language
+Live start/context synchronization reads existing account-owned shared metadata and exact saved card versions across all five tabs. An expired Fetch token is not a reason to ask for a manual refresh, Gmail refetch or model classification. Tab changes, redraws, viewport changes, dismissal and opening/closing a letter update the candidate proof automatically; invalid or foreign cards still fail safely.
 
-Loose editorial crayon illustration, with the friendly simplicity of Notion-style drawings. Use thick, imperfect dry-wax strokes, sparse expressive people, simple objects, generous negative space, and visible grain. Exactly three core tones: ink #17191F, cobalt #204DFF, and white. Cobalt is a selective accent. Avoid gradients, 3D, polished vector edges, decorative complexity, and lettering embedded in artwork. Keep illustrations static alongside the softly moving swarm. Use images to explain the service proposition, not merely fill space.
+Default demo cards show the source subject/title and at most three lines of source excerpt, with muted integrated actions. Classification explanations live behind the info icon. Hide prompt-library and shared-cache explanations from the main canvas. Normal destination cards never overlap or move across each other. Unsorted is one muted grey non-interactive top card with three decorative, aria-hidden, pointer-inert paper edges and a compact count; it is not a list of hundreds of rows. Retain every source item for full classification, but never include Unsorted in Live candidates or keyboard actions. Representative sorting ghosts are capped at three, clipped in a pointer-inert layer, and removed on completion/cancellation.
 
-## Services
+Explicit Reply opens a blank editable outgoing panel immediately alongside the original sender, subject and plain-text letter (stacked on mobile). The incoming source remains readable while the draft is prepared. Minimal owner guidance is expanded into a concise natural Gemini 3.8 Live draft; never require exact full-message dictation. Source context is provided to Live only after explicit reply. Final Send remains a reviewed UI action, never a voice tool.
 
-- MVP in days and weeks, not months: focused scope and a fast path to a first release.
-- Consumer insights as a core part of the proposition: listening, testing assumptions, and using findings to guide design and priorities.
-- End-to-end ownership, from concept to hosting: product, design, full stack development, deployment, and hosting.
+Reply, Done and Not important form a muted integrated bottom action row inside each card surface, not detached floating pills; touch targets remain at least 42px on phones. After confirmed Done/removal or an actually sent reply, highlight the next surviving item in the prior visible order. Do not advance for an unsent draft or a failed action; at the last visible item clear selection without wrapping. The same processing event serves manual and voice actions. Voice acknowledgment follows actual API persistence and rendered removal, not a model's unsupported claim.
+Portal proof cards: 26px radius, rgba(255,255,255,.83), 1px rgba(255,255,255,.9), 22px 24px padding, shadow 0 24px 70px rgba(54,70,111,.12), blur 20px.
+Analytics signal cards: white, 23px radius, 1px #e0e8f2, 22px padding, shadow 0 18px 50px rgba(47,67,104,.07); soft accent glow 180px circle at right:-85/top:-95, blur4px, opacity.2.
+Analytics proactive cards: radius20px, border #dfe7f1, 22px 24px padding, shadow 0 15px 45px rgba(43,64,100,.06), 3px accent top rule.
+Portal primary CTA: gradient 100deg #00cbae/#2584f4/#8338ec, 18px radius, 17px 22px padding, 800 weight, shadow 0 18px 42px rgba(58,134,255,.2). Dark secondary/demo action #15233d with white text. Quiet actions are small, not giant marketing CTAs.
+CRM currently adapts portal cards with analytics-style accent top rules. Job statuses Open/Inactive/Closed and sales Hot/Moderate/Cold always appear in text.
+Forms: retain clear labels, editable values, focus states, and explicit approval. Do not replace real controls with screenshot placeholders. Advanced prompt forms are hidden from the default demo.
 
-These are service positioning statements supplied by the user, not historical project metrics or unconditional delivery guarantees.
+## Interaction and accessibility
+Verified analytics focus outline: 2px #7589a7, offset4px. CRM adaptation uses 3px #3a86ff, offset3px. Preserve visible keyboard focus; minimum usable targets even where visual labels are small.
+New product requirements: semantic tablist/tab/tabpanel, arrow-key/Home/End navigation, card action via normal click/keyboard as well as right-click. Right-click is never the only way to label a card. Dialog Escape dismissal, focus return and a contained Tab loop. Decorative SVG is aria-hidden and ignores pointer events.
+Card movement/status labeling never sends mail. Draft edits reset approval; each exact outgoing message requires an explicit reviewed approval. Loading/error messages must remain truthful but brief; detailed provider/privacy explanation belongs in privacy documentation, not the default workspace.
 
-### Illustration asset and generation brief
+## Paper stacks: new CRM pattern, not claimed as existing Meridian
+Theme buttons use the same white/translucent card family. Two rotated paper layers (-3deg/+3deg), offsets5px/9px, .25s transform transition; hover rises4px. Expanded email cards enter over .25s with10px rise. Reduced motion disables transitions and animation. On phones stack grid has two columns and expanded emails one column. All expanded email text uses textContent, not HTML; no private remote tracking images or scripts.
 
-Asset: `assets/consumer-to-mvp-crayon.png`. Generated with the built-in image-generation tool; the original image is retained unchanged.
+## Reusable implementation mappings
+| Intent | Existing Meridian source | CRM adaptation |
+| --- | --- | --- |
+| Portal field and brand | .meridian-home, .mh-threads, .mh-brand | body, .workspace-threads, .brand-mark |
+| Navigation | .an-sidebar active / .mh-actions | .workspace-tabs [aria-selected=true] |
+| Task/signal card | .pr-unit-grid > article / .mh-proof article | .workspace-lanes .lane > .lead-card |
+| Quiet progress | .an-request-toast | .app-status, .scan-progress |
+| Expandable evidence | .pr-drivers | .lead-panel |
+| Theme exploration | new pattern | .paper-stack, .email-paper |
 
-Prompt: Use case: illustration-story. Asset type: editorial illustration for a Fractional Product Builder portfolio and its design system. Create one landscape 3:2 illustration on a pure white background with generous white space. A loose, thick, dry wax-crayon drawing: two simplified human figures at a table turn customer conversation (a simple empty speech bubble) into a small working product on a laptop, with a simple upward launch arrow. Contemporary Notion-like editorial sensibility, friendly and sophisticated, imperfect bold hand-drawn contours, rough crayon grain, sparse detail, oversized simple shapes. Strict three-tone palette only: near-black ink #17191F, cobalt blue #204DFF, and white. Blue used sparingly on clothing and one product detail. No gradients, no shading in additional colors, no 3D, no polished vector outlines. No text, no lettering, no logos, no watermark. Clean standalone illustration, not a screenshot or page mockup.
+Avoid selector collisions: .lane > button in the legacy CRM stylesheet also styles the Cold toggle; task cards must use the more specific .workspace-lanes .lane > .lead-card rule so they do not turn into a horizontal flex strip.
 
-## Project previews and contact
-
-Three initial project slots: e-commerce discovery concept, agentic engineering for paralegal firms, and a virtual employee for product teams. Sample screenshots are AI-generated conceptual interfaces and explicitly labeled as sample concept previews; they are not evidence of shipped functionality or client results. Replace these with the actual screenshots and case-study content when supplied. Each image links to its full-size local asset. The Contact Us links use `mailto:aditya@decisionos.me` and open the visitor's configured email client; there is no form submission or email-sending backend.
-
-### Sample screenshot generation briefs
-
-All three samples use the built-in image-generation tool, landscape 3:2, refined modern SaaS styling, strong sans-serif type, white/light-gray surfaces, ink text and restrained cobalt #204DFF. Interface only, no hardware frame, tilt, logos, real client names, or performance claims.
-
-- `assets/project-commerce.png`: consumer discovery interface with Discover/Saved/Collections navigation, a simple filter row and a 2×2 grid of a desk lamp, ceramic mug, headphones and tote bag.
-- `assets/project-paralegal.png`: matter workspace with Matters/Documents/Tasks navigation, generic example matters, document review, a Sources panel and Human review required.
-- `assets/project-employee.png`: product team workspace with Overview/Research/Backlog navigation; To explore/In progress/For review columns; feedback synthesis, product briefs, onboarding and release-note tasks; a Draft ready for review activity panel.
-
-## About positioning
-
-Use “Product thinker. Hands-on builder.” and the throughline “From the why, to the what, and finally the how.” The About profile connects the user's stated 15 years across development, design, and product management with hands-on execution and ownership from concept to hosting. Do not invent employers, accomplishments, education, or dates. The site now speaks as decisionos rather than a personal portfolio. Use firm branding and the shared editorial illustration style.
-
-## Lead proposition
-
-Lead with “Fractional Product Building” and “Get to market in weeks.” Frame the offer as a flexible consulting plan focused on market validation. The hero describes the proposition and customer outcome; experience belongs in About.
-
-## Service composition
-
-Show exactly three illustrated service pieces side by side on desktop, stacked on mobile. Use the customer-conversation drawing for consumer insights, a builder assembling a product for MVP delivery, and a concept-to-cloud drawing for end-to-end ownership. Do not repeat the consumer proposition in a separate introductory panel.
-
-Service illustration assets `assets/service-mvp.png` and `assets/service-ownership.png` were generated with the built-in image-generation tool. Briefs: a builder assembling a product interface on a laptop for fast MVP delivery; a builder at a laptop joined by a continuous line from a lightbulb to cloud hosting for ownership. Both use the shared 3:2, thick dry-crayon, ink/cobalt/white style with generous white space and no text.
-
-## About portrait
-
-The user supplied a face photograph and requested a matching illustrated portrait. Use it beside the About experience summary while keeping decisionos firm branding. Preserve the likeness and use the shared ink/cobalt/white crayon treatment. Asset: `assets/about-portrait.png`, generated with the built-in image-generation tool from the user-supplied photo and the existing customer-conversation illustration as a style-only reference.
-
-Portrait refinement prompt: make the portrait a clearly hand-drawn editorial caricature with an oversized rounded bald head, smaller shoulders, bold eyebrows, dot eyes, a simple friendly nose and a curved smile. Remove realistic eye anatomy, wrinkles and shading. Use only loose thick black crayon lines, a white face/background and a cobalt shirt with a few white plaid strokes. Preserve recognizable identity. The first realistic draft is not used on the site.
-
-## Alignment animation (supersedes the random swarm)
-
-Three labeled streams for product, design, and engineering start independently with gentle irregularity and converge into a shared smooth current. Fine continuous paths maintain the story when still; traveling marks communicate progress. Color and separation gradually resolve toward cobalt alignment. Pointer influence is bounded. Keep 30fps cap, offscreen/hidden suspension, mobile simplification, pause controls, and reduced-motion support. The landing headline is reduced by approximately 15% from the original scale.
-
-## Work and case-study pattern
-
-Provide a dedicated Our work index and a detail page for each project: question, why/what/how, interactive concept, design rationale, and what to validate. Initial content is explicitly a draft hypothesis with scripted sample interactions; no fabricated client outcomes. Reuse shared typography, colors, and responsive layouts. Keep the About grid columns shrinkable and cap the portrait width to protect the adjacent text.
-
-## Fluid convergence
-
-Three disciplines drift along layered, non-repeating waves before converging. A softly eased local pointer field bends the paths toward the cursor; influence fades when the cursor leaves. The shared endpoint remains coherent. Motion pauses offscreen, in hidden tabs, or through the Pause control, and reduced-motion preferences render a static view.
-
-## Case-study framing
-
-Stories explain what matters, why it matters, what needs to be done, and how the experience could evolve. Berlin Combat uses embedded storytelling as its central theme, with sourced context on Claude Fable 5.1 and GPT-6 Astra. The playable game is an exploration, not evidence of measured business results.
+## Screenshots and verification
+Screenshots must show an actual rendered UI. Use sanitized fixture accounts and label example data. No owner email contents in public screenshots. A capability illustration is not a product screenshot. Save a desktop and a verified390px mobile view; check document width, loaded images, cards, menu/keyboard flow and reduced motion. Do not claim actual provider operation based on fixtures: separately verify authenticated read-only mailbox processing and the named live model.

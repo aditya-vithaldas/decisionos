@@ -8,6 +8,7 @@ const fields = [...document.querySelectorAll('.swarm-canvas')].map(canvas => {
   const context = canvas.getContext('2d');
   if (!context) return null;
   const field = { canvas, context, width: 0, height: 0, time: 0, frame: 0, last: null, visible: true, x: .5, y: .4, aimX: .5, aimY: .4, influence: 0, aimInfluence: 0 };
+  const landing = canvas.closest('.swarm-landing');
   // Three disciplines begin independently, then converge into one smooth current.
   const laneColors = [[32, 77, 255], [95, 101, 114], [23, 25, 31]];
   const names = ['Product', 'Design', 'Engineering'];
@@ -21,7 +22,7 @@ const fields = [...document.querySelectorAll('.swarm-canvas')].map(canvas => {
       + .47 * Math.sin(u * 22.3 - t * .31 + phase * 1.73)
       + .24 * Math.sin(u * 7.1 + t * .67 + phase * 2.19);
     const envelope = Math.sin(Math.PI * Math.min(1, u * 1.6));
-    const center = (mobile.matches ? .35 : .40) + Math.sin(u * 4 - t * .22) * .017;
+    const center = (landing ? (mobile.matches ? .29 : .32) : (mobile.matches ? .35 : .40)) + Math.sin(u * 4 - t * .22) * .017;
     const x = .09 + .82 * u + Math.sin(u * 9 + phase + t * .37) * .007 * loose * envelope;
     const y = center + (lane - 1) * (mobile.matches ? .14 : .16) * loose
       + wave * (mobile.matches ? .028 : .045) * loose * envelope + strand * .005 * loose;
