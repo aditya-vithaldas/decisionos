@@ -1,0 +1,31 @@
+# Git
+.git/
+.gitignore
+
+# IDE/OS
+.claude/
+.DS_Store
+
+# Secrets
+.env
+credentials.json
+
+# Old Python backend
+backend/
+venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+backend-node/node_modules/
+
+# Database files
+*.db
+database/
+
+# Docs and scripts
+*.md
+*.sh
+*.yaml
+cloudbuild.yaml

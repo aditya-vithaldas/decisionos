@@ -1,0 +1,8 @@
+import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
+const endpoint='https://decisionos.me/analytics/api/demo/query';
+const fresh=process.env.BENCHMARK_FRESH==='1';
+const questions=fresh?['Plot daily revenue from December 25 through December 31, 2025','Compare total 2025 revenue across all regions','Plot the monthly number of website sessions during 2025','Rank the 10 highest spending customers in 2025','What was total revenue on December 15, 2025?','Compare revenue across every product category during 2025']:['Show daily sales for the last seven days','Show sales by region as a pie chart','Show monthly traffic for 2025','Show the top 10 customers by sales','Show sales for December 15, 2025','Show sales by product category for 2025'];
+const results=[];
+for(const question of questions){for(const repeat of [false,true]){const start=performance.now();const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://decisionos.me'},body:JSON.stringify({message:question})});const body=await response.json();assert.ok(response.ok,JSON.stringify(body));assert.equal(body.dataset.rows,50000000);assert.ok(body.generated.points.length>0);const result={question,repeat,clientRoundTripMs:performance.now()-start,...body.metrics,rows:body.generated.points.length,display:body.display,sql:body.sql};results.push(result);console.log(JSON.stringify(result));}}
+await writeFile(fresh?'docs/benchmark-50m-hosted-fresh.json':'docs/benchmark-50m-hosted.json',JSON.stringify({measuredAt:new Date().toISOString(),endpoint,totalRows:50000000,results},null,2));

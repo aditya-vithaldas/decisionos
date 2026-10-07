@@ -1,0 +1,424 @@
+<title>Gradient Feed Style Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Grand+Hotel&family=DM+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  /* brand gradient stops — identical in both themes */
+  --g-yellow:#FEDA75; --g-orange:#FA7E1E; --g-pink:#D62976; --g-purple:#962FBF; --g-blue:#4F5BD5;
+  --grad:linear-gradient(45deg,var(--g-yellow) 0%,var(--g-orange) 25%,var(--g-pink) 50%,var(--g-purple) 75%,var(--g-blue) 100%);
+  --grad-radial:radial-gradient(circle at 30% 107%,#FDF497 0%,#FDF497 5%,#FD5949 45%,#D6249F 60%,#285AEB 90%);
+  --heart:#FF3040; --link:#0095F6; --ok:#00A36C;
+
+  /* light UI neutrals */
+  --bg:#FAFAFA; --surface:#FFFFFF; --ink:#262626; --ink-2:#737373; --line:#DBDBDB; --chip:#EFEFEF;
+
+  --ease-glide:cubic-bezier(0.22,1,0.36,1);
+  --ease-pop:cubic-bezier(0.34,1.56,0.64,1);
+  --ease-swipe:cubic-bezier(0.65,0,0.35,1);
+
+  --display:"Plus Jakarta Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --script:"Grand Hotel","Brush Script MT",cursive;
+  --mono:"DM Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){color-scheme:dark;--bg:#000000;--surface:#121212;--ink:#F5F5F5;--ink-2:#A8A8A8;--line:#363636;--chip:#262626}
+}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#000000;--surface:#121212;--ink:#F5F5F5;--ink-2:#A8A8A8;--line:#363636;--chip:#262626}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--display);font-size:15px;line-height:1.55;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+h1,h2,h3{text-wrap:balance;margin:0}
+h2{font-size:28px;font-weight:800;letter-spacing:-0.02em}
+h3{font-size:16px;font-weight:700}
+p{margin:0;max-width:65ch}
+.muted{color:var(--ink-2)}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+code,.mono{font-family:var(--mono);font-size:13px}
+a{color:var(--link)}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px;border-radius:6px}
+
+/* nav — story-highlight chips */
+nav.hl{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding:10px 16px}
+nav.hl .row{max-width:1040px;margin:0 auto;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+nav.hl a{flex:none;text-decoration:none;color:var(--ink);font-weight:600;font-size:13px;padding:6px 14px;border-radius:999px;background:var(--chip)}
+nav.hl a:hover{background:var(--line)}
+
+section{padding-top:56px;display:grid;gap:20px}
+.head{display:grid;gap:6px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;padding-top:40px}
+.hero h1{font-size:clamp(36px,6vw,60px);font-weight:800;letter-spacing:-0.035em;line-height:1.02}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lede{font-size:17px;margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.pill{font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2)}
+
+/* phone mock — the reel title card */
+.phone{width:260px;max-width:100%;aspect-ratio:9/16;border-radius:32px;overflow:hidden;position:relative;background:var(--grad);box-shadow:0 30px 60px -25px rgba(150,47,191,.55);color:#fff}
+.phone .bars{position:absolute;top:14px;left:12px;right:12px;display:flex;gap:4px}
+.phone .bars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden}
+.phone .bars i:first-child::after{content:"";display:block;height:100%;width:100%;background:#fff}
+.phone .bars i:nth-child(2)::after{content:"";display:block;height:100%;background:#fff;animation:fill 5s linear infinite}
+.phone .who{position:absolute;top:28px;left:12px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700}
+.phone .who span.av{width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid rgba(255,255,255,.6);display:grid;place-items:center;color:var(--g-pink);font-weight:800;font-size:12px}
+.phone .title{position:absolute;left:18px;right:18px;top:38%;font-weight:800;font-size:30px;line-height:1.02;letter-spacing:-0.03em;animation:rise 5s var(--ease-glide) infinite}
+.phone .title small{display:block;font-family:var(--script);font-weight:400;font-size:28px;letter-spacing:0;margin-bottom:4px}
+.phone .cap{position:absolute;left:14px;right:60px;bottom:18px;font-size:12px;line-height:1.4}
+.phone .rail{position:absolute;right:12px;bottom:22px;display:grid;gap:14px;justify-items:center;font-size:11px;font-weight:700}
+.phone .rail svg{width:24px;height:24px}
+.phone .rail .h{animation:beat 5s var(--ease-pop) infinite;transform-origin:center}
+@keyframes fill{from{width:0}to{width:100%}}
+@keyframes rise{0%{opacity:0;transform:translateY(24px)}10%,88%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-8px)}}
+@keyframes beat{0%,40%{transform:scale(1)}46%{transform:scale(1.3)}54%,100%{transform:scale(1)}}
+
+/* cards */
+.grid{display:grid;gap:14px}
+.g5{grid-template-columns:repeat(5,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:8px;align-content:start}
+
+/* swatches */
+.sw{border-radius:14px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.sw .c{height:84px}
+.sw .t{padding:10px 12px;display:grid;gap:2px}
+.sw .t b{font-size:13px}
+.sw .t span{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.copy{all:unset;cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.copy:hover{color:var(--ink)}
+.bigband{height:120px;border-radius:18px;background:var(--grad)}
+.bigband.r{background:var(--grad-radial)}
+.bandlabel{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px}
+
+/* type specimens */
+.spec{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:baseline;padding:14px 0;border-top:1px solid var(--line)}
+.spec:last-child{border-bottom:1px solid var(--line)}
+.spec .lab{display:grid;gap:2px;font-size:12px;color:var(--ink-2)}
+.spec .lab b{color:var(--ink);font-size:13px}
+.spec .s{overflow-wrap:anywhere}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);font-weight:700}
+tr:last-child td{border-bottom:0}
+td code{font-size:12px}
+
+/* safe-zone diagram */
+.frames{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-end}
+.frame{display:grid;gap:8px;justify-items:start}
+.fr{position:relative;background:var(--chip);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.fr .safe{position:absolute;border:1.5px dashed var(--g-pink);border-radius:4px}
+.fr .ui{position:absolute;left:0;right:0;background:repeating-linear-gradient(45deg,transparent 0 6px,color-mix(in srgb,var(--ink-2) 22%,transparent) 6px 7px)}
+.fr .note{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--ink-2)}
+.frame .cap2{font-size:12px}
+.frame .cap2 b{display:block;font-size:13px}
+
+/* components */
+.stage{height:190px;border-radius:14px;background:var(--grad);position:relative;overflow:hidden;display:grid;place-items:center;color:#fff}
+.stage.plain{background:var(--chip);color:var(--ink)}
+.ring{width:84px;height:84px;border-radius:50%;padding:3px;background:var(--grad)}
+.ring > div{width:100%;height:100%;border-radius:50%;background:var(--surface);padding:3px}
+.ring > div > div{width:100%;height:100%;border-radius:50%;background:var(--grad-radial);display:grid;place-items:center;color:#fff;font-weight:800;font-size:24px}
+.lower{position:absolute;left:14px;right:14px;bottom:14px;display:flex;gap:10px;align-items:center;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:14px;padding:10px 12px;color:#fff;font-size:13px}
+.lower .av{width:30px;height:30px;border-radius:50%;background:#fff;flex:none}
+.lower b{display:block;font-size:13px}
+.bubble{background:var(--surface);color:var(--ink);border-radius:18px;padding:10px 14px;font-size:14px;max-width:80%;box-shadow:0 8px 24px -12px rgba(0,0,0,.35)}
+.bubble b{margin-right:6px}
+.cta{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;padding:12px 22px;border-radius:12px;background:var(--link);color:#fff;border:0}
+.cta.ghost{background:#fff;color:#262626}
+.sticker{font-weight:800;font-size:20px;letter-spacing:-0.01em;padding:8px 14px;border-radius:10px;background:#fff;color:#262626;transform:rotate(-4deg)}
+.sticker .grad-text{font-size:20px}
+.counter{display:flex;gap:14px;align-items:center;font-weight:700;font-size:15px}
+.counter svg{width:26px;height:26px}
+
+/* motion */
+.mo{display:grid;gap:10px}
+.mo .stage{height:150px}
+.mo button.replay{justify-self:start;font:600 12px var(--display);color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+.mo button.replay:hover{background:var(--line)}
+.mo .spec2{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.dot{width:40px;height:40px;border-radius:12px;background:#fff}
+.play .a-pop{animation:pop .45s var(--ease-pop) both}
+.play .a-glide{animation:glide .6s var(--ease-glide) both}
+.play .a-swipe{animation:swipe .5s var(--ease-swipe) both}
+.play .a-heart{animation:heart .8s var(--ease-pop) both}
+.play .a-words span{animation:word .4s var(--ease-glide) both}
+.play .a-ring{animation:spin 1.2s linear 2}
+.a-words{font-weight:800;font-size:24px;letter-spacing:-0.02em;display:flex;gap:8px}
+.a-words span{display:inline-block}
+.a-words span:nth-child(2){animation-delay:.08s!important}
+.a-words span:nth-child(3){animation-delay:.16s!important}
+.a-words span:nth-child(4){animation-delay:.24s!important}
+@keyframes pop{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes glide{0%{transform:translateY(40px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes swipe{0%{transform:translateX(160%)}100%{transform:none}}
+@keyframes heart{0%{transform:scale(0);opacity:0}35%{transform:scale(1.25);opacity:1}55%{transform:scale(.95)}70%{transform:scale(1)}85%{opacity:1}100%{transform:scale(1) translateY(-18px);opacity:0}}
+@keyframes word{0%{transform:translateY(14px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* do / don't */
+.dd{display:grid;gap:8px}
+.dd li{margin:0}
+.dd ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.tag{justify-self:start;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;color:#fff}
+.tag.do{background:var(--ok)}
+.tag.no{background:var(--heart)}
+
+/* token block */
+pre.tok{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.6}
+.tokhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.tokhead button{font:700 13px var(--display);background:var(--link);color:#fff;border:0;border-radius:10px;padding:8px 16px;cursor:pointer}
+
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr}
+  .phone{justify-self:center}
+  .g5{grid-template-columns:repeat(2,1fr)}
+  .g3,.g2{grid-template-columns:1fr}
+  .spec{grid-template-columns:1fr;gap:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<nav class="hl" aria-label="Sections">
+  <div class="row">
+    <a href="#canvas">Canvas</a><a href="#color">Color</a><a href="#type">Type</a><a href="#components">Components</a><a href="#motion">Motion</a><a href="#rules">Rules</a><a href="#tokens">Tokens</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <div>
+    <p class="eyebrow">Video style reference · v1 · 28 Sep 2026</p>
+    <h1>Warm gradient,<br><span class="grad-text">bold, bouncy type.</span></h1>
+    <p class="lede muted">One reference for every presentation video: the social-feed look of sunset gradients, bold geometric sans, rounded UI chrome, and springy micro-motion. Use these exact values in After Effects, Premiere, Canva, Keynote or code so every video matches. Companion docs: <a href="animation.md">animation.md</a> (story and motion) and <a href="illustration.md">illustration.md</a> (people). Videos now use the Lagoon palette with coral and sun contrast; see <a href="palettes.html">palettes.html</a>.</p>
+    <div class="meta"><span class="pill">9:16 Reels first</span><span class="pill">30 / 60 fps</span><span class="pill">Plus Jakarta Sans</span><span class="pill">Light + dark</span></div>
+  </div>
+  <div class="phone" role="img" aria-label="Example 9:16 title card using the gradient background, bold title and story progress bars">
+    <div class="bars"><i></i><i></i><i></i></div>
+    <div class="who"><span class="av">A</span> aditya · 2h</div>
+    <div class="title"><small>episode 04</small>Ship it in one weekend</div>
+    <div class="cap"><b>aditya</b> Three tools, zero meetings. Swipe for the setup ›</div>
+    <div class="rail">
+      <div class="h"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 21s-7.5-4.6-9.6-9.2C1 8.6 3 5 6.6 5c2 0 3.4 1.1 4.4 2.5C12 6.1 13.4 5 15.4 5 19 5 21 8.6 19.6 11.8 17.5 16.4 12 21 12 21z"/></svg>12.4k</div>
+      <div><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 12a8 8 0 1 1-3.1-6.3L21 4l-1.2 4.4A8 8 0 0 1 20 12z"/></svg>318</div>
+      <div><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M22 3 9.2 10.1M22 3l-7 18-3.8-8.9L2 9.4z"/></svg></div>
+    </div>
+  </div>
+</header>
+
+<!-- CANVAS -->
+<section id="canvas">
+  <div class="head"><p class="eyebrow">01 · Canvas</p><h2>Frame sizes and safe zones</h2>
+  <p class="muted">Design at the pixel sizes below. Keep text and faces inside the dashed box; the hatched bands are covered by platform UI (username, caption, buttons).</p></div>
+  <div class="frames">
+    <div class="frame">
+      <div class="fr" style="width:135px;height:240px">
+        <div class="ui" style="top:0;height:11.5%"></div><div class="ui" style="bottom:0;height:22%"></div>
+        <div class="safe" style="top:11.5%;bottom:22%;left:5.5%;right:12%"></div>
+        <div class="note">9:16</div>
+      </div>
+      <div class="cap2"><b>Reel / Story</b><span class="mono">1080 × 1920</span></div>
+    </div>
+    <div class="frame">
+      <div class="fr" style="width:160px;height:200px"><div class="safe" style="inset:6%"></div><div class="note">4:5</div></div>
+      <div class="cap2"><b>Feed portrait</b><span class="mono">1080 × 1350</span></div>
+    </div>
+    <div class="frame">
+      <div class="fr" style="width:160px;height:160px"><div class="safe" style="inset:6%"></div><div class="note">1:1</div></div>
+      <div class="cap2"><b>Square</b><span class="mono">1080 × 1080</span></div>
+    </div>
+    <div class="frame">
+      <div class="fr" style="width:284px;height:160px"><div class="safe" style="inset:5% 5%"></div><div class="note">16:9</div></div>
+      <div class="cap2"><b>Presentation / YouTube</b><span class="mono">1920 × 1080</span></div>
+    </div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Format</th><th>Size</th><th>Top keep-out</th><th>Bottom keep-out</th><th>Side margin</th><th>Right rail</th></tr></thead>
+    <tbody>
+      <tr><td>Reel / Story 9:16</td><td>1080 × 1920</td><td>220 px</td><td>420 px</td><td>60 px</td><td>130 px (buttons)</td></tr>
+      <tr><td>Feed 4:5</td><td>1080 × 1350</td><td>64 px</td><td>64 px</td><td>64 px</td><td>—</td></tr>
+      <tr><td>Square 1:1</td><td>1080 × 1080</td><td>64 px</td><td>64 px</td><td>64 px</td><td>—</td></tr>
+      <tr><td>Landscape 16:9</td><td>1920 × 1080</td><td>54 px</td><td>54 px</td><td>96 px</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- COLOR -->
+<section id="color">
+  <div class="head"><p class="eyebrow">02 · Color</p><h2>The sunset gradient</h2>
+  <p class="muted">Five stops, always in this order, always at 45°. Use it for backgrounds, rings, and one highlighted word per frame. Text on the gradient is always white.</p></div>
+  <div class="grid g5" id="stops"></div>
+  <div class="grid g2">
+    <div class="card"><div class="bigband"></div><div class="bandlabel"><b>Linear · primary</b><button class="copy" data-copy="linear-gradient(45deg, #FEDA75 0%, #FA7E1E 25%, #D62976 50%, #962FBF 75%, #4F5BD5 100%)">Copy CSS</button></div><p class="muted" style="font-size:13px">Backgrounds, title cards, gradient text. Angle 45°, yellow bottom-left to blue top-right.</p></div>
+    <div class="card"><div class="bigband r"></div><div class="bandlabel"><b>Radial · accent</b><button class="copy" data-copy="radial-gradient(circle at 30% 107%, #FDF497 0%, #FDF497 5%, #FD5949 45%, #D6249F 60%, #285AEB 90%)">Copy CSS</button></div><p class="muted" style="font-size:13px">Avatars, app-icon style tiles, end cards. Glow origin sits just below the bottom-left.</p></div>
+  </div>
+  <h3 style="margin-top:8px">UI neutrals and signal colors</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Role</th><th>Light</th><th>Dark</th><th>Use for</th></tr></thead>
+    <tbody>
+      <tr><td>Background</td><td><code>#FAFAFA</code></td><td><code>#000000</code></td><td>Plain frames behind UI mockups</td></tr>
+      <tr><td>Surface</td><td><code>#FFFFFF</code></td><td><code>#121212</code></td><td>Cards, comment bubbles, panels</td></tr>
+      <tr><td>Primary text</td><td><code>#262626</code></td><td><code>#F5F5F5</code></td><td>Headlines, body on neutral ground</td></tr>
+      <tr><td>Secondary text</td><td><code>#737373</code></td><td><code>#A8A8A8</code></td><td>Timestamps, captions, labels</td></tr>
+      <tr><td>Divider</td><td><code>#DBDBDB</code></td><td><code>#363636</code></td><td>Hairlines, card borders</td></tr>
+      <tr><td>Action blue</td><td colspan="2"><code>#0095F6</code></td><td>Buttons, links, "Follow" CTA only</td></tr>
+      <tr><td>Heart red</td><td colspan="2"><code>#FF3040</code></td><td>Likes, notifications, "live" badge</td></tr>
+      <tr><td>Scrim</td><td colspan="2"><code>rgba(0,0,0,0.35)</code> + 10 px blur</td><td>Lower thirds over footage</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- TYPE -->
+<section id="type">
+  <div class="head"><p class="eyebrow">03 · Type</p><h2>Bold geometric sans, one script accent</h2>
+  <p class="muted"><b>Plus Jakarta Sans</b> (free, Google Fonts) stands in for the platform's own geometric face. <b>Grand Hotel</b> is the script accent: at most three words per frame, never as a logo. Sizes are for a 1080-wide frame; multiply by 1.78 for 1920-wide.</p></div>
+  <div>
+    <div class="spec"><div class="lab"><b>Hero title</b>ExtraBold 800 · 120 px · −3.5% · lh 1.0</div><div class="s" style="font-weight:800;font-size:clamp(34px,5vw,52px);letter-spacing:-0.035em;line-height:1">Ship it in one weekend</div></div>
+    <div class="spec"><div class="lab"><b>Script kicker</b>Grand Hotel 400 · 96 px · 0 · lh 1.0</div><div class="s" style="font-family:var(--script);font-size:clamp(30px,4vw,42px);line-height:1">episode 04</div></div>
+    <div class="spec"><div class="lab"><b>Section title</b>ExtraBold 800 · 72 px · −2.5% · lh 1.05</div><div class="s" style="font-weight:800;font-size:clamp(26px,3.4vw,34px);letter-spacing:-0.025em;line-height:1.05">Step 2: connect the data</div></div>
+    <div class="spec"><div class="lab"><b>Body / caption</b>Medium 500 · 44 px · 0 · lh 1.35</div><div class="s" style="font-weight:500;font-size:20px;line-height:1.35">Three tools, zero meetings. Swipe for the full setup.</div></div>
+    <div class="spec"><div class="lab"><b>Username / label</b>Bold 700 · 36 px · 0</div><div class="s" style="font-weight:700;font-size:17px">aditya <span class="muted" style="font-weight:500">· 2h</span></div></div>
+    <div class="spec"><div class="lab"><b>Data / stat</b>ExtraBold 800 · 160 px · tabular</div><div class="s grad-text" style="font-weight:800;font-size:clamp(40px,6vw,64px);letter-spacing:-0.04em;line-height:1;font-variant-numeric:tabular-nums">12.4k</div></div>
+    <div class="spec"><div class="lab"><b>Code / values</b>DM Mono 500 · 32 px</div><div class="s mono" style="font-size:16px">pnpm run render --fps 30</div></div>
+  </div>
+  <p class="muted" style="font-size:13px">Case: sentence case for everything, lowercase for usernames and the script kicker. Max 6 words on a title card, max 2 lines of caption on screen at once.</p>
+</section>
+
+<!-- COMPONENTS -->
+<section id="components">
+  <div class="head"><p class="eyebrow">04 · Components</p><h2>Reusable on-screen pieces</h2>
+  <p class="muted">Build these once as templates in your editor. Radii: 12 px buttons, 14–18 px cards and bubbles, full circle for avatars and pills.</p></div>
+  <div class="grid g3">
+    <div class="card"><div class="stage plain"><div class="ring"><div><div>A</div></div></div></div><h3>Story ring avatar</h3><p class="muted" style="font-size:13px">Gradient ring 6 px, surface gap 6 px, at 1080 wide. Use for speaker intros.</p></div>
+    <div class="card"><div class="stage"><div class="sticker">new <span class="grad-text">drop</span></div><div class="lower"><div class="av"></div><div><b>Aditya Vithaldas</b>Engineering lead</div></div></div><h3>Lower third + sticker</h3><p class="muted" style="font-size:13px">Scrim at 35% black with blur. Sticker is white, rotated −4°.</p></div>
+    <div class="card"><div class="stage plain" style="gap:10px;align-content:center;justify-items:start;padding:16px"><div class="bubble"><b>maya</b>wait, this took one weekend?</div><div class="bubble"><b>jon</b>need the repo link 🙏</div></div><h3>Comment bubble</h3><p class="muted" style="font-size:13px">Use to show a question or reaction. Stagger in 120 ms apart.</p></div>
+    <div class="card"><div class="stage" style="gap:12px;align-content:center"><button class="cta" type="button" tabindex="-1">Follow for part 2</button><button class="cta ghost" type="button" tabindex="-1">Link in bio</button></div><h3>CTA buttons</h3><p class="muted" style="font-size:13px">Blue for the one main action, white on gradient for secondary. Bold 700.</p></div>
+    <div class="card"><div class="stage plain"><div class="counter"><svg viewBox="0 0 24 24" fill="#FF3040"><path d="M12 21s-7.5-4.6-9.6-9.2C1 8.6 3 5 6.6 5c2 0 3.4 1.1 4.4 2.5C12 6.1 13.4 5 15.4 5 19 5 21 8.6 19.6 11.8 17.5 16.4 12 21 12 21z"/></svg>12,408<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-3.1-6.3L21 4l-1.2 4.4A8 8 0 0 1 20 12z"/></svg>318</div></div><h3>Engagement counter</h3><p class="muted" style="font-size:13px">For showing results or stats. Numbers roll up over 600 ms.</p></div>
+    <div class="card"><div class="stage" style="align-content:start;padding:14px"><div style="display:flex;gap:4px;width:100%"><i style="flex:1;height:4px;border-radius:2px;background:#fff"></i><i style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></i><i style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></i><i style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></i></div></div><h3>Chapter progress bars</h3><p class="muted" style="font-size:13px">One segment per chapter, 8 px tall at 1080, 8 px gap, 40 px from top.</p></div>
+  </div>
+</section>
+
+<!-- MOTION -->
+<section id="motion">
+  <div class="head"><p class="eyebrow">05 · Motion</p><h2>Three curves, a handful of moves</h2>
+  <p class="muted">Motion is quick and springy: things pop in, glide up, or swipe across. Nothing drifts slowly. Tap a demo to replay it.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Curve</th><th>Cubic-bezier</th><th>After Effects (influence)</th><th>Use for</th></tr></thead>
+    <tbody>
+      <tr><td><b>Glide</b> (ease-out)</td><td><code>0.22, 1, 0.36, 1</code></td><td>out 0% · in 85%</td><td>Text and cards entering</td></tr>
+      <tr><td><b>Pop</b> (overshoot)</td><td><code>0.34, 1.56, 0.64, 1</code></td><td>scale 0 → 110 → 100 %</td><td>Hearts, stickers, avatars, badges</td></tr>
+      <tr><td><b>Swipe</b> (ease-in-out)</td><td><code>0.65, 0, 0.35, 1</code></td><td>out 65% · in 65%</td><td>Scene changes, slide transitions</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Token</th><th>ms</th><th>Frames @30</th><th>Frames @60</th><th>Use for</th></tr></thead>
+    <tbody>
+      <tr><td>micro</td><td>150</td><td>5</td><td>9</td><td>Button press, highlight flash</td></tr>
+      <tr><td>standard</td><td>300</td><td>9</td><td>18</td><td>Words in, bubbles in</td></tr>
+      <tr><td>pop</td><td>450</td><td>14</td><td>27</td><td>Heart, sticker, badge</td></tr>
+      <tr><td>scene</td><td>600</td><td>18</td><td>36</td><td>Title card in, slide swipe</td></tr>
+      <tr><td>word stagger</td><td>80 each</td><td>2–3</td><td>5</td><td>Title words cascading</td></tr>
+      <tr><td>hold per card</td><td>5 000</td><td>150</td><td>300</td><td>Story-style segment length</td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid g3">
+    <div class="mo"><div class="stage play" data-demo><div class="dot a-pop"></div></div><button class="replay" type="button">Replay · Pop in</button><span class="spec2">scale 0→1 · 450 ms · Pop</span></div>
+    <div class="mo"><div class="stage play" data-demo><div class="dot a-glide"></div></div><button class="replay" type="button">Replay · Glide up</button><span class="spec2">y +40→0, fade · 600 ms · Glide</span></div>
+    <div class="mo"><div class="stage play" data-demo><div class="dot a-swipe"></div></div><button class="replay" type="button">Replay · Swipe in</button><span class="spec2">x 160%→0 · 500 ms · Swipe</span></div>
+    <div class="mo"><div class="stage play" data-demo><svg class="a-heart" viewBox="0 0 24 24" width="72" height="72" fill="#fff"><path d="M12 21s-7.5-4.6-9.6-9.2C1 8.6 3 5 6.6 5c2 0 3.4 1.1 4.4 2.5C12 6.1 13.4 5 15.4 5 19 5 21 8.6 19.6 11.8 17.5 16.4 12 21 12 21z"/></svg></div><button class="replay" type="button">Replay · Double-tap heart</button><span class="spec2">0→125→95→100% then rise + fade · 800 ms</span></div>
+    <div class="mo"><div class="stage play" data-demo><div class="a-words"><span>Ship</span><span>it</span><span>this</span><span>weekend</span></div></div><button class="replay" type="button">Replay · Word cascade</button><span class="spec2">per word y +14→0 · 400 ms · 80 ms stagger</span></div>
+    <div class="mo"><div class="stage plain play" data-demo><div class="ring a-ring" style="width:72px;height:72px"><div><div style="font-size:20px">A</div></div></div></div><button class="replay" type="button">Replay · Ring spin</button><span class="spec2">ring rotates 360° · 1.2 s linear · loading / "live"</span></div>
+  </div>
+  <p class="muted" style="font-size:13px">Transitions between scenes: swipe left (600 ms, Swipe curve) or a hard cut on the beat. No dissolves, no spins on text, no bounce on body copy.</p>
+</section>
+
+<!-- RULES -->
+<section id="rules">
+  <div class="head"><p class="eyebrow">06 · Rules</p><h2>Keep it consistent</h2></div>
+  <div class="grid g2">
+    <div class="card dd"><span class="tag do">Do</span><ul>
+      <li>Keep one gradient per frame, at 45°, stops in order.</li>
+      <li>Put white text on the gradient; dark text only on neutral ground.</li>
+      <li>Highlight one word per title with gradient text on neutral frames.</li>
+      <li>Use the script face for a short kicker above the title.</li>
+      <li>Land every animation on a round resting state within 600 ms.</li>
+      <li>Burn in captions in Medium 500, max two lines, inside the safe zone.</li>
+    </ul></div>
+    <div class="card dd"><span class="tag no">Don't</span><ul>
+      <li>Use the Instagram logo, glyph or wordmark: this is a look, not their brand.</li>
+      <li>Reverse, rotate, or recolor the gradient stops.</li>
+      <li>Set body text in the script face or in all caps.</li>
+      <li>Use action blue and heart red as decoration.</li>
+      <li>Place text in the top 220 px or bottom 420 px of a Reel.</li>
+      <li>Stack more than two motions on one element at the same time.</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- TOKENS -->
+<section id="tokens">
+  <div class="head tokhead"><div><p class="eyebrow">07 · Tokens</p><h2>Copy-paste values</h2></div><button type="button" id="copyTokens">Copy tokens</button></div>
+  <pre class="tok" id="tokText">:root {
+  /* gradient (45°) */
+  --g-yellow: #FEDA75;  --g-orange: #FA7E1E;  --g-pink: #D62976;
+  --g-purple: #962FBF;  --g-blue:   #4F5BD5;
+  --grad: linear-gradient(45deg, #FEDA75 0%, #FA7E1E 25%, #D62976 50%, #962FBF 75%, #4F5BD5 100%);
+  --grad-radial: radial-gradient(circle at 30% 107%, #FDF497 0%, #FDF497 5%, #FD5949 45%, #D6249F 60%, #285AEB 90%);
+
+  /* neutrals: light | dark */
+  --bg: #FAFAFA | #000000;     --surface: #FFFFFF | #121212;
+  --ink: #262626 | #F5F5F5;    --ink-2: #737373 | #A8A8A8;
+  --line: #DBDBDB | #363636;
+  --action: #0095F6;  --heart: #FF3040;  --scrim: rgba(0,0,0,.35);
+
+  /* type */
+  --font-display: "Plus Jakarta Sans";   /* 800 titles, 700 labels, 500 body */
+  --font-script:  "Grand Hotel";         /* kicker only */
+  --font-mono:    "DM Mono";
+  /* sizes @1080w: hero 120 · section 72 · stat 160 · body 44 · label 36 */
+
+  /* motion */
+  --ease-glide: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-swipe: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 150ms; --dur-std: 300ms; --dur-pop: 450ms; --dur-scene: 600ms;
+  --stagger: 80ms;    --hold: 5000ms;
+
+  /* shape */
+  --r-btn: 12px; --r-card: 16px; --r-bubble: 18px; --r-pill: 999px;
+}</pre>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var stops=[["Yellow","#FEDA75"],["Orange","#FA7E1E"],["Pink","#D62976"],["Purple","#962FBF"],["Blue","#4F5BD5"]];
+  var box=document.getElementById("stops");
+  stops.forEach(function(s,i){
+    var d=document.createElement("div");d.className="sw";
+    d.innerHTML='<div class="c" style="background:'+s[1]+'"></div><div class="t"><b>'+s[0]+' · '+(i*25)+'%</b><button class="copy" data-copy="'+s[1]+'">'+s[1]+'</button></div>';
+    box.appendChild(d);
+  });
+  function copy(text,btn){
+    var old=btn.textContent;
+    function done(){btn.textContent="Copied";setTimeout(function(){btn.textContent=old},1200)}
+    try{navigator.clipboard.writeText(text).then(done,function(){sel()})}catch(e){sel()}
+    function sel(){var r=document.createRange();r.selectNodeContents(btn);var s=getSelection();s.removeAllRanges();s.addRange(r)}
+  }
+  document.addEventListener("click",function(e){
+    var b=e.target.closest("[data-copy]");if(b){copy(b.getAttribute("data-copy"),b);return}
+    if(e.target.id==="copyTokens"){copy(document.getElementById("tokText").textContent,e.target);return}
+    var r=e.target.closest(".replay");var st=r?r.previousElementSibling:e.target.closest("[data-demo]");
+    if(st){st.classList.remove("play");void st.offsetWidth;st.classList.add("play")}
+  });
+})();
+</script>

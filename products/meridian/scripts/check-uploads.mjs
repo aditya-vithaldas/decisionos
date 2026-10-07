@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import * as XLSX from 'xlsx';
+import {parseUploads,checkUploadLimit,MAX_UPLOAD_BYTES,uploadSchema,evaluateQuery} from '../lib/upload-data.ts';
+assert.doesNotThrow(()=>checkUploadLimit([{size:MAX_UPLOAD_BYTES}]));assert.throws(()=>checkUploadLimit([{size:MAX_UPLOAD_BYTES+1}]),/maximum of 10 MB/);assert.throws(()=>checkUploadLimit([{size:4}],MAX_UPLOAD_BYTES-3));
+const csv=new File(['date,sales,region\n2026-09-01,100,North\n2026-09-02,150,South\n2026-09-02,50,North\n'],'sales.csv');
+const steps=[];let data=await parseUploads([csv],null,(n)=>steps.push(n));assert.equal(data.tables[0].rows.length,3);assert.equal(steps.at(-1),100);
+let result=evaluateQuery(data,{tables:['table_0'],metric:'sales',aggregation:'sum',groupBy:'date',grain:'day',kind:'line',display:'chart',title:'Daily sales',unit:'USD'});assert.deepEqual(result.generated.points,[{label:'2026-09-01',value:100},{label:'2026-09-02',value:200}]);
+result=evaluateQuery(data,{tables:['table_0'],metric:'sales',aggregation:'sum',filters:[{column:'date',op:'eq',value:'2026-09-02'}],kind:'bar',display:'number',title:'Sales',unit:'USD'});assert.equal(result.generated.points[0].value,200);
+const book=XLSX.utils.book_new();XLSX.utils.book_append_sheet(book,XLSX.utils.aoa_to_sheet([['date','orders'],[new Date('2026-09-01T00:00:00Z'),4]]),'Orders');const excel=new File([XLSX.write(book,{type:'array',bookType:'xlsx'})],'orders.xlsx');data=await parseUploads([excel],data,()=>{});assert.equal(data.tables.length,2);assert.equal(data.tables[1].rows[0].orders,4);assert.equal(uploadSchema(data)[1].columns[0].type,'date');
+assert.throws(()=>evaluateQuery(data,{tables:['table_0'],metric:'invented',aggregation:'sum',kind:'line',display:'number',title:'Bad',unit:'USD'}),/not in/);
+console.log('10 MB boundaries, cumulative limit, CSV, Excel, full-row sums, date filtering, progress, multiple files and schema checks passed.');

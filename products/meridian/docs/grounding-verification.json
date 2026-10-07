@@ -1,0 +1,103 @@
+{
+  "datasetRows": 10000000,
+  "status": "Acceptance tests passed; query gateway and Sites version 13 published with owner approval on 2026-09-18",
+  "checks": [
+    "Real DuckDB fixture tests",
+    "Order/item continuity and three-to-one count",
+    "Independent intent contract and total reconciliation",
+    "Browser investigation selection/back navigation",
+    "Unsupported median refused; prior chart preserved",
+    "Uploaded CSV independently reviewed; total $300 verified",
+    "No page overflow at 1280x720"
+  ],
+  "queries": [
+    {
+      "question": "How many completed orders were there in December 2025?",
+      "grounding": {
+        "status": "checked",
+        "metric": "orders",
+        "checks": [
+          "schema-and-grain",
+          "allowlisted-sql",
+          "independent-intent-review",
+          "control-total-reconciled"
+        ],
+        "scope": "2025-12-01 \u2013 2025-12-31"
+      },
+      "metrics": {
+        "planningMs": 1016.3003730000019,
+        "sqlMs": 43.14664099999936,
+        "validationMs": 815.0217940000002,
+        "reconciliationMs": 14.763665000034962,
+        "serverMs": 1213.3855120000007,
+        "planCacheHit": false
+      }
+    },
+    {
+      "question": "And how many order items?",
+      "grounding": {
+        "status": "checked",
+        "metric": "order_items",
+        "checks": [
+          "schema-and-grain",
+          "allowlisted-sql",
+          "independent-intent-review",
+          "control-total-reconciled"
+        ],
+        "scope": "2025-12-01 \u2013 2025-12-31"
+      },
+      "metrics": {
+        "planningMs": 1255.5178610000003,
+        "sqlMs": 50.2009309999994,
+        "validationMs": 864.4716810000027,
+        "reconciliationMs": 26.169179999968037,
+        "serverMs": 1363.1566549999989,
+        "planCacheHit": false
+      }
+    },
+    {
+      "question": "Why did traffic go down in December compared with November 2025?",
+      "grounding": {
+        "status": "checked",
+        "metric": "traffic",
+        "checks": [
+          "schema-and-grain",
+          "allowlisted-sql",
+          "independent-intent-review",
+          "control-total-reconciled"
+        ],
+        "scope": "2025-11-01 \u2013 2025-12-31"
+      },
+      "metrics": {
+        "planningMs": 1359.4812380000003,
+        "sqlMs": 16.15034100000048,
+        "validationMs": 883.4387080000015,
+        "reconciliationMs": 3.626892999978736,
+        "serverMs": 1405.1035630000006,
+        "planCacheHit": false
+      }
+    },
+    {
+      "question": "Step 1",
+      "grounding": {
+        "status": "checked",
+        "metric": "traffic",
+        "checks": [
+          "schema-and-grain",
+          "allowlisted-sql",
+          "independent-intent-review",
+          "control-total-reconciled"
+        ],
+        "scope": "2025-12-01 \u2013 2025-12-31 vs 2025-11-01 \u2013 2025-11-30"
+      },
+      "metrics": {
+        "planningMs": 1489.5970809999963,
+        "sqlMs": 10.567576000001281,
+        "validationMs": 982.3336119999985,
+        "reconciliationMs": 5.128227000008337,
+        "serverMs": 1533.5930030000018,
+        "planCacheHit": false
+      }
+    }
+  ]
+}

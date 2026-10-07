@@ -1,0 +1,9 @@
+{
+  "name": "liveanalyst-duckdb",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@duckdb/node-api": "1.5.5-r.5"
+  },
+  "license": "MIT"
+}

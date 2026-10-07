@@ -1,0 +1,6 @@
+*
+!server/
+!server/**
+server/node_modules/
+
+!principles.md

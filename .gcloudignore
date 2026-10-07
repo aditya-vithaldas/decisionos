@@ -1,31 +1,56 @@
-# Git
-.git/
-.gitignore
+*
+!Dockerfile
+!package.json
+!scripts/
+!scripts/build.mjs
+!scripts/build-meridian.mjs
+!scripts/serve.mjs
+!scripts/contact-api.mjs
+!scripts/crm-api.mjs
+!scripts/crm-opportunities.mjs
+!scripts/crm-gmail.mjs
+!scripts/crm-prompts.mjs
+!scripts/feedback-api.mjs
+!feedback/
+!feedback/**
+!scripts/commerce-api.mjs
+!crm/
+!crm/**
+!index.html
+!design-system.html
+!assets/
+!assets/**
+!case-studies.html
+!projects/
+!projects/**
 
-# IDE/OS
-.claude/
-.DS_Store
+!package-lock.json
 
-# Secrets
-.env
-credentials.json
+!scripts/build-seo.mjs
+!scripts/seo-pages.json
 
-# Old Python backend
-backend/
-venv/
-__pycache__/
-*.pyc
+!thanks.html
 
-# Node
-node_modules/
-backend-node/node_modules/
+!services/
+!services/**
 
-# Database files
-*.db
-database/
+!images/
+!images/**
+!toptal-application.html
+!toptal-application.css
+!toptal-application.js
 
-# Docs and scripts
-*.md
-*.sh
-*.yaml
-cloudbuild.yaml
+!products/
+!products/**
+products/meridian/node_modules/
+products/meridian/dist/
+products/meridian/dist-portfolio/
+products/meridian/dist-commerce/
+products/meridian/.vinext/
+products/meridian/.wrangler/
+!scripts/analytics-api.mjs
+
+!scripts/generate-analytics.mjs
+
+!scripts/demo-api.mjs
+!scripts/demo-planner.mjs

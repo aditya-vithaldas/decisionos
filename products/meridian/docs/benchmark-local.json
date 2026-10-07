@@ -1,0 +1,42 @@
+{
+  "environment": "Local development machine; cloud benchmarks reported separately",
+  "databaseBytes": 230436864,
+  "totalRows": 10000000,
+  "results": [
+    {
+      "name": "daily_sales",
+      "firstMs": 6.642291,
+      "warmP50Ms": 3.8923750000000013,
+      "warmP95Ms": 4.65016700000001,
+      "rows": 365
+    },
+    {
+      "name": "regional_sales",
+      "firstMs": 27.997416000000015,
+      "warmP50Ms": 11.092583000000019,
+      "warmP95Ms": 12.143499999999989,
+      "rows": 10
+    },
+    {
+      "name": "top_customers",
+      "firstMs": 25.09729200000004,
+      "warmP50Ms": 22.176958000000013,
+      "warmP95Ms": 22.974125000000015,
+      "rows": 10
+    },
+    {
+      "name": "category_sales",
+      "firstMs": 40.247292000000016,
+      "warmP50Ms": 21.681917,
+      "warmP95Ms": 22.399749999999926,
+      "rows": 8
+    },
+    {
+      "name": "monthly_traffic",
+      "firstMs": 25.97395800000004,
+      "warmP50Ms": 14.930749999999989,
+      "warmP95Ms": 15.138957999999889,
+      "rows": 12
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "measuredAt": "2026-09-18T06:49:53.521Z",
+  "endpoint": "https://decisionos.me/analytics/api/demo/query",
+  "totalRows": 50000000,
+  "results": [
+    {
+      "question": "Show daily sales for the last seven days",
+      "repeat": false,
+      "clientRoundTripMs": 309.970375,
+      "planningMs": 0,
+      "sqlMs": 39.5114880000001,
+      "serverMs": 61.97045200000866,
+      "planCacheHit": true,
+      "rows": 7,
+      "display": "chart",
+      "sql": "SELECT CAST(o.order_date AS VARCHAR) AS \"label\", SUM(o.net_amount) AS \"value\" FROM orders AS o WHERE o.status = 'completed' AND o.order_date BETWEEN '2025-12-25' AND '2025-12-31' GROUP BY o.order_date ORDER BY o.order_date ASC"
+    },
+    {
+      "question": "Show daily sales for the last seven days",
+      "repeat": true,
+      "clientRoundTripMs": 83.10412500000001,
+      "planningMs": 0,
+      "sqlMs": 4.450213000000076,
+      "serverMs": 20.624989999996615,
+      "planCacheHit": true,
+      "rows": 7,
+      "display": "chart",
+      "sql": "SELECT CAST(o.order_date AS VARCHAR) AS \"label\", SUM(o.net_amount) AS \"value\" FROM orders AS o WHERE o.status = 'completed' AND o.order_date BETWEEN '2025-12-25' AND '2025-12-31' GROUP BY o.order_date ORDER BY o.order_date ASC"
+    },
+    {
+      "question": "Show sales by region as a pie chart",
+      "repeat": false,
+      "clientRoundTripMs": 649.372875,
+      "planningMs": 0,
+      "sqlMs": 569.2619749999994,
+      "serverMs": 584.4950539999991,
+      "planCacheHit": true,
+      "rows": 10,
+      "display": "chart",
+      "sql": "SELECT r.region_name AS \"label\", SUM(o.net_amount) AS \"value\" FROM regions r JOIN customers c ON r.region_id = c.region_id JOIN orders o ON c.customer_id = o.customer_id WHERE o.status = 'completed' GROUP BY r.region_id, r.region_name ORDER BY \"value\" DESC"
+    },
+    {
+      "question": "Show sales by region as a pie chart",
+      "repeat": true,
+      "clientRoundTripMs": 216.27591699999994,
+      "planningMs": 0,
+      "sqlMs": 137.0581059999986,
+      "serverMs": 154.44832999999926,
+      "planCacheHit": true,
+      "rows": 10,
+      "display": "chart",
+      "sql": "SELECT r.region_name AS \"label\", SUM(o.net_amount) AS \"value\" FROM regions r JOIN customers c ON r.region_id = c.region_id JOIN orders o ON c.customer_id = o.customer_id WHERE o.status = 'completed' GROUP BY r.region_id, r.region_name ORDER BY \"value\" DESC"
+    },
+    {
+      "question": "Show monthly traffic for 2025",
+      "repeat": false,
+      "clientRoundTripMs": 1001.9313330000002,
+      "planningMs": 0,
+      "sqlMs": 921.9259849999999,
+      "serverMs": 939.9075570000132,
+      "planCacheHit": true,
+      "rows": 12,
+      "display": "chart",
+      "sql": "SELECT STRFTIME('%Y-%m', session_date) AS \"label\", COUNT(*) AS \"value\" FROM sessions WHERE session_date BETWEEN '2025-01-01' AND '2025-12-31' GROUP BY 1 ORDER BY 1"
+    },
+    {
+      "question": "Show monthly traffic for 2025",
+      "repeat": true,
+      "clientRoundTripMs": 108.77108300000009,
+      "planningMs": 0,
+      "sqlMs": 25.9650189999993,
+      "serverMs": 42.865208000002895,
+      "planCacheHit": true,
+      "rows": 12,
+      "display": "chart",
+      "sql": "SELECT STRFTIME('%Y-%m', session_date) AS \"label\", COUNT(*) AS \"value\" FROM sessions WHERE session_date BETWEEN '2025-01-01' AND '2025-12-31' GROUP BY 1 ORDER BY 1"
+    },
+    {
+      "question": "Show the top 10 customers by sales",
+      "repeat": false,
+      "clientRoundTripMs": 1641.2007500000004,
+      "planningMs": 0,
+      "sqlMs": 1560.072567000001,
+      "serverMs": 1576.025833000007,
+      "planCacheHit": true,
+      "rows": 10,
+      "display": "chart",
+      "sql": "SELECT c.customer_name AS \"label\", SUM(oi.net_amount) AS \"value\" FROM orders o JOIN order_items oi ON o.order_id = oi.order_id JOIN customers c ON o.customer_id = c.customer_id WHERE o.status = 'completed' GROUP BY c.customer_id, c.customer_name ORDER BY \"value\" DESC LIMIT 10"
+    },
+    {
+      "question": "Show the top 10 customers by sales",
+      "repeat": true,
+      "clientRoundTripMs": 1548.9134170000002,
+      "planningMs": 0,
+      "sqlMs": 1468.3088849999986,
+      "serverMs": 1483.9026659999945,
+      "planCacheHit": true,
+      "rows": 10,
+      "display": "chart",
+      "sql": "SELECT c.customer_name AS \"label\", SUM(oi.net_amount) AS \"value\" FROM orders o JOIN order_items oi ON o.order_id = oi.order_id JOIN customers c ON o.customer_id = c.customer_id WHERE o.status = 'completed' GROUP BY c.customer_id, c.customer_name ORDER BY \"value\" DESC LIMIT 10"
+    },
+    {
+      "question": "Show sales for December 15, 2025",
+      "repeat": false,
+      "clientRoundTripMs": 86.72587500000009,
+      "planningMs": 0,
+      "sqlMs": 3.026471000001038,
+      "serverMs": 17.45238899999822,
+      "planCacheHit": true,
+      "rows": 1,
+      "display": "number",
+      "sql": "SELECT strftime(order_date, '%Y-%m-%d') AS \"label\", SUM(net_amount) AS \"value\" FROM orders WHERE status = 'completed' AND order_date = '2025-12-15' GROUP BY order_date"
+    },
+    {
+      "question": "Show sales for December 15, 2025",
+      "repeat": true,
+      "clientRoundTripMs": 81.47279200000048,
+      "planningMs": 0,
+      "sqlMs": 3.0395410000019183,
+      "serverMs": 19.071937000000617,
+      "planCacheHit": true,
+      "rows": 1,
+      "display": "number",
+      "sql": "SELECT strftime(order_date, '%Y-%m-%d') AS \"label\", SUM(net_amount) AS \"value\" FROM orders WHERE status = 'completed' AND order_date = '2025-12-15' GROUP BY order_date"
+    },
+    {
+      "question": "Show sales by product category for 2025",
+      "repeat": false,
+      "clientRoundTripMs": 810.3024999999998,
+      "planningMs": 0,
+      "sqlMs": 730.5271549999998,
+      "serverMs": 744.8872090000077,
+      "planCacheHit": true,
+      "rows": 40,
+      "display": "chart",
+      "sql": "SELECT t1.category_name AS \"label\", SUM(t3.net_amount) AS \"value\" FROM categories AS t1 JOIN products AS t2 ON t1.category_id = t2.category_id JOIN order_items AS t3 ON t2.product_id = t3.product_id JOIN orders AS t4 ON t3.order_id = t4.order_id WHERE t4.status = 'completed' AND t4.order_date >= '2025-01-01' AND t4.order_date <= '2025-12-31' GROUP BY t1.category_name ORDER BY \"value\" DESC"
+    },
+    {
+      "question": "Show sales by product category for 2025",
+      "repeat": true,
+      "clientRoundTripMs": 787.7012089999998,
+      "planningMs": 0,
+      "sqlMs": 710.9201140000005,
+      "serverMs": 727.9241699999984,
+      "planCacheHit": true,
+      "rows": 40,
+      "display": "chart",
+      "sql": "SELECT t1.category_name AS \"label\", SUM(t3.net_amount) AS \"value\" FROM categories AS t1 JOIN products AS t2 ON t1.category_id = t2.category_id JOIN order_items AS t3 ON t2.product_id = t3.product_id JOIN orders AS t4 ON t3.order_id = t4.order_id WHERE t4.status = 'completed' AND t4.order_date >= '2025-01-01' AND t4.order_date <= '2025-12-31' GROUP BY t1.category_name ORDER BY \"value\" DESC"
+    }
+  ]
+}

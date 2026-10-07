@@ -1,0 +1,393 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Meridian — Commerce Intelligence</title>
+<style>
+@font-face{font-family:PJS;src:url(fonts/pjs-500.woff);font-weight:500}
+@font-face{font-family:PJS;src:url(fonts/pjs-700.woff);font-weight:700}
+@font-face{font-family:PJS;src:url(fonts/pjs-800.woff);font-weight:800}
+@font-face{font-family:Script;src:url(fonts/grandhotel.woff)}
+@font-face{font-family:Mono;src:url(fonts/dmmono-500.woff);font-weight:500}
+:root{
+  --grad:linear-gradient(45deg,#69BDF2 0%,#4E83E6 32%,#7B61C9 62%,#EA765E 84%,#F6C65B 100%);
+  --grad-radial:radial-gradient(circle at 30% 107%,#FFF1C6 0%,#F6C65B 15%,#EA765E 42%,#7B61C9 68%,#4E83E6 95%);
+  --coral:#EA6F5D; --coral-rgb:234,111,93; --sun:#F6C65B; --cyan:#87D7FF;
+  --surface:#FFFFFF; --ink:#1D2940; --ink-2:#6F7890; --line:#E5E1E5;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#FFFCF7;color:var(--ink);font-family:PJS,system-ui,sans-serif}
+.scene{position:absolute;inset:0;overflow:hidden;display:none;transform-origin:50% 50%}
+.dark{background:radial-gradient(1000px 820px at 92% -8%,rgba(78,131,230,.12),transparent 65%),radial-gradient(950px 800px at -6% 108%,rgba(246,198,91,.13),transparent 66%),#FFFCF7}
+.gradbg{background:var(--grad);background-size:160% 160%;color:#fff}
+.gt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.m{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+.m>.w{display:inline-block}
+#wipebar{position:absolute;top:0;bottom:0;width:5px;margin-left:-2px;background:var(--coral);box-shadow:0 0 24px rgba(var(--coral-rgb),.7);z-index:20;display:none}
+#fade{position:absolute;inset:0;background:#000;opacity:0;z-index:30;pointer-events:none}
+.av{border-radius:50%;overflow:hidden;background:var(--grad-radial);border:3px solid #fff;flex:none}
+.av img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* story (the asker) */
+.story{flex-direction:column;padding:56px 160px 0}
+.story .bars{display:flex;gap:10px}
+.story .bars i{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.35);overflow:hidden}
+.story .bars i b{display:block;height:100%;width:0;background:#fff}
+.story .who{display:flex;align-items:center;gap:22px;margin-top:40px}
+.story .who .av{width:92px;height:92px}
+.story .nm{font-weight:800;font-size:34px}
+.story .nm span{font-weight:500;opacity:.85;margin-left:12px}
+.story .kick{font-family:Script,cursive;font-size:88px;line-height:1.15;margin-top:90px}
+.story .q{font-weight:800;font-size:90px;letter-spacing:-0.04em;line-height:1.05;max-width:1020px}
+.story .bub{align-self:flex-start;margin-top:48px;background:#fff;color:#1d1d22;border-radius:28px;padding:22px 32px;font-size:34px;font-weight:500;box-shadow:0 20px 50px -20px rgba(0,0,0,.35)}
+.story .bub b{margin-right:12px;color:var(--coral)}
+.story .illo{position:absolute;right:70px;bottom:0;width:680px;height:1000px}
+.story .illo::before{content:'';position:absolute;left:40px;right:0;top:120px;height:760px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.28),rgba(255,255,255,0))}
+.story .illo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%}
+.story .sbub{position:absolute;left:-10px;top:150px;width:120px;height:104px;border-radius:30px;background:#fff;display:grid;place-items:center;font-weight:800;font-size:68px;color:var(--coral);box-shadow:0 20px 40px -14px rgba(0,0,0,.35)}
+.story .sbub::after{content:'';position:absolute;right:18px;bottom:-16px;border:12px solid transparent;border-top-color:#fff;border-left-color:#fff}
+
+/* gradient card */
+.gc{flex-direction:column;justify-content:center;padding:0 160px;gap:10px}
+.gc .kicker{font-family:Script,cursive;font-size:104px;line-height:1.15}
+.gc .title{font-weight:800;font-size:200px;letter-spacing:-0.045em;line-height:1}
+.gc .sub{font-weight:500;font-size:44px;margin-top:22px}
+.gc .url{margin-top:44px;align-self:flex-start;font-family:Mono;font-size:34px;padding:16px 30px;border-radius:999px;background:#fff;color:#1d1d22}
+.gc .foot{position:absolute;left:160px;bottom:70px;font-weight:500;font-size:24px;opacity:.9}
+
+/* arc breadcrumb */
+.arc{position:absolute;left:96px;right:96px;top:60px;display:flex;gap:12px}
+.arc .seg{flex:1;display:flex;flex-direction:column;gap:12px}
+.arc .bar{height:6px;border-radius:3px;background:#E4EAF2;overflow:hidden}
+.arc .bar i{display:block;height:100%;width:0;background:var(--grad);background-size:1728px 100%}
+.arc .lbl{font-weight:700;font-size:18px;letter-spacing:.12em;text-transform:uppercase;color:#A2ADBC}
+.arc .seg.on .lbl{color:var(--ink)}
+.arc .seg.done .lbl{color:#8b8b93}
+
+/* app: the visual is the hero; left column explains it */
+.lc{position:absolute;left:96px;top:170px;width:540px;display:flex;flex-direction:column;gap:20px}
+.spk{position:relative;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:26px;padding:24px 26px;display:flex;flex-direction:column;gap:12px;box-shadow:0 24px 56px -36px rgba(34,67,115,.42)}
+.spk::before{content:'';position:absolute;left:0;top:24px;bottom:24px;width:5px;border-radius:0 5px 5px 0;background:var(--grad)}
+.spk .hd{display:flex;align-items:center;gap:14px;font-weight:700;font-size:19px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.spk .av{width:48px;height:48px;border-width:2px}
+.spk .mer{width:48px;height:48px;border-radius:50%;background:var(--grad);display:grid;place-items:center;flex:none}
+.spk .mer svg{width:22px;height:22px}
+.spk .tx{font-weight:800;font-size:36px;line-height:1.16;letter-spacing:-0.025em;min-height:82px}
+.caret{display:inline-block;width:3px;height:34px;background:var(--coral);vertical-align:-6px;margin-left:3px}
+.eyebrow{font-weight:700;font-size:18px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.how{display:flex;flex-direction:column;gap:10px;opacity:.76}
+.how .eyebrow{font-size:15px;letter-spacing:.12em}
+.how ol{position:relative;height:48px;margin:0;padding:0;list-style:none}
+.how li{position:absolute;inset:0;display:flex;gap:12px;align-items:center;font-weight:500;font-size:21px;line-height:1.25;color:var(--ink-2);opacity:0}
+.how li i{font-style:normal;font-family:Mono;font-size:14px;color:#243049;background:#EDF1F7;border:1px solid #DDE4ED;border-radius:999px;min-width:27px;height:27px;display:grid;place-items:center;flex:none}
+.why{border-radius:22px;padding:24px 26px;background:rgba(255,201,74,.13);border:1px solid rgba(255,201,74,.42);display:flex;flex-direction:column;gap:10px;box-shadow:0 18px 42px -38px rgba(246,198,91,.8)}
+.why .eyebrow{color:var(--sun)}
+.why p{margin:0;font-weight:800;font-size:31px;line-height:1.22;letter-spacing:-.018em}
+.reply{align-self:flex-start;display:flex;gap:14px;align-items:center;background:#fff;color:#1d1d22;border-radius:24px;padding:10px 22px 10px 10px;font-size:28px;font-weight:600}
+.reply .av{width:46px;height:46px;border-width:2px}
+.reply b{color:var(--coral);font-weight:800}
+.win{position:absolute;left:680px;top:170px;width:1144px;border-radius:22px;overflow:hidden;background:#FFFFFF;border:1px solid var(--line);box-shadow:0 50px 110px -55px rgba(112,97,185,.38),0 24px 48px -36px rgba(31,53,87,.24)}
+.win .chrome{height:48px;display:flex;align-items:center;gap:10px;padding:0 20px}
+.win .chrome i{width:13px;height:13px;border-radius:50%;background:#DCE5EF}
+.win .chrome .url{margin-left:18px;flex:1;max-width:520px;height:30px;border-radius:15px;background:#F3F6FA;font-family:Mono;font-size:16px;color:#7D8898;display:flex;align-items:center;padding:0 16px}
+.vp{position:relative;width:1144px;height:644px;overflow:hidden;background:#f5f5f7}
+.world{position:absolute;left:0;top:0;width:1600px;transform-origin:0 0}
+.world img{position:absolute;left:0;top:0;width:1600px;height:auto}
+.san{position:absolute;inset:0;width:1600px;pointer-events:none;font-family:PJS,system-ui,sans-serif;color:#10182b}
+.san .cover{position:absolute}
+.san-answer .workspace-mask{left:1240px;top:0;width:360px;height:58px;background:#fff}
+.san-answer .dataset-mask{left:0;top:135px;width:1305px;height:225px;background:#f4f7fc}
+.san-answer .badge-mask{left:1320px;top:135px;width:260px;height:62px;background:#f4f7fc}
+.san-answer .demo-mask{left:650px;top:535px;width:510px;height:112px;background:#fff}
+.san-answer .perf-mask{left:1305px;top:270px;width:295px;height:630px;background:#f4f7fc}
+.san-answer .source-mask{left:90px;top:858px;width:1050px;height:42px;background:#f4f7fc}
+.san-answer .answer-intro{position:absolute;left:110px;top:175px;width:700px;color:#1d2940}
+.san-answer .answer-intro small{font:12px Mono;letter-spacing:.14em;color:#3973c3}
+.san-answer .answer-intro b{display:block;font-size:31px;margin-top:10px}
+.san-answer .answer-proof{position:absolute;left:700px;top:570px;width:420px;height:48px;border-radius:24px;background:#f3f6fa;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#637083}
+.san-act{height:900px;background:#f3f6fa}
+.san-act .act-shot{position:absolute;inset:0;padding:72px 76px;background:#f3f6fa}
+.san-act .act-shot-two{opacity:0}
+.san-act .act-kicker{font:12px Mono;letter-spacing:.14em;color:#3973c3;margin-bottom:12px}
+.san-act .act-title{font-size:46px;line-height:1.06;letter-spacing:-.04em;margin:0}
+.san-act .act-sub{font-size:18px;line-height:1.5;color:#6f7b8f;margin:13px 0 0}
+.san-act .benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:42px}
+.san-act .benefits article{min-height:126px;border:1px solid #dce5ef;border-radius:16px;background:#fff;padding:23px 24px;box-shadow:0 18px 38px -34px rgba(31,53,87,.45)}
+.san-act small{display:block;font:11px Mono;letter-spacing:.12em;color:#3973c3;margin-bottom:11px}
+.san-act b{display:block;font-size:20px;line-height:1.28}
+.san-act .signal-card{margin-top:22px;border:1px solid #dce5ef;border-radius:18px;background:#fff;padding:26px 30px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:30px;box-shadow:0 20px 44px -38px rgba(31,53,87,.55)}
+.san-act .signal-card h4{font-size:30px;margin:0 0 8px}.san-act .signal-card p{font-size:17px;color:#6f7b8f;margin:0}.san-act .signal-card em{font:12px Mono;font-style:normal;color:#0c7c6f;background:#e7f7f3;border-radius:999px;padding:12px 16px}
+.san-act .plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:44px}
+.san-act .plan{position:relative;min-height:330px;border:1px solid #dce5ef;border-radius:20px;background:#fff;padding:30px 34px;box-shadow:0 18px 42px -36px rgba(31,53,87,.5)}
+.san-act .plan h4{font-size:29px;margin:0 0 14px}.san-act .plan p{font-size:17px;line-height:1.55;color:#637083;max-width:600px;margin:0}
+.san-act .plan .statusline{position:absolute;left:34px;right:34px;bottom:32px;height:70px;border-radius:14px;background:linear-gradient(90deg,#eefaf7,#eef4ff,#f5f0ff);display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:16px;font-weight:700}
+.san-act .plan .statusline em{font:12px Mono;font-style:normal;color:#3973c3}
+.san-act .continuity{margin-top:22px;border-radius:15px;background:#17243c;color:#fff;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;font-size:17px}.san-act .continuity span{color:#aebbd0}.san-act .continuity b{font-size:17px;color:#00e0c3}
+.dim{position:absolute;left:0;top:0;width:1600px;background:rgba(5,5,10,.55);opacity:0}
+.pull{position:absolute;border-radius:10px;box-shadow:0 30px 60px rgba(0,0,0,.45);outline:3px solid #fff;opacity:0;transform-origin:50% 50%}
+.capchip{position:absolute;right:26px;bottom:22px;max-width:1040px;background:#fff;color:#1d1d22;border-radius:14px;padding:14px 20px;font-size:24px;font-weight:700;opacity:0;box-shadow:0 20px 40px -10px rgba(0,0,0,.35)}
+.capchip em{font-style:normal;font-family:Mono;color:var(--coral);margin-left:8px}
+.ptrs{position:absolute;left:0;top:0;width:1600px;overflow:visible}
+.ptrs path{fill:none;stroke:var(--coral);stroke-width:4}
+.ptrs circle.d{fill:var(--coral)}
+.ptrs circle.h{fill:none;stroke:var(--coral);stroke-width:4}
+.ptag{position:absolute;transform:translateY(-50%);background:#172033;color:#fff;border-radius:999px;padding:12px 22px;font-size:26px;font-weight:700;white-space:nowrap;opacity:0;box-shadow:0 14px 30px -14px rgba(23,32,51,.45)}
+.ptag em{font-style:normal;font-family:Mono;color:var(--sun);margin-left:8px}
+
+/* check (like-for-like): the same answer-screen grammar, with a chart as the visual */
+.calc .calc-left{top:164px}
+.calc .spk .tx{font-size:32px;min-height:auto}
+.calc .calc-vis{position:absolute;left:680px;top:170px;width:1144px;height:750px;border-radius:24px;background:var(--surface);border:1px solid var(--line);padding:44px 46px;box-shadow:0 50px 120px -40px rgba(112,97,185,.38)}
+.calc .calc-k{font-family:Script;font-size:46px;color:var(--sun);line-height:1}
+.calc .hl{font-weight:800;font-size:55px;letter-spacing:-0.035em;line-height:1.05;margin-top:8px}
+.calc .bars{display:flex;flex-direction:column;gap:28px;margin-top:46px}
+.calc .row{display:grid;grid-template-columns:250px 1fr 110px;gap:22px;align-items:center}
+.calc .row b{font-family:Mono;font-weight:500;font-size:29px;text-align:right}
+.calc .row b.hot{color:var(--coral)}
+.calc .row span{font-weight:700;font-size:27px}
+.calc .track{position:relative;height:56px;border-radius:12px;background:#EEF2F7;border:1px solid var(--line);overflow:hidden}
+.calc .fill{position:absolute;left:0;top:0;bottom:0;border-radius:12px;transform-origin:left center}
+.calc .fill.soft{background:#A9B4C5;color:#fff}
+.calc .fill.hot{background:var(--coral)}
+.calc .axis{font-weight:500;font-size:19px;color:#8b8b93;margin:16px 0 0 272px}
+.calc .summary{font-weight:600;font-size:26px;line-height:1.35;margin:36px 0 0;max-width:1000px}
+.calc .foot{font-weight:500;font-size:18px;color:#8b8b93;margin-top:18px}
+.sig{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.sig path{fill:none;stroke:url(#sg);stroke-linecap:round;stroke-width:1.4;stroke-dasharray:1200;stroke-dashoffset:1200;opacity:.28}.sig circle{opacity:.28}.arc,.lc,.win,.calc-vis{z-index:1}.calc-left{z-index:1}
+</style></head>
+<body>
+<div id="wipebar"></div>
+<div id="fade"></div>
+<script>
+const BP=60/132;
+const $=(sel,root=document)=>root.querySelector(sel);
+const $$=(sel,root=document)=>[...root.querySelectorAll(sel)];
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const glide=x=>{x=clamp(x);return 1-Math.pow(1-x,4)};
+const swipe=x=>{x=clamp(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const pop=x=>{x=clamp(x);const c1=1.56,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+// animation.md §4: lines slide up through a mask, no blur
+const lines=arr=>arr.map(l=>typeof l==='string'?`<span class="m"><span class="w">${l}</span></span>`:`<span class="m"><span class="w gt">${l.g}</span></span>`).join('');
+function revealLines(el,lb,at){const ws=$$('.w',el);ws.forEach((w,i)=>{const e=glide((lb-at-i*0.26)/1.3);w.style.transform=`translateY(${(1-e)*105}%)`;});return at+ws.length*0.26;}
+function rise(el,lb,at,dy=20){if(!el)return 0;const e=glide((lb-at)/1.3);el.style.transform=`translateY(${(1-e)*dy}px)`;el.style.opacity=clamp(e*1.5);return e;}
+function popIn(el,lb,at){const e=pop((lb-at)/1.2);el.style.opacity=clamp((lb-at)/0.4);el.style.transform=`translateY(${(1-e)*30}px) scale(${0.94+0.06*e})`;}
+// Reasoning is a quiet trace, not a second headline. One short step occupies
+// the slot at a time; the next replaces it after roughly 1.4 seconds.
+function cycleTrace(items,lb,at,step=3.1){items.forEach((li,i)=>{const start=at+i*step,next=at+(i+1)*step;const enter=glide((lb-start)/.7),leave=i===items.length-1?1:1-glide((lb-(next-.45))/.45);li.style.opacity=clamp(enter*leave);li.style.transform=`translateY(${(1-enter)*8-(1-leave)*5}px)`;});}
+const typed=(el,text,lb,t0,t1)=>{const p=clamp((lb-t0)/(t1-t0));el.textContent=text.slice(0,Math.round(text.length*p));return p;};
+
+// illustration.md: Maya, Head of Sales (generated with gpt-image-1, see people/)
+const MAYA={name:'Maya',title:'Head of Sales',img:{ask:'assets/maya-notice-v3.png',pleased:'assets/maya-act-v3.png'},avatar:'assets/maya-avatar-v3.png'};
+const mayaAv=()=>`<div class="av"><img src="${MAYA.avatar}"></div>`;
+const MER='<div class="mer"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M6 16v-4M10 16V8M14 16v-6M18 16V5"/></svg></div>';
+const C=f=>`../captures/${f}.png`;
+const loads=s=>[0,1,2,3,4,5].map(i=>C(`${s}_loading_${i}`));
+const ARC=['Signal','Size it','Locate','Explain','Check it','Act'];
+const sigMarkup=()=>`<svg class="sig" viewBox="0 0 1920 1080" preserveAspectRatio="none"><defs><linearGradient id="sg" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#FFD083" stop-opacity=".14"/><stop offset=".45" stop-color="#EA765E" stop-opacity=".34"/><stop offset=".76" stop-color="#7B61C9" stop-opacity=".58"/><stop offset="1" stop-color="#4E83E6" stop-opacity=".78"/></linearGradient></defs><path d="M-80 980 C260 830 330 1030 610 820 C850 640 770 380 1080 440 C1370 496 1440 180 1990 120"/><path d="M-60 970 C230 1060 390 800 610 820 C850 842 830 550 1080 440 C1350 322 1570 420 1990 130"/><path d="M-70 980 C280 700 380 860 610 820 C830 780 910 470 1080 440 C1380 390 1590 160 1990 120"/><circle cx="610" cy="820" r="5" fill="#EA765E"/><circle cx="1080" cy="440" r="6" fill="#7B61C9"/><circle cx="1089" cy="431" r="2" fill="#4E83E6"/></svg>`;
+function animateSig(el,lb){$$('.sig path',el).forEach((p,i)=>{p.style.strokeDashoffset=1200*(1-glide((lb-i*.25)/5.2));p.style.opacity=.10+.22*glide((lb-i*.25)/5.2)});$$('.sig circle',el).forEach((c,i)=>{c.style.opacity=.08+.42*glide((lb-2-i*.2)/2);c.style.transformOrigin=c.getAttribute('cx')+'px '+c.getAttribute('cy')+'px';c.style.transform=`scale(${.7+.3*pop((lb-2-i*.2)/1.1)})`;});}
+
+// ---------- the story (beats; beat 0 = start of the 60 s Meridian cover) ----------
+// Each answer screen: the visual is the hero; left column says how Meridian got there and why a buyer should care.
+const SC=[
+ {t:'gc',b0:0,b1:12,kicker:'meridian noticed',title:'−$1.92M',sub:'November sales fell from October. Signal identified before the review began.',foot:'No prompt required · Evidence ready'},
+ {t:'story',b0:12,b1:20,tr:'wipe',expr:'ask',kick:'campaign review',q:['Did Halloween','finish differently','from plan?'],bub:['Meridian','I started with what actually changed.'],bubAt:5.7},
+ {t:'app',b0:20,b1:40,tr:'depth',arc:1,who:'meridian',say:'November fell $1.92M. Three paths show where.',type:[0.3,2.8],
+   prev:C('home'),load:loads('size'),L:2.8,done:C('size_done'),
+   how:['Detected the November decline','Compared with October','Sized the gap'],
+   why:'Start with a verified signal—not a blank dashboard.',
+   reply:{at:13.2,text:'Start with regions. Which market explains most of the drop?'},
+   cam:[[0,800,450,1],[5.2,800,450,1],[6.8,720,560,1.12]],
+   co:[{k:'ptr',at:7.4,pt:[870,590],lab:[1010,510],text:'Down <em>$1.92M</em> vs October'},
+       {k:'ptr',at:9.6,pt:[900,766],lab:[1010,690],text:'Three ways to investigate',tap:15}]},
+ {t:'app',b0:40,b1:56,tr:'wipe',arc:2,who:'meridian',say:'Western Europe is the largest regional fall.',type:[0.2,2.9],
+   prev:C('size_done'),load:loads('locate'),L:0.8,done:C('locate_done'),
+   how:['Split the change by region','Ranked each share of the drop'],
+   why:'Move from what changed to where—in one follow-up.',
+   cam:[[0,800,450,1],[3.2,800,450,1],[4.8,700,560,1.12]],
+   co:[{k:'pull',at:6.4,box:[131,738,1117,42],lift:[0,-150,1.32],cap:'Biggest regional fall · Western Europe',em:'$4,930,542 · down $328,613'}]},
+ {t:'app',b0:56,b1:72,tr:'wipe',arc:3,who:'meridian',say:'Fragrance is the largest category fall overall.',type:[0.3,2.5],
+   prev:C('locate_done'),load:loads('explain'),L:3.2,done:C('explain_done'),
+   how:['Kept the same two months','Split the change by category'],
+   why:'Ask again without rebuilding the analysis.',
+   cam:[[0,800,450,1],[5.6,800,450,1],[7,700,560,1.12]],
+   co:[{k:'pull',at:8.6,box:[131,738,1117,42],lift:[0,-150,1.32],cap:'Biggest category fall · Fragrance',em:'$1,199,033 · down $111,173'}]},
+ {t:'calc',b0:72,b1:86,tr:'wipe',arc:4},
+ {t:'story',b0:86,b1:96,tr:'wipe',expr:'pleased',kick:'choose the action',q:['We saw this before.','Pull in that case—and','watch Western Europe.'],bub:['Meridian','I’ll keep the evidence separate and start the daily watch.'],bubAt:6.2},
+ {t:'app',b0:96,b1:112,tr:'depth',arc:5,who:'meridian',say:'The prior case is open. Western Europe is now on a daily watch.',type:[0.3,3.5],
+   prev:C('home'),load:null,done:C('act_proactive_full'),H:1350,D:3.4,
+   how:['Joined the call with evidence','Reopened the prior case','Started a daily watch'],
+   why:'Context stays with the team after the call.',
+   cam:[[0,800,450,1],[16,800,450,1]],
+   co:[{k:'ptr',at:5.8,until:8.4,pt:[1240,603],lab:[1090,535],text:'Checks every morning'},
+       {k:'ptr',at:11.2,pt:[1175,610],lab:[1010,540],text:'Watches for sustained declines'}]},
+ {t:'story',b0:112,b1:120,tr:'wipe',expr:'pleased',kick:'ready to act',q:['Thanks, Meridian.','You did good.'],bub:['Meridian','All set. I’ll keep watching.'],bubAt:5.3},
+ {t:'gc',b0:120,b1:132,tr:'wipe',kicker:'commerce intelligence',title:'meridian',sub:'Industry intelligence. Your business context. One connected conversation.',url:'decisionos.me/analytics',foot:'Find what changed · Understand what matters · Know what to do next'},
+];
+const END=132, T={wipe:1.4,depth:1.8}, DELAY={wipe:0.4,depth:0.3};
+const VPX=681, VPY=219; // viewport origin inside the window (left + border, top + border + chrome)
+
+// ---------- build one DOM per scene ----------
+function build(s){
+  const el=document.createElement('div'); el.className='scene'; document.body.appendChild(el); s.el=el;
+  if(s.t==='story'){ el.classList.add('gradbg','story');
+    el.innerHTML=`<div class="bars"><i><b></b></i><i><b></b></i><i><b></b></i></div>
+      <div class="who">${mayaAv()}<div class="nm">${MAYA.name} · ${MAYA.title}<span>· Monday review</span></div></div>
+      <div class="kick">${s.kick}</div><div class="q">${lines(s.q)}</div>
+      <div class="bub"><b>${s.bub[0]}</b>${s.bub[1]}</div>
+      <div class="illo"><img src="${MAYA.img[s.expr]}"><div class="sbub">${s.expr==='pleased'?'✓':'?'}</div></div>`; }
+  if(s.t==='gc'){ el.classList.add('gradbg','gc');
+    el.innerHTML=`<div class="kicker">${s.kicker}</div><div class="title">${lines([s.title])}</div><div class="sub">${s.sub}</div>${s.url?`<div class="url">${s.url}</div>`:''}${s.foot?`<div class="foot">${s.foot}</div>`:''}`; }
+  if(s.t==='app'||s.t==='calc') el.insertAdjacentHTML('beforeend',`<div class="arc">${ARC.map((a,i)=>`<div class="seg ${i<s.arc?'done':i===s.arc?'on':''}"><div class="bar"><i style="background-position:-${i*288}px 0"></i></div><div class="lbl">${a}</div></div>`).join('')}</div>`);
+  if(s.t==='app'){ el.classList.add('dark');
+    el.insertAdjacentHTML('beforeend',sigMarkup());
+    const H=s.H||900;
+    const head=s.who==='maya'?`${mayaAv()}<span>${MAYA.name} · ${MAYA.title}</span>`:`${MER}<span>Meridian</span>`;
+    el.insertAdjacentHTML('beforeend',`
+      <div class="lc"><div class="spk"><div class="hd">${head}</div><div class="tx"><span class="say"></span><span class="caret"></span></div></div>
+        <div class="why"><div class="eyebrow">Why it matters</div><p>${s.why}</p></div>
+        <div class="how"><div class="eyebrow">How Meridian got there</div><ol>${s.how.map((h,i)=>`<li><i>${i+1}</i><span>${h}</span></li>`).join('')}</ol></div>
+        ${s.reply?`<div class="reply">${mayaAv()}<span><b>${MAYA.name}</b> ${s.reply.text}</span></div>`:''}</div>
+      <div class="win"><div class="chrome"><i></i><i></i><i></i><div class="url">decisionos.me/analytics</div></div>
+        <div class="vp"><div class="world" style="height:${H}px"><img class="A"><img class="B">
+          ${s.arc===5?`<div class="san san-act">
+            <section class="act-shot act-shot-one"><div class="act-kicker">FROM SIGNAL TO ACTION</div><h3 class="act-title">The investigation continues after the meeting.</h3><p class="act-sub">One evidence trail moves with the team—from discovery to discussion to follow-through.</p><div class="benefits"><article><small>PROACTIVE</small><b>Signal found before the meeting</b></article><article><small>ZOOM</small><b>Your analyst answers in the call</b></article><article><small>SLACK</small><b>The same investigation continues afterward</b></article></div><article class="signal-card"><div><small>ACTIVE WATCH</small><h4>Western Europe is now monitored daily</h4><p>The original comparison and evidence remain attached.</p></div><em>CHECKS EVERY MORNING</em></article></section>
+            <section class="act-shot act-shot-two"><div class="act-kicker">PLAN IN MOTION</div><h3 class="act-title">Two owners. One connected investigation.</h3><p class="act-sub">Each team gets the relevant evidence without rebuilding the analysis.</p><div class="plan-grid"><article class="plan"><small>REGIONAL FOLLOW-UP</small><h4>Western Europe review</h4><p>The regional team receives the largest decline, its comparison, and the evidence already attached.</p><div class="statusline"><span>Daily Meridian re-check</span><em>ACTIVE WATCH</em></div></article><article class="plan"><small>CATEGORY FOLLOW-UP</small><h4>Fragrance review</h4><p>The category team receives the same two-month context, ready for its own action.</p><div class="statusline"><span>Watching sustained declines</span><em>CONTEXT KEPT</em></div></article></div><div class="continuity"><span>Commerce knowledge + business context + live evidence</span><b>INVESTIGATION STAYS ACTIVE</b></div></section>
+          </div>`:`<div class="san san-answer"><div class="cover workspace-mask"></div><div class="cover dataset-mask"></div><div class="cover badge-mask"></div><div class="cover demo-mask"></div><div class="cover perf-mask"></div><div class="cover source-mask"></div><div class="answer-intro"><small>LIVE INVESTIGATION</small><b>One question. Evidence attached.</b></div><div class="answer-proof">November vs October · context kept</div></div>`}
+          <div class="dim" style="height:${H}px"></div><div class="pulls"></div>
+          <svg class="ptrs" viewBox="0 0 1600 ${H}" style="height:${H}px"></svg><div class="tags"></div></div>
+          <div class="caps"></div></div></div>`);
+    for(const c of s.co){
+      if(c.k==='pull'){ const [x,y,w,h]=c.box; c.dom=document.createElement('div'); c.dom.className='pull';
+        Object.assign(c.dom.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px',background:`url(${s.done}) -${x}px -${y}px / 1600px auto no-repeat`});
+        $('.pulls',el).appendChild(c.dom);
+        c.cdom=document.createElement('div'); c.cdom.className='capchip'; c.cdom.innerHTML=`${c.cap}<em>${c.em}</em>`; $('.caps',el).appendChild(c.cdom); }
+      if(c.k==='ptr'){ const [px,py]=c.pt,[lx,ly]=c.lab, svg=$('.ptrs',el);
+        svg.insertAdjacentHTML('beforeend',`<path d="M${px} ${py} L${px} ${ly} L${lx} ${ly}"/><circle class="h" cx="${px}" cy="${py}" r="14"/><circle class="d" cx="${px}" cy="${py}" r="9"/>`);
+        const ps=$$('path',svg), cs=$$('circle',svg); c.path=ps[ps.length-1]; c.halo=cs[cs.length-2]; c.dot=cs[cs.length-1]; c.len=c.path.getTotalLength();
+        c.path.style.strokeDasharray=c.len;
+        c.tag=document.createElement('div'); c.tag.className='ptag'; c.tag.innerHTML=c.text;
+        c.tag.style.top=ly+'px'; c.tag.style.left=(lx-6)+'px';
+        $('.tags',el).appendChild(c.tag); }
+    }
+  }
+  if(s.t==='calc'){ el.classList.add('dark','calc');
+    el.insertAdjacentHTML('beforeend',sigMarkup());
+    const rows=[['Total','−0.5%',0.5,'soft'],['Western Europe','−3.1%',3.1,'hot'],['Fragrance','−5.4%',5.4,'hot']];
+    el.insertAdjacentHTML('beforeend',`<div class="lc calc-left">
+        <div class="spk"><div class="hd">${MER}<span>Meridian</span></div><div class="tx">Daily rates reveal the real declines.</div></div>
+        <div class="why"><div class="eyebrow">Why it matters</div><p>Act on the real problem—not the calendar.</p></div>
+        <div class="how"><div class="eyebrow">How Meridian got there</div><ol>
+          <li><i>1</i><span>Kept the same months</span></li>
+          <li><i>2</i><span>Normalized revenue by days</span></li>
+          <li><i>3</i><span>Compared daily rates</span></li>
+        </ol></div>
+      </div>
+      <div class="calc-vis"><div class="calc-k">like for like</div><div class="hl">${lines(['Change in sales per day'])}</div>
+        <div class="bars">${rows.map(([n,v,p,c])=>`<div class="row"><span>${n}</span><div class="track"><div class="fill ${c}" data-w="${p/6*100}"></div></div><b class="${c}">${v}</b></div>`).join('')}</div>
+        <div class="axis">November vs October</div>
+        <p class="summary">November had 30 days; October had 31. Total sales barely moved per day. Western Europe and Fragrance are the real declines.</p>
+        <div class="foot">Calculated from Meridian revenue divided by days in each month.</div>
+      </div>`); }
+}
+
+// ---------- per-scene animation (lb = beats since content start) ----------
+const R={
+ story(s,lb,b){ const el=s.el;
+   el.style.backgroundPosition=`${50+Math.sin(b*BP*.35)*40}% ${50+Math.cos(b*BP*.3)*40}%`;
+   $$('.bars b',el).forEach((x,i)=>x.style.width=(i===(s.b0?1:0)?clamp((lb+0.4)/(s.b1-s.b0))*100:(s.b0&&i===0?100:0))+'%');
+   const av=$('.who .av',el), e=pop(lb/1.2); av.style.transform=`scale(${e})`; av.style.opacity=clamp(lb/0.4);
+   rise($('.nm',el),lb,0.3,16); rise($('.kick',el),lb,0.8,24);
+   revealLines($('.q',el),lb,1.3);
+   popIn($('.bub',el),lb,s.bubAt);
+   // illustration.md §5: rises in, breathes, blinks, gestures while asking
+   const il=$('.illo',el), ie=glide((lb-0.2)/1.6);
+   il.style.transform=`translateY(${(1-ie)*90 + Math.sin(b*BP*1.6)*3}px) scale(${1+0.006*Math.sin(b*BP*1.1)})`; il.style.transformOrigin='50% 100%'; il.style.opacity=clamp(ie*1.5);
+   const sb=$('.sbub',il), pe=pop((lb-1.8)/1.1); sb.style.transformOrigin='90% 100%'; sb.style.transform=`scale(${pe})`; sb.style.opacity=clamp((lb-1.8)/0.4);
+ },
+ gc(s,lb,b){ const el=s.el;
+   el.style.backgroundPosition=`${50+Math.sin(b*BP*.35)*40}% ${50+Math.cos(b*BP*.3)*40}%`;
+   rise($('.kicker',el),lb,0,28); const e=revealLines($('.title',el),lb,0.3);
+   rise($('.sub',el),lb,e+0.3); rise($('.url',el),lb,e+1.1); rise($('.foot',el),lb,e+1.8,12);
+ },
+ app(s,lb,b){ const el=s.el, H=s.H||900;
+   animateSig(el,lb);
+   const on=$('.arc .seg.on .bar i',el); if(on) on.style.width=clamp((lb+0.4)/1.6)*100+'%';
+   $$('.arc .seg.done .bar i',el).forEach(i=>i.style.width='100%');
+   const L=s.L||0, seq=s.load?[...s.load.map((f,i)=>[L+[0,.5,1,1.25,1.5,1.75][i],f,0.2]),[L+2,s.done,0.45]]:[[-99,s.done,0.01]];
+   let k=-1; seq.forEach(([bb],i)=>{if(lb>=bb) k=i;});
+   const A=$('img.A',el),B=$('img.B',el), set=(im,src)=>{if(im.getAttribute('src')!==src) im.setAttribute('src',src);};
+   if(k<0){set(A,s.prev);B.style.opacity=0;} else {set(A,k>0?seq[k-1][1]:s.prev);set(B,seq[k][1]);B.style.opacity=clamp((lb-seq[k][0])/seq[k][2]);}
+   const cam=keyed(s.cam,lb,1.6), S=1144/1600*cam[2], hw=572/S, hh=322/S;
+   const cx=clamp(cam[0],hw,1600-hw), cy=clamp(cam[1],hh,H-hh), tx=572-cx*S, ty=322-cy*S;
+   $('.world',el).style.transform=`translate(${tx}px,${ty}px) scale(${S})`;
+   if(s.arc===5){const swap=glide((lb-8.7)/1);$('.act-shot-one',el).style.opacity=1-swap;$('.act-shot-two',el).style.opacity=swap;}
+   rise($('.spk',el),lb,0,24);
+   const p=typed($('.say',el),s.say,lb,s.type[0],s.type[1]);
+   const D=s.D!=null?s.D:L+2;
+   $('.caret',el).style.opacity=lb>=D?0:((p<1||Math.floor(lb*2)%2===0)?1:0);
+   rise($('.why',el),lb,D+0.25,18);
+   rise($('.how .eyebrow',el),lb,D+1.05,8);
+   cycleTrace($$('.how li',el),lb,D+1.45);
+   if(s.reply) popIn($('.reply',el),lb,s.reply.at);
+   let dimOn=0;
+   for(const c of s.co){
+     if(c.k==='pull'){ const g=glide((lb-c.at)/1.4); dimOn=Math.max(dimOn,g);
+       c.dom.style.opacity=lb>=c.at?1:0; c.dom.style.transform=`translate(${c.lift[0]*g}px,${c.lift[1]*g}px) scale(${1+(c.lift[2]-1)*g})`;
+       rise(c.cdom,lb,c.at+0.5,16); }
+     if(c.k==='ptr'){ const d=pop((lb-c.at)/0.8),out=c.until?1-glide((lb-c.until)/0.6):1; c.dot.style.transform=`scale(${d})`; c.dot.style.transformOrigin=`${c.pt[0]}px ${c.pt[1]}px`; c.dot.style.transformBox='view-box';
+       c.halo.style.opacity=lb>=c.at?0.35:0;
+       if(c.tap){ const u=(lb-c.tap)/1.2; if(u>=0&&u<1){ c.halo.setAttribute('r',14+40*glide(u)); c.halo.style.opacity=1-u; } else c.halo.setAttribute('r',14); }
+       c.path.style.strokeDashoffset=c.len*(1-swipe((lb-c.at-0.3)/1.2));
+       const tg=glide((lb-c.at-1.1)/1.1); c.path.style.opacity=out;c.dot.style.opacity=out;c.halo.style.opacity*=out;c.tag.style.opacity=clamp(tg*1.4)*out; c.tag.style.transform=`translate(${(1-tg)*-14}px,-50%)`; }
+   }
+   $('.dim',el).style.opacity=dimOn;
+ },
+ calc(s,lb){ const el=s.el;
+   animateSig(el,lb);
+   const on=$('.arc .seg.on .bar i',el); if(on) on.style.width=clamp((lb+0.4)/1.6)*100+'%';
+   $$('.arc .seg.done .bar i',el).forEach(i=>i.style.width='100%');
+   rise($('.spk',el),lb,0,20);
+   rise($('.why',el),lb,0.5,18);
+   rise($('.how .eyebrow',el),lb,1.15,8);
+   cycleTrace($$('.how li',el),lb,1.55);
+   rise($('.calc-k',el),lb,0.5,16); const e=revealLines($('.hl',el),lb,0.8);
+   $$('.row',el).forEach((r,i)=>{ rise(r,lb,e+0.4+i*0.6,20); const f=$('.fill',r); f.style.width=f.dataset.w+'%'; f.style.transform=`scaleX(${glide((lb-e-0.7-i*0.6)/1.6)})`; });
+   rise($('.axis',el),lb,e+2.4,10);
+   rise($('.summary',el),lb,e+3.1,16);
+   rise($('.foot',el),lb,e+4.0,10);
+ },
+};
+function keyed(keys,b,dur){
+  if(b<=keys[0][0]) return keys[0].slice(1);
+  for(let i=1;i<keys.length;i++){const k=keys[i],p=keys[i-1];
+    if(b<k[0]){const d=Math.min(dur,k[0]-p[0]),s=k[0]-d; if(b<=s) return p.slice(1); const u=swipe((b-s)/d); return p.slice(1).map((v,j)=>v+(k[j+1]-v)*u);} }
+  return keys[keys.length-1].slice(1);
+}
+
+// ---------- frame: wipes within a beat, depth only at chapter breaks (animation.md §3) ----------
+SC.forEach(build);
+window.render=function(t){
+  const b=t/BP;
+  let ci=SC.findIndex(x=>b>=x.b0&&b<x.b1); if(ci<0) ci=SC.length-1;
+  const cur=SC[ci], tr=cur.tr||'wipe', dur=T[tr], prev=ci>0&&b<cur.b0+dur?SC[ci-1]:null;
+  SC.forEach(s=>{s.el.style.display='none';});
+  const show=(s,z)=>{s.el.style.display=s.t==='app'?'block':'flex'; s.el.style.zIndex=z; R[s.t](s,b-s.b0-DELAY[s.tr||'wipe'],b);};
+  const u=(b-cur.b0)/dur, bar=document.getElementById('wipebar');
+  bar.style.display='none';
+  if(prev){ show(prev,1); Object.assign(prev.el.style,{transform:'none',filter:'none',clipPath:'none',boxShadow:'none',opacity:1}); }
+  show(cur,2); Object.assign(cur.el.style,{transform:'none',filter:'none',clipPath:'none',opacity:1,boxShadow:'none'});
+  if(ci===0){ const e=glide(b/1.8); cur.el.style.transform=`scale(${0.86+0.14*e})`; cur.el.style.filter=b<1.8?`blur(${(1-e)*14}px) brightness(${0.6+0.4*e})`:'none'; cur.el.style.opacity=clamp(b/0.7); }
+  else if(tr==='wipe'){
+    const x=100*(1-swipe(u)); cur.el.style.clipPath=u<1?`inset(0 0 0 ${x}%)`:'none';
+    const fadeU=(b-cur.b0-dur)/0.2;
+    if(u<1||fadeU<1){ bar.style.display='block'; bar.style.left=(u<1?x:0)+'%'; bar.style.opacity=u<1?1:1-clamp(fadeU); }
+  } else if(prev){
+    cur.el.style.zIndex=1; prev.el.style.zIndex=2;
+    const e=glide(u); cur.el.style.transform=`scale(${0.86+0.14*e})`; cur.el.style.filter=u<1?`blur(${(1-e)*14}px) brightness(${0.6+0.4*e})`:'none'; cur.el.style.opacity=clamp(u/0.4);
+    const x=swipe((b-cur.b0)/1.5); prev.el.style.transform=`translateX(${-1920*x}px) scale(${1-0.03*x})`; prev.el.style.boxShadow='40px 0 80px rgba(0,0,0,.5)';
+  }
+  document.getElementById('fade').style.opacity=clamp((b-(END-3))/3);
+};
+window.ready=(async()=>{
+  const srcs=new Set(); SC.forEach(s=>{if(s.prev)srcs.add(s.prev); if(s.done)srcs.add(s.done); srcs.add(MAYA.img.ask);srcs.add(MAYA.img.pleased);srcs.add(MAYA.avatar); (s.load||[]).forEach(f=>srcs.add(f));});
+  await Promise.all([...srcs].map(src=>{const im=new Image();im.src=src;return im.decode()}));
+  await Promise.all(['500 20px PJS','700 20px PJS','800 20px PJS','20px Script','500 20px Mono'].map(f=>document.fonts.load(f)));
+})();
+</script>
+</body></html>

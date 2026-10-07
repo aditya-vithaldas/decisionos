@@ -1,0 +1,42 @@
+{
+  "environment": "Cloud Build Linux container, limited to 2 CPUs / 2 GiB; DuckDB 2 threads / 1 GB; SQL execution only",
+  "databaseBytes": 415510528,
+  "totalRows": 50000000,
+  "results": [
+    {
+      "name": "daily_sales",
+      "firstMs": 34.04929899999979,
+      "warmP50Ms": 25.6395050000001,
+      "warmP95Ms": 36.85218399999985,
+      "rows": 365
+    },
+    {
+      "name": "regional_sales",
+      "firstMs": 138.89551400000028,
+      "warmP50Ms": 180.66161399999964,
+      "warmP95Ms": 205.49532999999974,
+      "rows": 10
+    },
+    {
+      "name": "top_customers",
+      "firstMs": 460.96694299999945,
+      "warmP50Ms": 448.0932759999996,
+      "warmP95Ms": 497.17153099999996,
+      "rows": 10
+    },
+    {
+      "name": "category_sales",
+      "firstMs": 709.8310979999987,
+      "warmP50Ms": 800.4343910000007,
+      "warmP95Ms": 885.5127460000003,
+      "rows": 40
+    },
+    {
+      "name": "monthly_traffic",
+      "firstMs": 49.59374400000161,
+      "warmP50Ms": 47.902202000001125,
+      "warmP95Ms": 52.03142599999774,
+      "rows": 12
+    }
+  ]
+}

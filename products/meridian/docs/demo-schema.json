@@ -1,0 +1,624 @@
+{
+  "name": "Demo e-commerce",
+  "version": "2025-v4-context-10m",
+  "scale": 1,
+  "storage": {
+    "sortedBy": {
+      "orders": [
+        "order_date",
+        "order_id"
+      ],
+      "sessions": [
+        "session_date",
+        "session_id"
+      ]
+    },
+    "indexes": [
+      "products.product_id",
+      "products.product_name",
+      "customers.customer_id",
+      "customers.customer_name"
+    ]
+  },
+  "period": {
+    "start": "2025-01-01",
+    "end": "2025-12-31"
+  },
+  "synthetic": true,
+  "currency": "USD",
+  "totalRows": 10000000,
+  "databaseBytes": 97267712,
+  "tables": [
+    {
+      "name": "regions",
+      "rows": 10,
+      "columns": [
+        {
+          "name": "region_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "region_name",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "categories",
+      "rows": 40,
+      "columns": [
+        {
+          "name": "category_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "category_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "department",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "rows": 50000,
+      "columns": [
+        {
+          "name": "product_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "product_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "category_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "list_price",
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "unit_cost",
+          "type": "DECIMAL(12,2)"
+        }
+      ]
+    },
+    {
+      "name": "customers",
+      "rows": 150000,
+      "columns": [
+        {
+          "name": "customer_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "customer_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "region_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "signup_date",
+          "type": "DATE"
+        },
+        {
+          "name": "segment",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "calendar",
+      "rows": 365,
+      "columns": [
+        {
+          "name": "date",
+          "type": "DATE"
+        },
+        {
+          "name": "calendar_year",
+          "type": "INTEGER"
+        },
+        {
+          "name": "month_number",
+          "type": "INTEGER"
+        },
+        {
+          "name": "day_number",
+          "type": "INTEGER"
+        },
+        {
+          "name": "weekday",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "quarter_number",
+          "type": "INTEGER"
+        }
+      ]
+    },
+    {
+      "name": "order_items",
+      "rows": 3000000,
+      "columns": [
+        {
+          "name": "order_item_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "order_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "product_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "quantity",
+          "type": "INTEGER"
+        },
+        {
+          "name": "unit_price",
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "discount_amount",
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "net_amount",
+          "type": "DECIMAL(12,2)"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "rows": 1000000,
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "customer_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "order_date",
+          "type": "DATE"
+        },
+        {
+          "name": "channel",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "net_amount",
+          "type": "DECIMAL(14,2)"
+        },
+        {
+          "name": "tax_amount",
+          "type": "DECIMAL(14,2)"
+        },
+        {
+          "name": "shipping_amount",
+          "type": "DECIMAL(12,2)"
+        }
+      ]
+    },
+    {
+      "name": "payments",
+      "rows": 1000000,
+      "columns": [
+        {
+          "name": "payment_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "order_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "payment_date",
+          "type": "DATE"
+        },
+        {
+          "name": "payment_method",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "amount",
+          "type": "DECIMAL(14,2)"
+        }
+      ]
+    },
+    {
+      "name": "shipments",
+      "rows": 850000,
+      "columns": [
+        {
+          "name": "shipment_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "order_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "shipped_date",
+          "type": "DATE"
+        },
+        {
+          "name": "delivered_date",
+          "type": "DATE"
+        },
+        {
+          "name": "carrier",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "sessions",
+      "rows": 3943737,
+      "columns": [
+        {
+          "name": "session_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "customer_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "session_date",
+          "type": "DATE"
+        },
+        {
+          "name": "traffic_source",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "device",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "page_views",
+          "type": "INTEGER"
+        },
+        {
+          "name": "order_id",
+          "type": "INTEGER"
+        }
+      ]
+    },
+    {
+      "name": "business_events",
+      "rows": 8,
+      "columns": [
+        {
+          "name": "event_id",
+          "type": "INTEGER"
+        },
+        {
+          "name": "event_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "event_type",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "start_date",
+          "type": "DATE"
+        },
+        {
+          "name": "end_date",
+          "type": "DATE"
+        },
+        {
+          "name": "market",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "scope",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "expected_effect_pct",
+          "type": "DECIMAL(3,1)"
+        },
+        {
+          "name": "summary",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "source_type",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "market_snapshots",
+      "rows": 5840,
+      "columns": [
+        {
+          "name": "snapshot_date",
+          "type": "DATE"
+        },
+        {
+          "name": "market",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "competitor",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "category_group",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "homepage_promotion",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "sampled_price_index",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "promotion_depth_pct",
+          "type": "DECIMAL(3,1)"
+        },
+        {
+          "name": "products_sampled",
+          "type": "INTEGER"
+        },
+        {
+          "name": "source_type",
+          "type": "VARCHAR"
+        }
+      ]
+    }
+  ],
+  "categoryCatalog": [
+    {
+      "category_id": 1,
+      "name": "T-Shirts & Tops",
+      "department": "Apparel"
+    },
+    {
+      "category_id": 2,
+      "name": "Headphones & Audio",
+      "department": "Electronics"
+    },
+    {
+      "category_id": 3,
+      "name": "Bedding & Linens",
+      "department": "Home"
+    },
+    {
+      "category_id": 4,
+      "name": "Skincare",
+      "department": "Beauty"
+    },
+    {
+      "category_id": 5,
+      "name": "Running & Training",
+      "department": "Sport"
+    },
+    {
+      "category_id": 6,
+      "name": "Coffee & Tea",
+      "department": "Food"
+    },
+    {
+      "category_id": 7,
+      "name": "Fiction & Literature",
+      "department": "Books"
+    },
+    {
+      "category_id": 8,
+      "name": "Building Sets",
+      "department": "Toys"
+    },
+    {
+      "category_id": 9,
+      "name": "Jeans & Trousers",
+      "department": "Apparel"
+    },
+    {
+      "category_id": 10,
+      "name": "Computers & Tablets",
+      "department": "Electronics"
+    },
+    {
+      "category_id": 11,
+      "name": "Cookware & Bakeware",
+      "department": "Home"
+    },
+    {
+      "category_id": 12,
+      "name": "Makeup",
+      "department": "Beauty"
+    },
+    {
+      "category_id": 13,
+      "name": "Outdoor & Camping",
+      "department": "Sport"
+    },
+    {
+      "category_id": 14,
+      "name": "Snacks & Chocolate",
+      "department": "Food"
+    },
+    {
+      "category_id": 15,
+      "name": "Business & Leadership",
+      "department": "Books"
+    },
+    {
+      "category_id": 16,
+      "name": "Board Games",
+      "department": "Toys"
+    },
+    {
+      "category_id": 17,
+      "name": "Dresses & Skirts",
+      "department": "Apparel"
+    },
+    {
+      "category_id": 18,
+      "name": "Phones & Accessories",
+      "department": "Electronics"
+    },
+    {
+      "category_id": 19,
+      "name": "Furniture",
+      "department": "Home"
+    },
+    {
+      "category_id": 20,
+      "name": "Haircare",
+      "department": "Beauty"
+    },
+    {
+      "category_id": 21,
+      "name": "Cycling",
+      "department": "Sport"
+    },
+    {
+      "category_id": 22,
+      "name": "Pantry Essentials",
+      "department": "Food"
+    },
+    {
+      "category_id": 23,
+      "name": "Cooking & Food Books",
+      "department": "Books"
+    },
+    {
+      "category_id": 24,
+      "name": "Arts & Crafts",
+      "department": "Toys"
+    },
+    {
+      "category_id": 25,
+      "name": "Jackets & Coats",
+      "department": "Apparel"
+    },
+    {
+      "category_id": 26,
+      "name": "Cameras & Photography",
+      "department": "Electronics"
+    },
+    {
+      "category_id": 27,
+      "name": "Lighting",
+      "department": "Home"
+    },
+    {
+      "category_id": 28,
+      "name": "Fragrance",
+      "department": "Beauty"
+    },
+    {
+      "category_id": 29,
+      "name": "Yoga & Pilates",
+      "department": "Sport"
+    },
+    {
+      "category_id": 30,
+      "name": "Beverages",
+      "department": "Food"
+    },
+    {
+      "category_id": 31,
+      "name": "Science & Nature",
+      "department": "Books"
+    },
+    {
+      "category_id": 32,
+      "name": "Outdoor Toys",
+      "department": "Toys"
+    },
+    {
+      "category_id": 33,
+      "name": "Shoes & Accessories",
+      "department": "Apparel"
+    },
+    {
+      "category_id": 34,
+      "name": "Smart Home",
+      "department": "Electronics"
+    },
+    {
+      "category_id": 35,
+      "name": "Home Decor",
+      "department": "Home"
+    },
+    {
+      "category_id": 36,
+      "name": "Bath & Body",
+      "department": "Beauty"
+    },
+    {
+      "category_id": 37,
+      "name": "Team Sports",
+      "department": "Sport"
+    },
+    {
+      "category_id": 38,
+      "name": "Specialty Foods",
+      "department": "Food"
+    },
+    {
+      "category_id": 39,
+      "name": "Children’s Books",
+      "department": "Books"
+    },
+    {
+      "category_id": 40,
+      "name": "Plush & Pretend Play",
+      "department": "Toys"
+    }
+  ],
+  "rules": [
+    "Category, product and customer names are fictional human-readable demo labels. Always display their name columns, not numeric IDs or invented aliases. Names are not guaranteed unique: group by the entity ID and name for rankings, and use IDs for joins. Category names and departments are listed in categoryCatalog.",
+    "All records, business events, and market snapshots are synthetic, reproducible demo data for calendar year 2025; all monetary amounts are USD. Never present synthetic competitor observations as live facts.",
+    "Table grains: orders/payments one row per order; order_items exactly three rows per order; shipments one row for each of 850000 orders; sessions one row per session; business_events one row per deliberately embedded scenario; market_snapshots one row per date, competitor, and category group.",
+    "Business events provide known scenario context, not proof that an external event caused a measured change. Use cautious language such as coincides with or overlaps.",
+    "Market snapshots are synthetic benchmark samples inspired by public European commerce category structures. sampled_price_index is currency-free, promotion_depth_pct is a modeled observation, and products_sampled is the sample size.",
+    "Sales/revenue means SUM(orders.net_amount) WHERE orders.status='completed'. Excludes tax/shipping and cancelled/returned orders. Gross booked sales includes all statuses only if explicitly requested.",
+    "Orders count means COUNT(*) FROM orders, qualified by status when requested. AOV = completed revenue / completed order count.",
+    "Customers.customer_id links orders.customer_id and sessions.customer_id. customers.region_id links regions.region_id. order_items.order_id, payments.order_id and shipments.order_id link orders.order_id. products.product_id links order_items.product_id; products.category_id links categories.category_id.",
+    "Never sum orders.net_amount after joining to order_items; it repeats three times. For product/category revenue sum order_items.net_amount joined to orders filtered completed.",
+    "Payment amount includes net+tax+shipping, so it is not sales revenue. Payment status captured/void/refunded corresponds to completed/cancelled/returned orders.",
+    "Traffic = COUNT(*) FROM sessions. Conversion = count(sessions.order_id) / count(*) * 100; it includes placed orders of all statuses. For completed conversion join orders and explicitly filter status.",
+    "For a single date return one aggregate and display number unless a breakdown is requested. For temporal questions default to daily line chart; use monthly grouping for full-year requests.",
+    "Date filters on orders use order_date; sessions use session_date. Latest demo date is 2025-12-31. Relative last-7-days means 2025-12-25 through 2025-12-31 inclusive.",
+    "Read-only SELECT/CTE queries only. Return columns label (text), value (numeric), optional secondary (numeric). Charts <= 1000 groups. No external files, extensions, system tables, or network operations."
+  ],
+  "generatedSeconds": 16
+}

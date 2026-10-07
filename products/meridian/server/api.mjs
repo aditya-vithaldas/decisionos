@@ -1,0 +1,4 @@
+import {createServer} from 'node:http';
+import {schema,queryDatabase} from './database.mjs';
+const send=(res,status,body)=>res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(JSON.stringify(body));
+createServer(async(req,res)=>{const path=new URL(req.url,'http://localhost').pathname;if(req.method==='GET'&&(path==='/metadata'||path==='/schema'))return send(res,200,schema);if(path==='/health')return send(res,200,{ok:true});if(path!=='/query'||req.method!=='POST')return send(res,404,{error:'Not found'});try{let body='';for await(const chunk of req){body+=chunk;if(body.length>16000)return send(res,413,{error:'Query too large'});}const {sql}=JSON.parse(body);send(res,200,await queryDatabase(sql));}catch(e){send(res,400,{error:e.message});}}).listen(Number(process.env.PORT||8080),'0.0.0.0',()=>console.log('Private LiveAnalyst DuckDB ready'));

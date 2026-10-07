@@ -1,0 +1,151 @@
+{
+  "measuredAt": "2026-09-18T06:51:06.591Z",
+  "endpoint": "https://decisionos.me/analytics/api/demo/query",
+  "totalRows": 50000000,
+  "results": [
+    {
+      "question": "Plot daily revenue from December 25 through December 31, 2025",
+      "repeat": false,
+      "clientRoundTripMs": 1363.839834,
+      "planningMs": 1116.4800960000139,
+      "sqlMs": 6.090677000000142,
+      "serverMs": 1139.810541999992,
+      "planCacheHit": false,
+      "rows": 7,
+      "display": "chart",
+      "sql": "SELECT CAST(o.order_date AS VARCHAR) AS \"label\", SUM(o.net_amount) AS \"value\" FROM orders o WHERE o.status = 'completed' AND o.order_date BETWEEN '2025-12-25' AND '2025-12-31' GROUP BY o.order_date ORDER BY o.order_date"
+    },
+    {
+      "question": "Plot daily revenue from December 25 through December 31, 2025",
+      "repeat": true,
+      "clientRoundTripMs": 87.71154200000001,
+      "planningMs": 0,
+      "sqlMs": 4.557673999996041,
+      "serverMs": 24.329705999989528,
+      "planCacheHit": true,
+      "rows": 7,
+      "display": "chart",
+      "sql": "SELECT CAST(o.order_date AS VARCHAR) AS \"label\", SUM(o.net_amount) AS \"value\" FROM orders o WHERE o.status = 'completed' AND o.order_date BETWEEN '2025-12-25' AND '2025-12-31' GROUP BY o.order_date ORDER BY o.order_date"
+    },
+    {
+      "question": "Compare total 2025 revenue across all regions",
+      "repeat": false,
+      "clientRoundTripMs": 1367.0311660000002,
+      "planningMs": 981.5189940000128,
+      "sqlMs": 239.98781099999906,
+      "serverMs": 1238.2958689999941,
+      "planCacheHit": false,
+      "rows": 10,
+      "display": "chart",
+      "sql": "SELECT r.region_name AS \"label\", SUM(o.net_amount) AS \"value\" FROM regions r JOIN customers c ON r.region_id = c.region_id JOIN orders o ON c.customer_id = o.customer_id WHERE o.status = 'completed' AND o.order_date >= '2025-01-01' AND o.order_date <= '2025-12-31' GROUP BY r.region_id, r.region_name ORDER BY \"value\" DESC"
+    },
+    {
+      "question": "Compare total 2025 revenue across all regions",
+      "repeat": true,
+      "clientRoundTripMs": 306.8705,
+      "planningMs": 0,
+      "sqlMs": 159.14413500000956,
+      "serverMs": 175.62065100000473,
+      "planCacheHit": true,
+      "rows": 10,
+      "display": "chart",
+      "sql": "SELECT r.region_name AS \"label\", SUM(o.net_amount) AS \"value\" FROM regions r JOIN customers c ON r.region_id = c.region_id JOIN orders o ON c.customer_id = o.customer_id WHERE o.status = 'completed' AND o.order_date >= '2025-01-01' AND o.order_date <= '2025-12-31' GROUP BY r.region_id, r.region_name ORDER BY \"value\" DESC"
+    },
+    {
+      "question": "Plot the monthly number of website sessions during 2025",
+      "repeat": false,
+      "clientRoundTripMs": 1917.270125,
+      "planningMs": 1067.9509890000045,
+      "sqlMs": 771.4690700000065,
+      "serverMs": 1853.9334220000019,
+      "planCacheHit": false,
+      "rows": 12,
+      "display": "chart",
+      "sql": "SELECT STRFTIME(c.date, '%Y-%m') AS \"label\", COUNT(s.session_id) AS \"value\" FROM calendar c LEFT JOIN sessions s ON c.date = s.session_date WHERE c.calendar_year = 2025 GROUP BY 1 ORDER BY 1;"
+    },
+    {
+      "question": "Plot the monthly number of website sessions during 2025",
+      "repeat": true,
+      "clientRoundTripMs": 948.6488749999999,
+      "planningMs": 0,
+      "sqlMs": 869.551140999989,
+      "serverMs": 885.3511799999978,
+      "planCacheHit": true,
+      "rows": 12,
+      "display": "chart",
+      "sql": "SELECT STRFTIME(c.date, '%Y-%m') AS \"label\", COUNT(s.session_id) AS \"value\" FROM calendar c LEFT JOIN sessions s ON c.date = s.session_date WHERE c.calendar_year = 2025 GROUP BY 1 ORDER BY 1;"
+    },
+    {
+      "question": "Rank the 10 highest spending customers in 2025",
+      "repeat": false,
+      "clientRoundTripMs": 1763.1548750000002,
+      "planningMs": 968.9944719999912,
+      "sqlMs": 712.3191420000076,
+      "serverMs": 1697.2008380000188,
+      "planCacheHit": false,
+      "rows": 10,
+      "display": "chart",
+      "sql": "SELECT t1.customer_name AS \"label\", SUM(t2.net_amount) AS \"value\" FROM customers AS t1 JOIN orders AS t2 ON t1.customer_id = t2.customer_id WHERE t2.status = 'completed' GROUP BY t1.customer_id, t1.customer_name ORDER BY \"value\" DESC LIMIT 10"
+    },
+    {
+      "question": "Rank the 10 highest spending customers in 2025",
+      "repeat": true,
+      "clientRoundTripMs": 638.1859999999988,
+      "planningMs": 0,
+      "sqlMs": 556.7904220000055,
+      "serverMs": 572.5109029999876,
+      "planCacheHit": true,
+      "rows": 10,
+      "display": "chart",
+      "sql": "SELECT t1.customer_name AS \"label\", SUM(t2.net_amount) AS \"value\" FROM customers AS t1 JOIN orders AS t2 ON t1.customer_id = t2.customer_id WHERE t2.status = 'completed' GROUP BY t1.customer_id, t1.customer_name ORDER BY \"value\" DESC LIMIT 10"
+    },
+    {
+      "question": "What was total revenue on December 15, 2025?",
+      "repeat": false,
+      "clientRoundTripMs": 931.4498330000006,
+      "planningMs": 820.0063519999967,
+      "sqlMs": 30.40761300000304,
+      "serverMs": 864.776939000003,
+      "planCacheHit": false,
+      "rows": 1,
+      "display": "number",
+      "sql": "SELECT '2025-12-15' AS \"label\", COALESCE(SUM(net_amount), 0) AS \"value\" FROM orders WHERE order_date = '2025-12-15' AND status = 'completed'"
+    },
+    {
+      "question": "What was total revenue on December 15, 2025?",
+      "repeat": true,
+      "clientRoundTripMs": 79.18816700000025,
+      "planningMs": 0,
+      "sqlMs": 2.6408380000066245,
+      "serverMs": 16.18617100000847,
+      "planCacheHit": true,
+      "rows": 1,
+      "display": "number",
+      "sql": "SELECT '2025-12-15' AS \"label\", COALESCE(SUM(net_amount), 0) AS \"value\" FROM orders WHERE order_date = '2025-12-15' AND status = 'completed'"
+    },
+    {
+      "question": "Compare revenue across every product category during 2025",
+      "repeat": false,
+      "clientRoundTripMs": 1879.3919170000008,
+      "planningMs": 1016.0662649999722,
+      "sqlMs": 779.5133320000023,
+      "serverMs": 1811.855114999984,
+      "planCacheHit": false,
+      "rows": 40,
+      "display": "chart",
+      "sql": "SELECT c.category_name AS \"label\", SUM(oi.net_amount) AS \"value\" FROM categories c JOIN products p ON c.category_id = p.category_id JOIN order_items oi ON p.product_id = oi.product_id JOIN orders o ON oi.order_id = o.order_id WHERE o.status = 'completed' AND o.order_date >= '2025-01-01' AND o.order_date <= '2025-12-31' GROUP BY c.category_name ORDER BY \"value\" DESC"
+    },
+    {
+      "question": "Compare revenue across every product category during 2025",
+      "repeat": true,
+      "clientRoundTripMs": 851.5385409999999,
+      "planningMs": 0,
+      "sqlMs": 689.2501150000026,
+      "serverMs": 703.5961139999854,
+      "planCacheHit": true,
+      "rows": 40,
+      "display": "chart",
+      "sql": "SELECT c.category_name AS \"label\", SUM(oi.net_amount) AS \"value\" FROM categories c JOIN products p ON c.category_id = p.category_id JOIN order_items oi ON p.product_id = oi.product_id JOIN orders o ON oi.order_id = o.order_id WHERE o.status = 'completed' AND o.order_date >= '2025-01-01' AND o.order_date <= '2025-12-31' GROUP BY c.category_name ORDER BY \"value\" DESC"
+    }
+  ]
+}

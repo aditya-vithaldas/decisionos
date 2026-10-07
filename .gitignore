@@ -1,45 +1,7 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-venv/
-ENV/
-env/
-.venv/
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Environment
-.env
-.env.local
-*.env
-
-# Database files
-*.db
-*.sqlite3
-
-# Logs
-*.log
-logs/
-
-# Docker volumes
-postgres_data/
-
-# Node (if any frontend build tools are added later)
+dist/
 node_modules/
-npm-debug.log
-
-# Secrets
-credentials.json
-secrets.json
+.DS_Store
+/analytics/
+/commerce/
+/products/meridian/dist-commerce/
+/.cache/

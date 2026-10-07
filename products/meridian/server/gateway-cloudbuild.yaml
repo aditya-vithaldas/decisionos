@@ -1,0 +1,5 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-f', 'server/Gateway.Dockerfile', '-t', 'europe-west1-docker.pkg.dev/striking-loop-447915-q3/cloud-run-source-deploy/liveanalyst-query:rolling-2026-0930-v3', '.']
+images:
+  - europe-west1-docker.pkg.dev/striking-loop-447915-q3/cloud-run-source-deploy/liveanalyst-query:rolling-2026-0930-v3

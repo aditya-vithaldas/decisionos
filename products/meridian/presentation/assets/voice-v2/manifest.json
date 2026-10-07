@@ -1,0 +1,83 @@
+{
+  "provider": "ElevenLabs",
+  "model": "eleven_v3",
+  "voices": {
+    "narrator": {
+      "name": "Brian",
+      "id": "nPczCjzI2devNBz1zQrb"
+    },
+    "maya": {
+      "name": "Sarah",
+      "id": "EXAVITQu4vr4xnSDxMaL"
+    }
+  },
+  "settings": {
+    "stability": 0.46,
+    "similarity_boost": 0.76,
+    "style": 0.24,
+    "use_speaker_boost": true
+  },
+  "delivery": "Neutral international English; natural, restrained emotion; conversational rather than promotional.",
+  "takes": [
+    {
+      "file": "01-narrator-opening.mp3",
+      "voice": "narrator",
+      "direction": "[calm] [assured]",
+      "text": "Commerce teams rarely suffer from too little data. The harder problem is knowing which signal deserves attention."
+    },
+    {
+      "file": "02-maya-campaign.mp3",
+      "voice": "maya",
+      "direction": "[mildly frustrated] [curious]",
+      "text": "Did Halloween finish differently from plan?"
+    },
+    {
+      "file": "03-narrator-choice.mp3",
+      "voice": "narrator",
+      "direction": "[thoughtful] [quietly confident]",
+      "text": "Meridian notices the change before the review begins, then gives the team three clear paths to investigate."
+    },
+    {
+      "file": "04-maya-region.mp3",
+      "voice": "maya",
+      "direction": "[curious] [decisive]",
+      "text": "Start with regions. Which market explains most of the drop?"
+    },
+    {
+      "file": "05-narrator-context.mp3",
+      "voice": "narrator",
+      "direction": "[measured] [precise]",
+      "text": "Every follow-up keeps the original evidence attached: region, category, and a like-for-like calendar check."
+    },
+    {
+      "file": "06-narrator-memory.mp3",
+      "voice": "narrator",
+      "direction": "[warm] [quietly confident]",
+      "text": "When Maya recognizes an earlier pattern, Meridian reopens it without mixing the evidence."
+    },
+    {
+      "file": "07-maya-action.mp3",
+      "voice": "maya",
+      "direction": "[concerned] [decisive]",
+      "text": "We saw this before. Pull in that case—and watch Western Europe."
+    },
+    {
+      "file": "08-narrator-continuity.mp3",
+      "voice": "narrator",
+      "direction": "[warm] [purposeful]",
+      "text": "The analyst joins the call, continues in Slack, and keeps working after the meeting ends."
+    },
+    {
+      "file": "09-maya-closing.mp3",
+      "voice": "maya",
+      "direction": "[genuinely pleased] [lightly relieved]",
+      "text": "Thanks, Meridian. You did good."
+    },
+    {
+      "file": "10-narrator-end.mp3",
+      "voice": "narrator",
+      "direction": "[assured] [concise]",
+      "text": "Meridian. Commerce intelligence for what comes next."
+    }
+  ]
+}

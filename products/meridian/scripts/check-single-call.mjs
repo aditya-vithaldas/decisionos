@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {generateAnalytics} from '../lib/generate-analytics.mjs';
+import {planQuery} from '../server/planner.mjs';
+import {compileIntent} from '../server/semantic-guard.mjs';
+const intent={metric:'orders',dimension:'none',start:'2025-12-01',end:'2025-12-31',status:'completed',filters:[],limit:null};
+let calls=0;
+let answer={supported:true,intent,title:'Orders',display:'number',unit:'count',kind:'bar'};
+globalThis.fetch=async()=>{calls++;return {ok:true,json:async()=>({candidates:[{content:{parts:[{text:JSON.stringify(answer)}]}}]})};};
+const plan=await planQuery('December completed orders',null,{version:'single-call-test'});
+assert.match(compileIntent(plan.intent).sql,/COUNT/);assert.equal(calls,1);
+answer={queryPlan:{tables:['sales'],metric:'revenue',aggregation:'sum',unit:'USD'}};calls=0;
+const result=await generateAnalytics('test','Total revenue',null,[{id:'sales',columns:[{name:'revenue'}]}]);
+assert.equal(calls,1);assert.deepEqual(result.grounding.checks,['exact-column-check','aggregation-and-filter-validation']);
+console.log('One model call per uncached demo/upload query; local validation retained.');

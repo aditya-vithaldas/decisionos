@@ -1,0 +1,121 @@
+[
+  {"file":"projects/image-object-pipeline.html","path":"/projects/image-object-pipeline.html","title":"Image Object Pipeline Quality Assurance | Decision Axis","description":"Ten sourced product photographs, visual catalog claims and actual OpenAI Decisions probabilities. Deliberate mismatches are labeled, never manipulated scores.","type":"WebPage"},
+  {
+    "file": "index.html",
+    "path": "/",
+    "title": "Decision Axis | eCommerce and B2B products and solutions",
+    "description": "eCommerce and B2B products and solutions that help you stand out from the crowd. Decision Axis connects product strategy, design, and engineering.",
+    "image": "assets/consumer-to-mvp-crayon.png",
+    "type": "WebPage"
+  },
+  {
+    "file": "case-studies.html",
+    "path": "/case-studies.html",
+    "title": "Case studies \u2014 decisionos",
+    "description": "Explore working commerce and analytics concepts: voice-first discovery, photo-first selling, focused shopping screens, and an analyst in the conversation.",
+    "image": "assets/commerce-live-home.png",
+    "type": "CollectionPage"
+  },
+  {
+    "file": "projects/agent-harness.html",
+    "path": "/projects/agent-harness.html",
+    "title": "Agent harness setup: what does it actually mean? | Decision Axis",
+    "description": "A practical guide to setting up an agent harness in Slack: permitted context, maintained Markdown playbooks, distinct reviewer perspectives and approval-gated workflows.",
+    "type": "Article",
+    "service": "Agent harness setup for your organization"
+  },
+  {
+    "file": "projects/live-feedback.html",
+    "path": "/projects/live-feedback.html",
+    "title": "Live usability feedback for eCommerce | Decision Axis",
+    "description": "Create a private usability study, hear think-aloud feedback, and review timestamped likes, comments and friction. Explicit consent and private reports.",
+    "type": "WebPage"
+  },
+  {
+    "file": "projects/micro-crm.html",
+    "path": "/projects/micro-crm.html",
+    "title": "Gmail Micro CRM and follow-up prompts | Decision Axis",
+    "description": "A Gmail-first Micro CRM with editable private prompt templates, grounded prospect suggestions, source-thread evidence and reviewed outreach. Google Sheets optional.",
+    "type": "WebPage"
+  },
+  {
+    "file": "commerce/index.html",
+    "path": "/commerce/",
+    "title": "Loop voice commerce search and browse demo | Decision Axis",
+    "description": "Explore an illustrative eCommerce storefront, browse products and try voice product discovery. This demonstration does not process purchases.",
+    "type": "WebPage"
+  },
+  {
+    "file": "projects/commerce.html",
+    "path": "/projects/commerce.html",
+    "title": "eCommerce Discovery Live Concept \u2014 decisionos",
+    "description": "How voice-first shopping can turn a broad need into a useful shortlist. Explore the concept, see real demo screenshots, and try the live experience.",
+    "image": "assets/commerce-live-home.png",
+    "type": "Article"
+  },
+  {
+    "file": "projects/shelf-to-sell.html",
+    "path": "/projects/shelf-to-sell.html",
+    "title": "\u201cWhat\u2019s my wardrobe worth?\u201d \u2014 The Missed Opportunity of C2C Selling \u2014 decisionos",
+    "description": "Reflections from eBay on C2C supply, the cost of cataloging, and making selling easier with bulk photos, AI, and experiences where customers already are.",
+    "type": "Article"
+  },
+  {
+    "file": "projects/surface.html",
+    "path": "/projects/surface.html",
+    "title": "Defining a New Commerce Surface \u2014 decisionos",
+    "description": "A voice-controlled shopping demo that shows products, reviews, attributes and comparisons in response to customer questions.",
+    "type": "Article"
+  },
+  {
+    "file": "services/ecommerce-product-consulting.html",
+    "path": "/services/ecommerce-product-consulting.html",
+    "title": "eCommerce product consulting | decisionos",
+    "description": "eCommerce product consulting that connects customer insight, product strategy and hands-on delivery across discovery, buying and selling experiences.",
+    "image": "assets/consumer-to-mvp-crayon.png",
+    "type": "WebPage",
+    "service": "eCommerce product consulting"
+  },
+  {
+    "file": "services/ai-first-experiences.html",
+    "path": "/services/ai-first-experiences.html",
+    "title": "AI-first experiences | decisionos",
+    "description": "Design and build AI-first product experiences: voice commerce, conversational discovery and interfaces that respond to what customers need.",
+    "image": "assets/consumer-to-mvp-crayon.png",
+    "type": "WebPage",
+    "service": "AI-first experiences"
+  },
+  {
+    "file": "services/executive-product-direction.html",
+    "path": "/services/executive-product-direction.html",
+    "title": "Executive product direction | decisionos",
+    "description": "Fractional product leadership and executive product direction: clarify the proposition, align priorities and connect product strategy with execution.",
+    "image": "assets/consumer-to-mvp-crayon.png",
+    "type": "WebPage",
+    "service": "Executive product direction"
+  },
+  {
+    "file": "services/full-stack-product-builder.html",
+    "path": "/services/full-stack-product-builder.html",
+    "title": "Full-stack product builder | decisionos",
+    "description": "A hands-on full-stack product builder connecting product strategy, experience design, frontend, backend and deployment to take your MVP from concept to launch.",
+    "image": "assets/consumer-to-mvp-crayon.png",
+    "type": "WebPage",
+    "service": "Full-stack product builder"
+  },
+  {
+    "file": "projects/analytics.html",
+    "path": "/projects/analytics.html",
+    "title": "What if your analyst could join the call? \u2014 decisionos",
+    "description": "A live analytics concept that answers follow-up questions without losing the graph, and a product direction for an analyst that can participate in business calls.",
+    "image": "assets/analytics-sales.svg",
+    "type": "Article"
+  },
+  {
+    "file": "analytics/index.html",
+    "path": "/analytics",
+    "title": "Meridian eCommerce analytics demo | decisionos",
+    "description": "Explore a working eCommerce analytics and voice analyst demo using illustrative commerce data. Ask sales questions, see SQL-backed charts, and test follow-ups.",
+    "type": "WebPage"
+  }
+]
