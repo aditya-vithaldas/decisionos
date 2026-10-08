@@ -5,8 +5,9 @@ import { checkedProfile, publicURL, postPlatform, groundedSources, checkedResult
 import { createCrmHandler, crmSecurityForTests as crypto } from '../scripts/crm-api.mjs';
 
 const profile = { company: 'Fixture B2B', website: 'https://fixture-b2b.com/', summary: 'Agent harness implementation for teams.', questions: ['How do I set up an agent harness?'] };
-const source = { url: 'https://www.reddit.com/r/agents/comments/abc123/harness/', title: 'Help with an agent harness', evidence: 'A team is asking how to set up an agent harness.' };
-const row = { sourceIndex: 0, isQuestion: true, question: 'How can our team set up an agent harness?', reason: 'The company implements agent harnesses.', angle: 'Explain a concrete first step.', fit: 'Strong' };
+const today = new Date().toISOString().slice(0, 10);
+const source = { url: 'https://www.reddit.com/r/agents/comments/abc123/harness/', title: 'Help with an agent harness', evidence: `Posted ${today}. A team is asking how to set up an agent harness.` };
+const row = { postedAt: today, dateEvidence: `Posted ${today}`, sourceIndex: 0, isQuestion: true, question: 'How can our team set up an agent harness?', reason: 'The company implements agent harnesses.', angle: 'Explain a concrete first step.', fit: 'Strong' };
 const key = Buffer.alloc(32, 7), config = { key };
 
 test('source URLs must be individual posts on exact public HTTPS platform hosts', () => {

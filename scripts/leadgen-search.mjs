@@ -5,10 +5,19 @@ export async function searchPlatforms(research, instruction, input, onProgress =
   const searches = await Promise.allSettled(input.queries.map(async query => {
     onProgress({ platform: query.platform, status: 'searching' });
     try {
-      const result = await research(
+      let result = await research(
         `${instruction}\nThis request covers ONLY ${query.platform}. Use concise problem phrases with the site filters, rather than joining every full question into one long query. Paraphrase each question briefly, at most 30 words, without quoting post text. Replies do not necessarily mean a question has been solved.`,
-        { profile: input.profile, queries: [query], today: input.today }, true,
+        { profile: input.profile, queries: [query], today: input.today, since: input.since }, true,
       );
+      if (input.since && result.sources.filter(source => postPlatform(source.url) === query.platform).length < 10) {
+        onProgress({ platform: query.platform, status: 'expanding' });
+        try {
+          const more = await research(`${instruction}\nThis follow-up covers ONLY ${query.platform}. Search additional relevant communities and alternate short problem phrases to find up to ten distinct recent questions. Exclude the already cited URLs. Keep the same date window and relevance requirements. Cite original posting dates.`, { profile: input.profile, queries: [query], today: input.today, since: input.since, excludeURLs: result.sources.map(source => source.url) }, true);
+          const sources = new Map(result.sources.map(source => [source.url, source]));
+          for (const source of more.sources) if (!sources.has(source.url)) sources.set(source.url, source);
+          result = { sources: [...sources.values()], suggestions: (result.suggestions || '') + (more.suggestions || '') };
+        } catch { onProgress({ platform: query.platform, status: 'limited' }); }
+      }
       onProgress({ platform: query.platform, status: 'done', sourceCount: result.sources.filter(source => postPlatform(source.url) === query.platform).length });
       return result;
     } catch (error) { onProgress({ platform: query.platform, status: 'unavailable' }); throw error; }

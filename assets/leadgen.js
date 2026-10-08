@@ -1,6 +1,6 @@
 (() => {
   const $ = id => document.getElementById(id);
-  let profile = null, results = [], filter = 'all', busy = false;
+  let profile = null, results = [], filter = 'X', busy = false;
   let activityTimer = null, startedAt = 0;
   const el = (tag, className, content) => { const node = document.createElement(tag); if (className) node.className = className; if (content) node.textContent = content; return node; };
   const link = (label, url) => { const node = el('a', '', label); node.href = url; node.target = '_blank'; node.rel = 'noopener noreferrer'; return node; };
@@ -18,7 +18,7 @@
       const tick = () => {
         const seconds = Math.floor((Date.now() - startedAt) / 1000);
         $('progress-time').textContent = `Working · ${seconds}s elapsed`;
-        if (seconds >= 300) $('progress-estimate').textContent = 'Taking longer than estimated · still working';
+        if (seconds >= 420) $('progress-estimate').textContent = 'Taking longer than estimated · still working';
       };
       tick(); activityTimer = setInterval(tick, 1000);
     }
@@ -39,16 +39,16 @@
   function progress(event) {
     if (event.platform) {
       const chip = [...$('platform-activity').children].find(node => node.dataset.platform === event.platform);
-      if (chip) { chip.dataset.state = event.status; chip.textContent = `${event.platform} · ${event.status === 'done' ? `${event.sourceCount} sources found` : event.status === 'unavailable' ? 'Unavailable' : 'Searching'}`; }
+      if (chip) { chip.dataset.state = event.status; chip.textContent = `${event.platform} · ${event.status === 'done' ? `${event.sourceCount} sources found` : event.status === 'unavailable' ? 'Unavailable' : event.status === 'expanding' ? 'Broadening search' : event.status === 'limited' ? 'Coverage limited' : 'Searching'}`; }
       return;
     }
     activity(event.stage);
     $('progress-detail').textContent = event.detail || '';
-    $('progress-estimate').textContent = `Estimated 2–5 minutes overall${event.estimate ? ` · ${event.estimate}` : ''}`;
+    $('progress-estimate').textContent = `Estimated 2–7 minutes overall${event.estimate ? ` · ${event.estimate}` : ''}`;
   }
   async function api(path, body) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 210000);
+    const timeout = setTimeout(() => controller.abort(), 330000);
     try {
       const response = await fetch(`/api/leadgen/${path}`, { method: 'POST', credentials: 'omit', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, progress: true }), signal: controller.signal });
       if (!response.ok || !response.headers.get('content-type')?.includes('application/x-ndjson')) {
@@ -86,17 +86,26 @@
     $('search-suggestions').append(frame);
   }
   function render() {
-    const visible = results.filter(item => filter === 'all' || item.platform === filter);
+    const visible = results.filter(item => item.platform === filter);
     $('result-count').textContent = `${visible.length} conversation${visible.length === 1 ? '' : 's'}`;
-    $('filters').hidden = !results.length; $('results').replaceChildren();
+    $('filters').hidden = false;
+    document.querySelectorAll('[data-filter]').forEach(button => {
+      const selected = button.dataset.filter === filter;
+      button.setAttribute('aria-selected', String(selected)); button.tabIndex = selected ? 0 : -1;
+      button.textContent = `${button.dataset.filter} (${results.filter(item => item.platform === button.dataset.filter).length})`;
+      if (selected) $('results').setAttribute('aria-labelledby', button.id);
+    });
+    $('results').replaceChildren();
     if (!visible.length) {
-      const empty = el('div', 'empty'); empty.append(el('h3', '', results.length ? 'No conversations on this platform.' : 'No matching questions found this time.'), el('p', '', 'Public search coverage varies. Try again later or try another website.')); $('results').append(empty);
+      const empty = el('div', 'empty'); empty.append(el('h3', '', `No verified recent questions on ${filter}.`), el('p', '', 'Only posts from the last 30 days with supported dates appear here. Check another tab or try again later.')); $('results').append(empty);
     }
     for (const item of visible) {
       const card = el('article', 'lead-card'); card.dataset.platform = item.platform;
       const top = el('div', 'card-top'); top.append(el('span', '', item.platform), el('span', 'fit', `${item.fit} fit`), el('span', 'status-tag', item.answerStatus === 'unanswered' ? 'Appears unanswered · check original' : 'Reply status unknown'));
+      if (item.postedAt) { const time = el('time', 'post-date', `Posted ${new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', timeZone: 'UTC' }).format(new Date(item.postedAt + 'T00:00:00Z'))}`); time.dateTime = item.postedAt; top.append(time); }
       const angle = el('p', 'angle'); angle.append(el('strong', '', 'A helpful angle: '), document.createTextNode(item.angle || 'Read the original question and offer specific, useful advice.'));
       const evidence = el('details'); evidence.append(el('summary', '', 'Why this conversation is here'), el('p', '', `Search summary: ${item.evidence}`));
+      if (item.dateEvidence) evidence.append(el('p', '', `Posting-date evidence: ${item.dateEvidence}`));
       if (item.answerEvidence) evidence.append(el('p', '', `Reply-status evidence: ${item.answerEvidence}`));
       evidence.append(link(item.title || 'Original source', item.url));
       const actions = el('div', 'card-actions'); actions.append(link('Open conversation & reply ↗', item.url));
@@ -109,21 +118,20 @@
     activity('search');
     status('Finding relevant questions on LinkedIn, X and Reddit…');
     const found = await api('search', { profile, platforms: ['LinkedIn', 'X', 'Reddit'] });
-    results = found.results; $('coverage').replaceChildren();
-    for (const item of found.coverage || []) $('coverage').append(el('span', '', item.status === 'unavailable' ? `${item.platform}: search unavailable` : `${item.platform}: ${item.count} match${item.count === 1 ? '' : 'es'}`));
+    results = found.results; filter = ['X', 'LinkedIn', 'Reddit'].find(platform => results.some(item => item.platform === platform)) || 'X'; $('coverage').replaceChildren();
+    for (const item of found.coverage || []) $('coverage').append(el('span', '', item.status === 'unavailable' ? `${item.platform}: search unavailable` : `${item.platform}: ${item.count}/10 recent matches`));
     $('inbox').hidden = false; $('retry-search').hidden = true; render(); attribution(found.suggestions);
-    status(results.length ? 'Conversations are ready. Open a question and offer something useful.' : 'Search complete. No supported matches found this time.');
+    status(results.length ? 'Recent conversations are ready. Newest first; each tab aims for 8–10 verified posts.' : 'Search complete. No supported matches found this time.');
   }
   $('website-form').addEventListener('submit', async event => {
     event.preventDefault(); if (busy) return;
     let website = $('website').value.trim(); if (!/^https?:\/\//i.test(website)) website = `https://${website}`;
     try { const url = new URL(website); if (url.protocol !== 'https:') throw new Error(); website = url.href; }
     catch { return status('Enter a public website, such as https://yourcompany.com.', true); }
-    controls(true); profile = null; results = []; filter = 'all';
+    controls(true); profile = null; results = []; filter = 'X';
     activity('website');
     $('progress-detail').textContent = `Checking ${new URL(website).hostname}.`;
-    $('progress-estimate').textContent = 'Estimated 2–5 minutes overall';
-    document.querySelectorAll('[data-filter]').forEach(node => node.setAttribute('aria-pressed', String(node.dataset.filter === filter)));
+    $('progress-estimate').textContent = 'Estimated 2–7 minutes overall';
     $('question-plan').hidden = true; $('inbox').hidden = true; $('retry-search').hidden = true; attribution('');
     status('Reading your website and finding the questions your business can answer…');
     try {
@@ -140,6 +148,13 @@
     try { await search(); } catch (error) { status(error.message, true); } finally { controls(false); }
   });
   document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
-    filter = button.dataset.filter; document.querySelectorAll('[data-filter]').forEach(node => node.setAttribute('aria-pressed', String(node.dataset.filter === filter))); render();
+    filter = button.dataset.filter; render();
   }));
+  $('filters').addEventListener('keydown', event => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    const tabs = [...$('filters').querySelectorAll('[role=tab]')]; const index = tabs.indexOf(document.activeElement);
+    if (index < 0) return; event.preventDefault();
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+    tabs[next].click(); tabs[next].focus();
+  });
 })();
