@@ -1,19 +1,48 @@
 (() => {
   const $ = id => document.getElementById(id);
   let profile = null, results = [], filter = 'all', busy = false;
+  let activityTimer = null, startedAt = 0;
   const el = (tag, className, content) => { const node = document.createElement(tag); if (className) node.className = className; if (content) node.textContent = content; return node; };
   const link = (label, url) => { const node = el('a', '', label); node.href = url; node.target = '_blank'; node.rel = 'noopener noreferrer'; return node; };
   const status = (message, error = false) => { $('app-status').textContent = message; $('app-status').classList.toggle('error', error); };
   function controls(value) {
     busy = value; $('discover').disabled = value; $('website').disabled = value; $('retry-search').disabled = value;
     $('discover').textContent = value ? 'Finding conversations…' : 'Find conversations ↗';
-    $('main').setAttribute('aria-busy', String(value));
+    $('discover').setAttribute('aria-busy', String(value));
+    $('inbox').setAttribute('aria-busy', String(value));
+    if (!value) { clearInterval(activityTimer); activityTimer = null; $('search-progress').hidden = true; }
+  }
+  function activity(stage) {
+    if (!activityTimer) {
+      startedAt = Date.now();
+      const tick = () => {
+        const seconds = Math.floor((Date.now() - startedAt) / 1000);
+        $('progress-time').textContent = `Working · ${seconds}s elapsed`;
+        $('progress-note').textContent = seconds >= 45 ? 'Still working. Public searches can take a few minutes.' : 'This can take a couple of minutes. You can keep this page open while we work.';
+      };
+      tick(); activityTimer = setInterval(tick, 1000);
+    }
+    const finding = stage === 'search';
+    $('search-progress').hidden = false;
+    $('progress-title').textContent = finding ? 'Searching LinkedIn, X and Reddit' : 'Reading your website';
+    $('progress-stage').textContent = finding ? 'Step 2 of 2' : 'Step 1 of 2';
+    $('discover').textContent = finding ? 'Searching conversations…' : 'Reading website…';
+    $('progress-read').classList.toggle('complete', finding);
+    for (const id of ['progress-read', 'progress-find']) $(id).removeAttribute('aria-current');
+    $(finding ? 'progress-find' : 'progress-read').setAttribute('aria-current', 'step');
   }
   async function api(path, body) {
-    const response = await fetch(`/api/leadgen/${path}`, { method: 'POST', credentials: 'omit', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Could not finish. Please try again.');
-    return data;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 210000);
+    try {
+      const response = await fetch(`/api/leadgen/${path}`, { method: 'POST', credentials: 'omit', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: controller.signal });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Could not finish. Please try again.');
+      return data;
+    } catch (error) {
+      if (error.name === 'AbortError') throw new Error('The search took too long. Please try again.');
+      throw error;
+    } finally { clearTimeout(timeout); }
   }
   function attribution(suggestions) {
     $('search-suggestions').replaceChildren(); $('search-attribution').hidden = !suggestions;
@@ -41,6 +70,7 @@
     }
   }
   async function search() {
+    activity('search');
     status('Finding relevant questions on LinkedIn, X and Reddit…');
     const found = await api('search', { profile, platforms: ['LinkedIn', 'X', 'Reddit'] });
     results = found.results; $('coverage').replaceChildren();
@@ -54,6 +84,7 @@
     try { const url = new URL(website); if (url.protocol !== 'https:') throw new Error(); website = url.href; }
     catch { return status('Enter a public website, such as https://yourcompany.com.', true); }
     controls(true); profile = null; results = []; filter = 'all';
+    activity('website');
     document.querySelectorAll('[data-filter]').forEach(node => node.setAttribute('aria-pressed', String(node.dataset.filter === filter)));
     $('question-plan').hidden = true; $('inbox').hidden = true; $('retry-search').hidden = true; attribution('');
     status('Reading your website and finding the questions your business can answer…');
