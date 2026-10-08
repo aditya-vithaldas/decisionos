@@ -389,3 +389,14 @@ img { max-width: 100%; }
   .philosophy, .about, .contact-form-section { padding-block: 42px; }
   .services-heading { margin-bottom: 20px; }
 }
+
+/* Replace the inquiry fields with a clear, spacious confirmation. */
+.contact-form[hidden], .contact-intro[hidden], .contact-success[hidden] { display: none !important; }
+.contact-form-section.is-complete { grid-template-columns: minmax(0, 1fr); }
+.contact-success { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 380px; text-align: center; padding: 28px 12px; background: radial-gradient(ellipse at 25% 40%, #00cbae14, transparent 55%), radial-gradient(ellipse at 80% 60%, #8338ec12, transparent 55%); border-radius: 28px; }
+.contact-success-mark { display: grid; place-items: center; width: 76px; height: 76px; margin-bottom: 24px; border-radius: 24px; font-size: 40px; color: white; background: linear-gradient(120deg, #00a995, #2584f4 55%, #8338ec); box-shadow: 0 16px 40px #2584f42b; }
+.contact-success .eyebrow { color: #536b83; margin-bottom: 16px; }
+.contact-success h2 { margin: 0; font-size: clamp(2.6rem, 7vw, 5.25rem); line-height: 1.08; letter-spacing: -.055em; font-weight: 800; color: #216bd0; background: linear-gradient(100deg, #008b80, #2584f4 52%, #8338ec); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.contact-success-copy { font-size: clamp(1rem, 2vw, 1.3rem); line-height: 1.7; color: var(--muted); max-width: 520px; margin: 22px auto 0; }
+.contact-success:focus { outline: none; }
+@media (max-width: 650px) { .contact-success { min-height: 320px; padding-inline: 0; }.contact-success-mark { width: 64px; height: 64px; font-size: 34px; } }
