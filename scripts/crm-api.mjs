@@ -467,7 +467,7 @@ export function createCrmHandler() {
       if (path === '/workspace/status' && req.method === 'POST') {
         sameOrigin(req, config); const body = await readBody(req);
         const { lead, record, path: recordPath } = await gmailLead(uid, user, config, body.id, body.email, body.kind);
-        if (!lead.kind || !(lead.kind === 'finance' ? ['Action required','Informational','Payment failures'] : lead.kind === 'jobs' ? ['Open', 'Closed', 'Inactive'] : ['Hot', 'Moderate', 'Cold', 'Done']).includes(body.stage))
+        if (!lead.kind || !(lead.kind === 'finance' ? ['Amount','Payment failures','General information'] : lead.kind === 'jobs' ? ['Open', 'Closed', 'Inactive'] : ['Hot', 'Moderate', 'Cold', 'Done']).includes(body.stage))
           throw Object.assign(new Error('Choose a valid private workspace status.'), { status: 400 });
         await firestore(recordPath, 'PATCH', { lead: JSON.stringify({ ...lead, stage: body.stage, manualStatus: true }), manualStage: body.stage, analyzedAt: record.analyzedAt }, record.updateTime);
         for (const key of snapshots.keys()) if (key.startsWith(`${uid}:`)) snapshots.delete(key);

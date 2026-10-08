@@ -9,7 +9,7 @@ const lenses = {
   sales: 'Relevant means a genuine personal business inquiry or sales prospect. Other means mass promotion, recruiting, receipts, or unrelated mail.',
   jobs: 'Relevant means actual personal application, hiring or recruiter conversation including automated application acknowledgement/rejection. Generic job listings/newsletters are Other.',
   actions: 'Relevant means an explicit request or task requiring action by the mailbox owner. Generic marketing calls to action, informational mail, or already completed work are Other.',
-  finance: 'Relevant means a personal invoice, receipt, bill, payment confirmation, failed/declined/returned payment or outstanding amount. Generic financial promotions, offers and investing newsletters are Other. Do not infer payment from invoice creation.',
+  finance: 'Relevant means a personal invoice, receipt, bill, payment confirmation, failed/declined/returned payment or outstanding amount. Choose Amount for invoices, bills, amounts owed or paid with a specific monetary amount; Payment failures for current failed, declined or returned payments (including auto-pay); General information for other personal billing/payment information. Generic financial promotions, offers and investing newsletters are Other. Conditional or resolved failures are not Payment failures. Do not infer payment from invoice creation.',
 };
 const PAGE_BATCHES = 8;
 // Classification never generates or extracts facts with another model. Source-only
@@ -18,7 +18,7 @@ function sourceCard(c, tab, decision, now) {
   const text=c.messages.at(-1)?.text || '', quote=text.slice(0,180);
   const closed=tab==='jobs' && !c.outbound && !/\b(if|might|may|unless|possibly)\b/i.test(quote) && /(?:not (?:be )?(?:proceeding|moving forward|selected)|rejected|rejection|withdrawn|position.{0,30}(?:filled|closed)|application.{0,30}(?:unsuccessful|closed))/i.test(quote);
   const paymentFailure=tab==='finance'?sourcePaymentFailure(c):null;
-  const stage=tab==='jobs' ? closed?'Closed':now-new Date(c.lastTouch)>7*86400000?'Inactive':'Open' : tab==='finance' ? paymentFailure?'Payment failures':/\b(?:amount due|balance due|overdue|please pay|payment required)\b/i.test(quote)?'Action required':'Informational' : c.days >= (c.outbound?3:1)?'Hot':'Moderate';
+  const stage=tab==='jobs' ? closed?'Closed':now-new Date(c.lastTouch)>7*86400000?'Inactive':'Open' : tab==='finance' ? decision.suggestedTheme : c.days >= (c.outbound?3:1)?'Hot':'Moderate';
   return {...visible(c,tab,stage),...decision,stage,theme:stage,application:null,finance:null,paymentFailure,dueDate:null,quote:paymentFailure?.quote||quote,
     evidence:[`Subject: ${c.subject}`,`Latest message: ${c.lastTouch}`,`Source excerpt: ${paymentFailure?.quote||quote}`,...[paymentFailure?.amountQuote,paymentFailure?.actionQuote].filter(Boolean)],
     reason:'JEV classified this topic. Displayed text and dates come directly from the stored email; no generated extraction.'};
@@ -121,7 +121,7 @@ export function createWorkspaceFlow({ googleRequest, firestore, storedList, encr
         const eligibleTotal=metadata.dates?Object.entries(metadata.versions).filter(([id,version])=>new Date(metadata.dates[id])>=metadata.now-(tab==='jobs'?180:tab==='clusters'?14:7)*86400000&&!disposed.has(`${id}:${version}`)&&!dismissed.has(`gmail-${id}`)).length:null;activity.eligibleTotal=eligibleTotal;
         const prompt = String(body.prompt || '').slice(0, 3000), signature = hash(prompt);
         if (token && token.promptHash !== signature) throw Object.assign(new Error('Your analysis changed. Start analysis again.'), { status: 400 });
-        const scope = `${uid}:${tab}:${signature}:jev-only-v1${tab==='finance'?'-failures-v1':''}:${process.env.CRM_JEV_MODEL || 'jev-latest'}`;
+        const scope = `${uid}:${tab}:${signature}:jev-only-v1${tab==='finance'?'-categories-v2':''}:${process.env.CRM_JEV_MODEL || 'jev-latest'}`;
         const snapshotKey = `${scope}:${fetched.fetch}`;
         const statusVersion=await firestore(`${uid}/workspace_meta/status`);
         const durablePath=`${uid}/workspace_analyses/${hash(`${scope}:${JSON.stringify(metadata.versions || fetched.fetch)}:${statusVersion?.updatedAt || ''}`)}`;
@@ -151,7 +151,7 @@ export function createWorkspaceFlow({ googleRequest, firestore, storedList, encr
         let themes = cursor.themes || [], items = []; const modelStarted = performance.now();
         if (tab === 'clusters' && !themes.length) themes = checkedThemes({themes:body.themes}) || [];
         if (tab === 'clusters' && !themes.length) themes = ['Business','Jobs','Tasks','Finance','Personal','Other'];
-        const labels = tab === 'clusters' ? themes : ['Relevant', 'Other'];
+        const labels = tab === 'clusters' ? themes : tab === 'finance' ? ['Amount', 'Payment failures', 'General information', 'Other'] : ['Relevant', 'Other'];
         await Promise.all(Array.from({length:Math.ceil(candidates.length/16)},(_,i)=>i*16).map(async offset => {
           const group = candidates.slice(offset, offset + 16), missing = [];
           const resolved = new Map();
@@ -166,7 +166,7 @@ export function createWorkspaceFlow({ googleRequest, firestore, storedList, encr
             const decision = resolved.get(c.threadId); activity.classified++;
             if (decision.theme === 'Needs review') items.push({ ...visible(c, tab), ...decision, stage: 'Unsorted', theme: 'Unsorted', reviewRequired: true });
             else if (tab === 'clusters') items.push({ ...visible(c, tab, decision.theme), ...decision });
-            else if (decision.theme === 'Relevant') items.push(sourceCard(c,tab,decision,metadata.now));
+            else if (decision.theme === 'Relevant' || tab === 'finance' && ['Amount','Payment failures','General information'].includes(decision.theme)) items.push(sourceCard(c,tab,decision,metadata.now));
             else items.push({ ...visible(c, tab, 'Other'), ...decision, stage: 'Other', theme: 'Other', nonAction: true });
           }
         }));
@@ -174,7 +174,7 @@ export function createWorkspaceFlow({ googleRequest, firestore, storedList, encr
         await Promise.all(items.filter(i => !i.nonAction && !i.reviewRequired && tab !== 'clusters').map(async item => {
           const path = `${uid}/gmail_leads/${tab}-${item.id}`, prior = await firestore(path);
           try { const saved=JSON.parse(prior?.lead || 'null');if(saved?.lastMessageId===item.lastMessageId){item.application=saved.application || null;item.finance=saved.finance || null;item.dueDate=saved.dueDate || null;} } catch {}
-          if ((!item.paymentFailure || prior?.manualStage==='Payment failures') && (tab === 'finance' ? ['Action required','Informational','Payment failures'] : tab === 'jobs' ? ['Inactive','Closed'] : ['Hot','Moderate','Cold','Done']).includes(prior?.manualStage)) { item.stage = prior.manualStage; item.manualStatus = true; }
+          if ((!item.paymentFailure || prior?.manualStage==='Payment failures') && (tab === 'finance' ? ['Amount','Payment failures','General information'] : tab === 'jobs' ? ['Inactive','Closed'] : ['Hot','Moderate','Cold','Done']).includes(prior?.manualStage)) { item.stage = prior.manualStage; item.manualStatus = true; }
           await firestore(path, 'PATCH', { lead: JSON.stringify(item), manualStage: prior?.manualStage || '', analyzedAt: new Date().toISOString() }, prior?.updateTime);
         }));
         const page = Number(cursor.page) + PAGE_BATCHES, scanned = cursor.scanned + candidates.length;

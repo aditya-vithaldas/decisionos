@@ -30,6 +30,19 @@ test('Fetch is model-free and encrypted; Analyze consumes stored mail, grounds c
     assert.equal(googleCalls.length,callsBefore,'Analyze must not refetch Gmail');assert.equal(jevCalls,1);assert.equal(modelCalls,0,'Analyze must invoke JEV exclusively');assert.equal(analyzed.timings.geminiRequests,0);assert.equal(analyzed.timings.jevThreads,2);
     assert.equal(analyzed.items.find(x=>x.id.endsWith(ids[0])).quote,'Please send a proposal.');
     assert.equal(analyzed.items.find(x=>x.id.endsWith(ids[1])).stage,'Other');assert.equal(analyzed.items.find(x=>x.id.endsWith(ids[0])).decision.probability,.99);
+    assert.equal(analyzed.items[0].decision.batchSize,2);
+    assert.ok(Number.isFinite(analyzed.items[0].decision.apiMs));
+    const financeFetchId=fetched.fetchIds.finance;
+    const beforeFinance=globalThis.fetch;
+    globalThis.fetch=async(url,options)=>{
+      const payload=JSON.parse(options.body);
+      assert.deepEqual(Object.values(payload.questions.mail_0.criteria),['Amount','Payment failures','General information','Other']);
+      return new Response(JSON.stringify({answers:{mail_0:{choice:'theme_0',confidence:.98,probabilities:{theme_0:.8,theme_1:.1,theme_2:.05,theme_3:.05}},mail_1:{choice:'theme_2',confidence:.97,probabilities:{theme_0:.1,theme_1:.05,theme_2:.8,theme_3:.05}}}}));
+    };
+    const finance=await flow.run('analyze','alice',{email:'owner@example.test'},config,{tab:'finance',fetchId:financeFetchId});
+    assert.deepEqual(finance.items.map(x=>x.stage).sort(),['Amount','General information']);
+    assert.equal(finance.items.find(x=>x.stage==='Amount').decision.probabilities['Payment failures'],.1);
+    globalThis.fetch=beforeFinance;
     const warm=await flow.run('analyze','alice',{email:'owner@example.test'},config,{tab:'sales',fetchId:fetched.fetchId});assert.equal(warm.cached,true);assert.equal(modelCalls,0);assert.equal(jevCalls,1);
     const restarted=createWorkspaceFlow(dependencies);
     const durableWarm=await restarted.run('analyze','alice',{email:'owner@example.test'},config,{tab:'sales',fetchId:fetched.fetchId});assert.equal(durableWarm.cached,true);assert.equal(durableWarm.items.length,2);assert.equal(modelCalls,0);

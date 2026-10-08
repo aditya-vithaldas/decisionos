@@ -68,3 +68,5 @@
 .speed-hero.compact .speed-bar{display:none}
 .speed-hero.compact .speed-note{flex-basis:100%;margin:0}
 .speed-hero.compact .speed-close{top:50%;transform:translateY(-50%)}
+
+.card-decision{display:grid;gap:3px;margin-top:10px;padding-top:8px;border-top:1px solid #ddd}.card-decision small{display:block;font-size:11px;line-height:1.4}

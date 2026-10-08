@@ -67,7 +67,7 @@ async function refresh() {
   renderBoard(); status(gmail ? `${data.scannedThreads} threads reviewed; ${leads.length} evidence-backed suggestions.${data.limited ? ' This is a limited recent-thread sample, not your full mailbox.' : ''}` : `${leads.length} customer rows reviewed. ${leads.filter(lead => lead.stage === 'Done').length} marked done.`);
 }
 function element(tag, text, cls) { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; if (cls) e.className = cls; return e; }
-function unsortedStack(items){const lane=element('section',undefined,'lane unsorted');lane.append(element('h3',`Unsorted · ${items.length}`));const stack=element('div',undefined,'unsorted-stack');for(let i=0;i<3;i++){const edge=element('span',undefined,'unsorted-edge');edge.setAttribute('aria-hidden','true');edge.style.setProperty('--layer',String(i+1));stack.append(edge);}const top=element('article',undefined,'unsorted-top');top.append(element('strong',items[0].subject||items[0].title),element('p',items[0].excerpt||items[0].quote||'','card-excerpt'));stack.append(top);lane.append(stack);return lane;}
+function unsortedStack(items){const lane=element('section',undefined,'lane unsorted');lane.append(element('h3',`Unsorted · ${items.length}`));const stack=element('div',undefined,'unsorted-stack');for(let i=0;i<3;i++){const edge=element('span',undefined,'unsorted-edge');edge.setAttribute('aria-hidden','true');edge.style.setProperty('--layer',String(i+1));stack.append(edge);}const top=element('article',undefined,'unsorted-top');top.append(element('strong',items[0].subject||items[0].title),element('p',items[0].excerpt||items[0].quote||'','card-excerpt'));if(items[0].decision)top.append(cardDecision(items[0]));stack.append(top);lane.append(stack);return lane;}
 function infoButton(item) {
   const button = element('button', 'ⓘ', 'decision-info'); button.type = 'button'; button.setAttribute('aria-label', `Classification details for ${item.title}`);
   button.addEventListener('click', () => {
@@ -92,7 +92,7 @@ function renderWorkspace() {
   $('scan-summary').dataset.scanned = String(scan.scanned); $('scan-summary').dataset.complete = String(scan.complete);
   for (const [name, value] of Object.entries(scan.timings || {})) $('scan-summary').dataset[name] = String(Math.round(value));
   $('processing-details').hidden = !scan.attempted;
-  const t=scan.timings || {}; $('processing-metrics').textContent=`Mail fetch: ${((t.gmailMs||0)/1000).toFixed(2)}s. JEV only: ${t.jevThreads||0} threads in ${t.jevRequests||0} batched requests; ${((t.modelMs||0)/1000).toFixed(2)}s classification wall time, ${t.modelMs?((t.jevThreads||0)*1000/t.modelMs).toFixed(1):'0'} threads/s. Up to 8 concurrent requests of 16 threads. Summed request time: ${((t.jevMs||0)/1000).toFixed(2)}s (overlapping). Gemini: ${t.geminiRequests||0} calls. Storage: ${((t.storeMs||0)/1000).toFixed(2)}s. Cached results make no model calls. Main throughput includes storage and page updates.${scan.fetchComplete===false?' Source fetch is incomplete: these results cover only fetched mail.':''}`;
+  const t=scan.timings || {}; $('processing-metrics').textContent=`Mail fetch: ${((t.gmailMs||0)/1000).toFixed(2)}s. JEV only: ${t.jevThreads||0} threads in ${t.jevRequests||0} batched requests; ${((t.modelMs||0)/1000).toFixed(2)}s classification wall time, ${t.modelMs?((t.jevThreads||0)*1000/t.modelMs).toFixed(1):'0'} threads/s. Up to 8 concurrent requests of 16 threads. Summed request time: ${((t.jevMs||0)/1000).toFixed(2)}s (overlapping). Gemini: ${t.geminiRequests||0} calls. Storage: ${((t.storeMs||0)/1000).toFixed(2)}s. CRM API calls: ${((t.apiMs||0)/1000).toFixed(2)}s; server processing: ${((t.serverMs||0)/1000).toFixed(2)}s. Cached results make no model calls. Main throughput includes storage and page updates.${scan.fetchComplete===false?' Source fetch is incomplete: these results cover only fetched mail.':''}`;
   if (!scanning) $('scan-stage').textContent = scan.attempted && scan.timings?.totalMs ? `${scan.operation === 'fetch' ? scan.fetched : scan.scanned} threads ${scan.operation === 'fetch' ? 'fetched' : 'reviewed'} · ${(scan.timings.totalMs / 1000).toFixed(1)}s${scan.cached ? ' · saved results' : scan.cursor ? ' · paused' : ''}` : '';
   if (!visibleItems.length) { results.append(element('p', scan.complete ? 'Nothing to act on here yet.' : scanning ? 'Finding what matters…' : 'Fetch your mail to get started.', 'empty')); return; }
   if (activeTab === 'clusters') {
@@ -109,7 +109,7 @@ function renderWorkspace() {
   results.className = 'workspace-lanes';
   const unsortedItems=visibleItems.filter(i=>i.stage==='Unsorted');
   if(unsortedItems.length)results.append(unsortedStack(unsortedItems));
-  const base = activeTab === 'jobs' ? ['Open', 'Inactive', 'Closed'] : activeTab === 'finance' ? ['Action required','Informational','Payment failures'] : ['Hot', 'Moderate', 'Cold', 'Done'];
+  const base = activeTab === 'jobs' ? ['Open', 'Inactive', 'Closed'] : activeTab === 'finance' ? ['Amount','Payment failures','General information'] : ['Hot', 'Moderate', 'Cold', 'Done'];
   const labels = base;
   for (const label of labels) {
     const group = visibleItems.filter(i => i.stage === label), lane = element('section', undefined, `lane ${label.toLowerCase()}`);
@@ -118,6 +118,7 @@ function renderWorkspace() {
       const wrapper = element('div', undefined, 'mail-card'); wrapper.dataset.threadId = item.threadId;wrapper.dataset.actionable=String(!['Unsorted','Other'].includes(item.stage));
       const card = element('button', undefined, 'lead-card'); card.type = 'button';
       card.append(element('strong', item.subject || item.title), element('p', item.excerpt || item.quote || '', 'card-excerpt'));
+      if(item.decision)card.append(cardDecision(item));
       if(item.reviewRequired)card.append(element('small','Review'));
       if (item.finance && !item.paymentFailure) { if(item.finance.amount)card.prepend(element('span',`${item.finance.currency} ${item.finance.amount}`,'finance-amount'));if(item.finance.type)card.append(element('small',item.finance.type)); }
       if(item.paymentFailure){const failure=item.paymentFailure;card.prepend(element('span',failure.amount?`${failure.currency} ${failure.amount}`:'Payment failed','finance-amount'));if(failure.reference||failure.date)card.append(element('small',[failure.reference,failure.date].filter(Boolean).join(' · ')));}
@@ -145,9 +146,19 @@ async function showCluster(label, items) {
       read.hidden = true;
     }));
     const letter = element('button', 'Open letter'); letter.type='button';letter.addEventListener('click',()=>openLead(item,letter));
-    card.append(element('h4', item.title), element('p', item.excerpt), link, letter, read, body); if (item.decision) card.append(infoButton(item)); $('cluster-email-cards').append(card);
+    card.append(element('h4', item.title), element('p', item.excerpt), link, letter, read, body); if (item.decision) card.append(cardDecision(item), infoButton(item)); $('cluster-email-cards').append(card);
   }
   $('cluster-title').tabIndex = -1; $('cluster-title').focus();
+}
+function cardDecision(item) {
+  const decision = item.decision, block = element('div', undefined, 'card-decision');
+  if (!decision) return block;
+  const percent = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : 'unavailable';
+  block.append(element('small', `Selected: ${decision.category} · ${percent(decision.probability)}`));
+  const alternatives = Object.entries(decision.probabilities || {}).filter(([label]) => label !== decision.category).sort((a,b) => (b[1] ?? -1) - (a[1] ?? -1));
+  for (const [label, probability] of alternatives) block.append(element('small', `${label} · ${percent(probability)}`));
+  block.append(element('small', Number.isFinite(decision.apiMs) ? `JEV API: ${(decision.apiMs / 1000).toFixed(2)}s · batch of ${decision.batchSize} emails · original call` : 'JEV API time: unavailable'));
+  return block;
 }
 function applySharedMailbox(data){
   sharedMailbox.complete=Boolean(data.fetchComplete);sharedMailbox.lastFetchedAt=Date.parse(data.lastFetchedAt)||Date.now();
@@ -222,7 +233,10 @@ async function scanWorkspace(operation = 'analyze',automatic=false) {
   try {
     do {
       status('');
+      const callStarted = performance.now();
       const data = await api(`/workspace/${operation}`, { tab, cursor: scan.cursor, fetchId: scan.fetchId, prompt: scan.prompt });
+      scan.timings.apiMs = (scan.timings.apiMs || 0) + performance.now() - callStarted;
+      scan.timings.serverMs = (scan.timings.serverMs || 0) + (data.timings?.totalMs || 0);
       const before = new Map([...document.querySelectorAll('.mail-card[data-thread-id]')].map(e=>[e.dataset.threadId,e.getBoundingClientRect()]));
       const unsortedStack = [...document.querySelectorAll('.paper-stack')].find(e=>e.dataset.stage==='Unsorted')?.getBoundingClientRect() || document.querySelector('.lane.unsorted')?.getBoundingClientRect();
       if (data.replaceItems) for (const [id,item] of scan.items) if (item.stage !== 'Unsorted' && (tab!=='jobs' || scan.sourceKeys?.has(id))) scan.items.delete(id);
@@ -290,7 +304,7 @@ function openLead(lead, card, loadLetter=true) {
   $('lead-title').textContent = lead.title || lead.name; $('lead-row').textContent = lead.source === 'gmail' ? 'Gmail conversation' : `Sheet row ${lead.row}`; $('lead-reason').textContent = lead.reason || '';
   $('lead-source').hidden = lead.source !== 'gmail'; if (lead.source === 'gmail') $('lead-source').href = lead.sourceUrl;
   $('lead-evidence').replaceChildren(...(lead.evidence || [lead.quote || lead.excerpt || '']).map(text => { const li = document.createElement('li'); li.textContent = text; return li; }));
-  $('lead-stage').replaceChildren(...(lead.kind === 'finance' ? ['Action required','Informational','Payment failures'] : lead.kind === 'jobs' ? ['Open', 'Closed', 'Inactive'] : ['Hot', 'Moderate', 'Cold', 'Done']).map(s => new Option(s, s)));
+  $('lead-stage').replaceChildren(...(lead.kind === 'finance' ? ['Amount','Payment failures','General information'] : lead.kind === 'jobs' ? ['Open', 'Closed', 'Inactive'] : ['Hot', 'Moderate', 'Cold', 'Done']).map(s => new Option(s, s)));
   $('save-stage').parentElement.hidden = ['Unsorted','Other'].includes(lead.stage) || lead.kind === 'clusters';
   $('lead-stage').value = lead.stage; $('draft-editor').hidden = true; $('reply-questions').hidden = true; $('history-list').replaceChildren();
   $('history-block').hidden = !account.gmailConnected; $('create-draft').disabled = !lead.email || /no.?reply|mailer-daemon/i.test(lead.email) || ['Other','Unsorted'].includes(lead.stage);
