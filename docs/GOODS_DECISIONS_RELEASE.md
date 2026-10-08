@@ -21,3 +21,29 @@ Release method: targeted layers over the actual previously serving production im
 Source images are generated illustrative assets, not purchasable listings. Results are model judgements; borderline results can change between calls. Protective limits are two concurrent batches and ten batches per minute per observed source IP. No customer history is stored. The existing Decisions credential expires November 5, 2026 and needs replacement before then.
 
 Unrelated local `docs/JEV_PROFILE_2026-10-07.md` was preserved and excluded.
+
+## 100-product speed experiment — October 9, 2026
+
+Current catalog has 100 distinct products: 25 tools/everyday goods, 25 office products, 25 summer/outdoor products and 25 winter/warmth products. Four generated 5×5 photograph grids supply the image evidence. Each provider request includes all four images and 100 named predicates targeting individual image cells. Product names are included as orientation hints, so this evaluates images with name context, rather than an image-only ablation. No category labels are sent to the provider. Each question makes one fresh `/v1/decisions` call using `gpt-6-luna`; no application result cache is used.
+
+The page displays valid decisions returned, Decisions API time, question-to-updated-shelf time (network and rendering included), and provider call count. Matching cards remain prominent with yes probabilities. Unknown answers remain undecided.
+
+Implementation: `c2f96b44cd89264001a1831d37237dcbcd5c4317`, merged and pushed to main. Build: `4f938278-aa0b-4277-a133-2a6f76946320`. Image: `sha256:957ee81fcf0a4cc0bbc5ba482596a5682bb97cf797223a4155aa226172e2bcb1`. Revision: `chatpm-goods100-c2f96b4`, promoted to 100% traffic at the existing public URL.
+
+Focused checks passed for 100 unique products, four image inputs, all 100 targeted predicates in a single fresh call, threshold/unknown handling, timings and validation. JavaScript syntax and diff checks passed. All six deployed image/CSS/JS files matched committed source. Tagged health, CRM, goods and catalog checks returned 200. Public catalog and browser verification confirmed 100 products and the live timing panel; winter produced 25 prominent matches and 75 nonmatches with percentages.
+
+Observed samples (not a load or capacity benchmark):
+
+| Environment / question | API milliseconds | Total milliseconds | Valid decisions |
+| --- | ---: | ---: | ---: |
+| Local server / summer | 3232 | 3255 | 100 |
+| Local server / winter | 3052 | 3060 | 100 |
+| Local server / summer repeat | 2887 | 2891 | 100 |
+| Tagged Cloud Run / summer | 1971 | 2132 | 100 |
+| Tagged Cloud Run / winter | 1956 | 2144 | 100 |
+| Tagged Cloud Run / tools | 1920 | 2136 | 100 |
+| Public browser / winter | 1350 (display rounded) | 1440 (display rounded) | 100 |
+
+Local/tagged totals are HTTP roundtrip measurements; public browser total includes shelf rendering. API timings include payload serialization/upload and response reading. Different locations, network conditions, provider variation and possible provider-side prompt reuse can affect timings. The browser sample is not a guaranteed SLA. Application results are never replayed from a cache.
+
+Release is a targeted layer over the previously serving percentage image digest, adding exact committed goods assets, images, API and catalog. It is not a full build of unrelated applications. Existing server routing and other production applications remain in the base image. Unrelated `docs/JEV_PROFILE_2026-10-07.md` remains excluded.
