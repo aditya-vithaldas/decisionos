@@ -55,7 +55,7 @@
     $('result-count').textContent = `${visible.length} conversation${visible.length === 1 ? '' : 's'}`;
     $('search-meta').textContent = state.searchedAt ? `Last searched ${new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(state.searchedAt))}. Post dates and current buying intent are unverified.` : example ? 'Example recommendations only. Sign in and search to discover actual posts.' : state.profile ? 'Review your offering and questions, then find conversations.' : 'Start with a company to discover relevant questions.';
     $('coverage').replaceChildren();
-    for (const item of state.coverage || []) $('coverage').append(el('span', '', `${item.platform}: ${item.count} match${item.count === 1 ? '' : 'es'}`));
+    for (const item of state.coverage || []) $('coverage').append(el('span', '', item.status === 'unavailable' ? `${item.platform}: search unavailable` : `${item.platform}: ${item.count} match${item.count === 1 ? '' : 'es'}`));
     $('results').replaceChildren();
     if (!visible.length) {
       const empty = el('div', 'empty'); empty.append(el('span', 'empty-icon', '↗'), el('h3', '', state.searchedAt ? all.length ? 'No conversations in this view.' : 'No verified matches this time.' : 'Good leads start with a real need.'), el('p', '', state.searchedAt ? 'Try another question or platform. Public search coverage can be limited; fewer matches are better than invented prospects.' : 'We’ll look for questions about problems you solve, then show you why each conversation could be a fit.'));
