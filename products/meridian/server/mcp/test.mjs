@@ -12,10 +12,10 @@ test('MCP transport, every read tool, reconciled evidence, rejected writes and o
  await client.connect(new StreamableHTTPClientTransport(new URL('http://127.0.0.1:8089/mcp')));
  const list=await client.listTools();assert.equal(list.tools.length,5);assert.ok(list.tools.every(t=>t.annotations.readOnlyHint));
  const call=async(name,args={})=>{const r=await client.callTool({name,arguments:args});return {raw:r,value:JSON.parse(r.content[0].text)};};
- const s=await call('get_schema');assert.equal(s.value.synthetic,true);
+ const s=await call('get_schema');assert.equal(s.value.synthetic,true);assert.deepEqual(s.value.reportingPolicy.requiredBreakdowns,['category','channel']);
  const q=await call('query_sales',{sql:'SELECT count(*)::INTEGER n FROM orders'});assert.ok(q.value.rows[0].n>0);
  for(const sql of ['DELETE FROM orders','SELECT 1; SELECT 2',"SELECT * FROM read_csv('/etc/passwd')"]){const r=await call('query_sales',{sql});assert.equal(r.raw.isError,true);}
- const intelligence=await call('get_sales_intelligence');assert.equal(intelligence.raw.isError,undefined,JSON.stringify(intelligence.value));const report=intelligence.value;assert.equal(report.dataThrough,s.value.period.end);assert.ok(Math.abs(report.attribution.unexplained)<.01);assert.equal(report.currency,'USD');
+ const intelligence=await call('get_sales_intelligence');assert.equal(intelligence.raw.isError,undefined,JSON.stringify(intelligence.value));const report=intelligence.value;assert.equal(report.dataThrough,s.value.period.end);assert.ok(Math.abs(report.attribution.unexplained)<.01);assert.equal(report.currency,'USD');assert.ok(report.presentation.nextQuestions.length);for(const dimension of ['category','channel'])assert.ok(Math.abs(report.presentation.breakdowns[dimension].reduce((sum,row)=>sum+row.current,0)-report.current.revenue)<.01);
  const docs=(await call('search',{query:'sales'})).value;assert.ok(docs.results.length);const doc=(await call('fetch',{id:docs.results[0].id})).value;assert.ok(doc.text);
  const denied=await fetch('http://127.0.0.1:8089/mcp',{method:'POST',headers:{Origin:'https://attacker.example','Content-Type':'application/json'},body:'{}'});assert.equal(denied.status,403);
  const fresh=(await call('query_sales',{sql:'SELECT count(*)::INTEGER n FROM orders'})).value;assert.equal(fresh.rows[0].n,q.value.rows[0].n);

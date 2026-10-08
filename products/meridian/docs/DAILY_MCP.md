@@ -25,6 +25,16 @@ The Page embeds contain saved results read from `/dashboard`; the Page sandbox d
 
 The latest complete day is compared with the same weekday one week earlier. Revenue equals completed orders' net amount, excluding tax, shipping, cancelled orders and returns. A sequential traffic → completed conversion → average-order-value decomposition reconciles to the revenue change. Category, region and channel changes reconcile independently; they overlap and must not be added together. Synthetic scenario events provide context, not evidence of an external causal effect. Inventory availability and payment errors are unmeasured and cannot be claimed as findings.
 
+## Sales reporting contract — 1.1.0
+
+The MCP initialization instructions, tool description, schema/query responses and sales-intelligence evidence carry the reporting contract in `server/mcp/reporting.mjs`. Sales-performance answers show a dashboard when supported, use smooth shape-preserving temporal curves with observed values retained, and color favorable changes green and unfavorable changes red. Cancellation increases are unfavorable. Signs and labels accompany colors.
+
+Every performance answer includes both category and channel revenue splits with shares and changes against the same stated baseline. The two dimensions overlap and cannot be added. Requests for another date or period must query both splits for that exact scope.
+
+The evidence contains computed `presentation.breakdowns`, per-day `declineCues` with exact comparison dates and investigation prompts, and up to three pattern-based `nextQuestions`. Every mentioned drop gets a specific investigation cue, and every sales-performance response ends with a useful forward question. Historical daily dips must not be explained using the latest day's weekly segment comparison or an unrelated scenario event.
+
+The performance template includes a smooth daily trend, direction-colored deltas, simultaneous category/channel splits, a day inspection control, and follow-up actions. Category totals show the leading eight categories and a reconciled remainder, with all category details available. The existing hosted Page needs its saved template refreshed before these presentation changes appear there; the connected plugin receives the reporting guidance directly from the live service.
+
 ## Checks
 
 Run `scripts/check-daily.mjs` with `BASE_DATA_DIR` pointing to an existing demo dataset and `TEST_DATA_DIR` pointing to a scratch directory. Run `server/mcp/test.mjs` with `BASE_DATA_DIR`. The checks cover duplicate generation, date validation and DST, foreign keys, item/order/payment totals, session dates, RCA reconciliation, MCP transport and every tool, unchanged row counts after rejected writes, and rejected cross-origin requests.

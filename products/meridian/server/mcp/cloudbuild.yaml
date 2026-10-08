@@ -1,5 +1,7 @@
 steps:
   - name: gcr.io/cloud-builders/docker
-    args: ['build', '-f', 'server/mcp/Dockerfile', '-t', 'europe-west1-docker.pkg.dev/striking-loop-447915-q3/cloud-run-source-deploy/meridian-commerce-mcp:20261008', '.']
+    args: ['build', '-f', 'server/mcp/Dockerfile', '-t', 'europe-west1-docker.pkg.dev/striking-loop-447915-q3/cloud-run-source-deploy/meridian-commerce-mcp:${_RELEASE_TAG}', '.']
 images:
-  - europe-west1-docker.pkg.dev/striking-loop-447915-q3/cloud-run-source-deploy/meridian-commerce-mcp:20261008
+  - europe-west1-docker.pkg.dev/striking-loop-447915-q3/cloud-run-source-deploy/meridian-commerce-mcp:${_RELEASE_TAG}
+substitutions:
+  _RELEASE_TAG: '20261008-v1.1.0'
