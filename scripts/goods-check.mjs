@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {Readable} from 'node:stream';
-import {goods,decisionsResult,createGoodsHandler} from './goods-api.mjs';
+import {goods,decisionsResult,createGoodsHandler,decisionCost} from './goods-api.mjs';
 assert.equal(goods.length,100);assert.equal(new Set(goods.map(p=>p.id)).size,100);assert.equal(new Set(goods.map(p=>p.name)).size,100);
 assert.deepEqual(goods[99],{id:'item_100',name:'Insulated sleeping bag',category:'Winter & warmth',sheet:4,image:'/images/goods-100/sheet-4.png',row:5,column:5,columns:5,rows:5});
 const results=decisionsResult({answers:[{name:'item_076',type:'predicate',probability:.99},{name:'item_051',type:'predicate',probability:.2},{name:'item_052',type:'predicate',probability:.5},{name:'item_002',type:'refusal'},{name:'item_004',type:'predicate',probability:1.1}]});
@@ -10,3 +10,8 @@ async function call(body){const req=Readable.from([JSON.stringify(body)]);req.ur
 const r=await call({question:'Is this related to winter?'});assert.equal(r.status,200);assert.equal(r.data.goods.length,100);assert.equal(r.data.goods.filter(p=>p.yes).length,1);assert.equal(providerBody.questions.length,100);assert.deepEqual(loaded,[1,2,3,4]);assert.equal(providerBody.input[0].content.filter(p=>p.type==='input_image').length,4);assert.match(providerBody.questions[99].instructions,/row 5, column 5 of IMAGE 4/);assert.match(providerBody.questions[0].instructions,/winter/);assert.equal(r.data.apiCalls,1);assert.equal(calls,1);assert.equal(typeof r.data.apiMs,'number');assert.equal(r.data.productCount,100);assert.equal((await call({question:''})).status,400);
 await call({question:'Is this related to summer?'});assert.equal(calls,2,'Each question makes a fresh API call');
 console.log('100-product checks passed: distinct items, four images, 100 targeted predicates in one fresh API call, threshold, unknown answers and timings.');
+
+const slow=createGoodsHandler({key:()=>'test-only',loadImage:async()=>Buffer.from('image'),request:async()=>{const e=new Error('timeout');e.name='TimeoutError';throw e;}});
+const slowReq=Readable.from([JSON.stringify({question:'Is this a tool?'})]);Object.assign(slowReq,{url:'/api/goods/decide',method:'POST',headers:{},socket:{remoteAddress:'test'}});let slowStatus,slowBody;await slow(slowReq,{writeHead(s){slowStatus=s;return this},end(s){slowBody=JSON.parse(s)}});assert.equal(slowStatus,504);assert.match(slowBody.error,/two minutes/);console.log('Timeout error handling passed');
+
+assert.equal(decisionCost({model:'gpt-6-luna',usage:{input_tokens:20000,input_tokens_details:{cached_tokens:5000,cache_write_tokens:1000}}}).usd,.0015);assert.equal(decisionCost({model:'gpt-6-luna',usage:{input_tokens:20000,input_tokens_details:{cached_tokens:20000}}}).usd,0);assert.equal(decisionCost({}),null);assert.equal(decisionCost({model:'other',usage:{input_tokens:10,input_tokens_details:{cached_tokens:0}}}),null);console.log('Usage-based cost checks passed');
