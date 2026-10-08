@@ -47,3 +47,13 @@ Observed samples (not a load or capacity benchmark):
 Local/tagged totals are HTTP roundtrip measurements; public browser total includes shelf rendering. API timings include payload serialization/upload and response reading. Different locations, network conditions, provider variation and possible provider-side prompt reuse can affect timings. The browser sample is not a guaranteed SLA. Application results are never replayed from a cache.
 
 Release is a targeted layer over the previously serving percentage image digest, adding exact committed goods assets, images, API and catalog. It is not a full build of unrelated applications. Existing server routing and other production applications remain in the base image. Unrelated `docs/JEV_PROFILE_2026-10-07.md` remains excluded.
+
+## Compact shelf, costs and slow-call handling — October 9, 2026
+
+Implementation `66437f1` was merged and pushed to main. Desktop widths >=1200px now show ten products per row in both matching and remaining shelves; medium widths show five and mobile shows two. The hero uses a compact title/control layout and full-width slim metrics strip. Browser verification at the desktop breakpoint confirmed ten computed columns, 100 initial cards, and the shelf starting around y=355px before a question.
+
+Call cost is estimated from the provider's reported usage, using the official Decisions guide rate checked on October 9: $0.10 per million uncached input tokens, with no extra cache-read/write or output charge. The UI formats USD to four decimal places and explicitly labels it estimated; hosting and taxes are excluded. Unknown usage/models display unavailable rather than zero. Source: https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability . A real sample reported 34,764 input tokens, zero cached tokens, and $0.0034764, displayed as $0.0035. Cost and timeout handler checks, syntax checks and diff checks passed.
+
+Investigation found one production 502 lasting 60.1209 seconds, corresponding to the prior provider timeout; subsequent requests succeeded. The provider wait window is now 120 seconds, with a distinct HTTP 504 timeout message and a still-waiting notice after ten seconds. This allows longer calls to complete but cannot eliminate upstream stalls. No automatic retry is added.
+
+Build `b84c1588-6a98-4c93-b2fd-9d755b131fbb`; image `sha256:27fa9e84e89524cc3d4e3c89073c1f7de36b44ea9dcceb850c4f142c8e26c1b1`; revision `chatpm-goods-layout-66437f1`, promoted to 100% traffic. Targeted release over the previous serving image; deployed CSS/JS matched committed bytes. Tagged health/CRM/goods checks passed and a real 100-answer API call returned cost metadata with 1.928 seconds API time. Unrelated draft remains excluded.
