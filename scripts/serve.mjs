@@ -2,6 +2,7 @@ import {demoAPI} from './demo-api.mjs';
 import { analyticsSession } from './analytics-api.mjs';
 import { createContactHandler } from './contact-api.mjs';
 import { createCrmHandler } from './crm-api.mjs';
+import { createPublicLeadgenHandler } from './leadgen-api.mjs';
 import { createImageQAHandler } from './image-qa-api.mjs';
 import { commerceSession } from './commerce-api.mjs';
 import { createServer } from 'node:http';
@@ -17,9 +18,11 @@ Object.assign(types, { '.mjs': 'text/javascript; charset=utf-8', '.wasm': 'appli
 const redirects = { '/toptal-application': '/toptal-application.html', '/work.html': '/case-studies.html', '/index.html': '/', '/llm.txt': '/llms.txt' };
 const contactHandler = createContactHandler();
 const crmHandler = createCrmHandler();
+const leadgenHandler = createPublicLeadgenHandler();
 const imageQAHandler = createImageQAHandler();
 createServer(async (req, res) => {
   try {
+    if (new URL(req.url, 'http://localhost').pathname.startsWith('/api/leadgen/')) { await leadgenHandler(req, res); return; }
     if (new URL(req.url,'http://localhost').pathname.startsWith('/api/image-qa/')) {await imageQAHandler(req,res);return;}
     if (new URL(req.url, 'http://localhost').pathname === '/commerce/api/realtime') { await commerceSession(req, res); return; }
     if (new URL(req.url, 'http://localhost').pathname.startsWith('/crm/api/')) { await crmHandler(req, res); return; }

@@ -1,25 +1,23 @@
 # B2B lead generator
 
-`/leadgen` researches a B2B company, recommends editable buyer questions, searches public LinkedIn, Reddit and X posts, and links to the original conversation for manual replies. The homepage B2B carousel links to it.
+The public `/leadgen` page starts with a blank website field. Submitting a public HTTPS website reads its offering, recommends buyer questions, then automatically searches LinkedIn, X and Reddit. No sign-in or company setup is required. Each sourced match explains relevance, suggests a constructive answer and links to the original post.
 
-## Runtime and account data
+## Public runtime
 
-Uses the established Node server and identity-only Google OAuth flow: `/crm/api/oauth/start?identity=1&return=leadgen`. The existing callback redirects to `/leadgen`. All private endpoints are under `/crm/api/leadgen/`, covered by the existing HttpOnly `/crm` session cookie. No OAuth redirect URI or social app credentials are added. Gmail and Sheets permissions are unnecessary. The established Gmail/Sheets flows retain their destinations and permissions.
+POST `/api/leadgen/recommend` accepts `{website}` and returns the inferred company profile and suggested questions. POST `/api/leadgen/search` accepts that profile and the selected platforms. These routes require JSON from an allowed site origin, bound request bodies, rate-limit temporary hashed network addresses and cap concurrent research. Only recommendation and search are exposed publicly. The public flow performs no Firestore reads or writes, uses no session cookies and retains no profiles or leads on the server. Results live in the current page until refresh or navigation. Infrastructure may retain normal request logs.
 
-Requires the existing CRM Google OAuth, session, token encryption and Firestore configuration, plus `GEMINI_API_KEY`. `LEADGEN_MODEL` optionally overrides the default `gemini-3.8-flash`. API credentials stay on the server.
+The existing signed-in CRM leadgen endpoints remain separate. Public requests cannot access saved account state or mutate account-owned leads.
 
-GET `/state` returns the account's profile, results and statuses. POST `/recommend` researches company/website and proposes questions. POST `/search` accepts a reviewed profile and selected platforms. POST `/status` changes an existing account-owned result to new, saved, dismissed or replied. Every mutation checks the established exact-origin JSON requirement. State lives encrypted in the user's `leadgenCipher` Firestore field. Existing record update-time preconditions protect against concurrent cross-instance overwrites. Account mutation locks and bounded hourly/global daily budgets protect research calls within each instance; these are not distributed quotas.
+Requires the server's `GEMINI_API_KEY`; `LEADGEN_MODEL` optionally overrides the configured model. API credentials stay on the server.
 
 ## Search and evidence
 
-Research uses Google Gemini's Interactions API with Google Search. A second structured extraction step creates recommendations or classifies cited post evidence. Result URLs come only from provider `url_citation` metadata with valid cited text ranges. Server validation accepts individual Reddit comment threads, LinkedIn posts/activity updates and X/Twitter status URLs on exact platform domains; unknown hosts, non-HTTPS URLs and model-generated URLs are excluded. Duplicate post URLs are collapsed. Cards explicitly label paraphrased questions, search summaries and inferred fit; no author, timestamp, numerical lead score or verified buying intent is invented.
+Google Gemini with Google Search reads the submitted public site. Structured extraction recommends relevant questions from cited sources. Platform searches discover individual public posts, then classify relevance and suggest helpful response angles. URLs come from provider citation metadata, with source evidence and individual-platform URL validation. No invented prospects, author names or dates.
 
-Per-platform counts cover fresh verified matches in that search, including zero matches. Coverage is limited to publicly discoverable posts, not direct social APIs or private/authenticated feeds. Search suggestions are displayed in a sandboxed iframe. Source text is untrusted data and rendered with DOM text methods. Source links open the original platform; the service never posts replies. Mark replied is a manual workspace record. Saved and replied results survive repeat searches of the same company; another company starts a distinct latest workspace. Previous full search history is not retained. Recommendation refresh starts a new question plan and clears prior results.
+Questions that appear unanswered are ranked first only when the classifier provides an exact substring of cited source evidence explicitly describing no replies, answers or comments. Missing reply information stays unknown. These are search-based suggestions; visitors must check the original post for current context. Per-platform counts describe the current search, including zero results and provider failures. Coverage is limited to publicly discoverable posts. Opening the original platform may require that platform's account. The product does not submit replies.
 
-Example mode is illustrative recommendations only, requires no sign-in, does not call providers or persist data, and contains no fake prospects. A signed-in user can search with those editable questions.
+Search suggestions appear in a sandboxed iframe. Source text uses DOM text methods. The page privacy notice explains the public flow.
 
 ## Build and release
 
-`npm run build` compiles the complete site. The lead generator directory and versioned assets are included in the root build, Docker image and upload allowlists. `/leadgen` and `/leadgen/` serve the same page. The SEO registry includes the public landing page; account API paths remain excluded by the existing robots rules. `/leadgen/privacy.html` explains storage and providers.
-
-Deployment requires a separate authorized release. Do not claim live social search or live sign-in verification based on fixtures; verify provider citations and identity callback on the deployed environment before advertising coverage.
+The root build includes `/leadgen`, its privacy page and versioned assets. The Node server dispatches public leadgen routes before static handling. Publish from a committed snapshot and record revision and image digest. Verify both the public URL-only landing page and provider-backed recommendation/search flow after release.
