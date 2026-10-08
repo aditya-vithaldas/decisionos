@@ -1,6 +1,6 @@
 (() => {
   const $ = id => document.getElementById(id);
-  let profile = null, results = [], filter = 'X', busy = false;
+  let profile = null, results = [], coverage = [], filter = 'X', busy = false;
   let activityTimer = null, startedAt = 0;
   const el = (tag, className, content) => { const node = document.createElement(tag); if (className) node.className = className; if (content) node.textContent = content; return node; };
   const link = (label, url) => { const node = el('a', '', label); node.href = url; node.target = '_blank'; node.rel = 'noopener noreferrer'; return node; };
@@ -97,7 +97,8 @@
     });
     $('results').replaceChildren();
     if (!visible.length) {
-      const empty = el('div', 'empty'); empty.append(el('h3', '', `No verified recent questions on ${filter}.`), el('p', '', 'Only posts from the last 30 days with supported dates appear here. Check another tab or try again later.')); $('results').append(empty);
+      const unavailable = coverage.find(item => item.platform === filter)?.status === 'unavailable';
+      const empty = el('div', 'empty'); empty.append(el('h3', '', unavailable ? `${filter} search could not finish.` : `No verified recent questions on ${filter}.`), el('p', '', unavailable ? 'Try the search again. The other tabs may have results.' : 'Public web search found no supported questions from the last 30 days. Check another tab or try again later.')); $('results').append(empty);
     }
     for (const item of visible) {
       const card = el('article', 'lead-card'); card.dataset.platform = item.platform;
@@ -118,8 +119,8 @@
     activity('search');
     status('Finding relevant questions on LinkedIn, X and Reddit…');
     const found = await api('search', { profile, platforms: ['LinkedIn', 'X', 'Reddit'] });
-    results = found.results; filter = ['X', 'LinkedIn', 'Reddit'].find(platform => results.some(item => item.platform === platform)) || 'X'; $('coverage').replaceChildren();
-    for (const item of found.coverage || []) $('coverage').append(el('span', '', item.status === 'unavailable' ? `${item.platform}: search unavailable` : `${item.platform}: ${item.count}/10 recent matches`));
+    results = found.results; coverage = found.coverage || []; filter = ['X', 'LinkedIn', 'Reddit'].find(platform => results.some(item => item.platform === platform)) || 'X'; $('coverage').replaceChildren();
+    for (const item of found.coverage || []) $('coverage').append(el('span', '', item.status === 'unavailable' ? `${item.platform}: search unavailable` : `${item.platform}: ${item.count}/10 recent matches${item.status === 'limited' ? ' · search limited' : ''}`));
     $('inbox').hidden = false; $('retry-search').hidden = true; render(); attribution(found.suggestions);
     status(results.length ? 'Recent conversations are ready. Newest first; each tab aims for 8–10 verified posts.' : 'Search complete. No supported matches found this time.');
   }

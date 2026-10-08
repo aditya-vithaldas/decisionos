@@ -1,3 +1,5 @@
+import { postPlatform } from './leadgen-urls.mjs';
+
 const day = 86400000;
 
 // Accept a posting date only when the provider's cited evidence supports it.
@@ -19,4 +21,14 @@ export function verifiedPostDate(row, source, today) {
   const posted = Date.parse(`${row.postedAt}T00:00:00Z`);
   if (!Number.isFinite(posted) || new Date(posted).toISOString().slice(0, 10) !== row.postedAt || posted !== supported || posted > now || now - posted >= 30 * day) return null;
   return row.postedAt;
+}
+
+// Twitter's Snowflake timestamp format: twitter-archive/snowflake IdWorker.scala.
+export function xPostDate(url) {
+  if (postPlatform(url) !== 'X') return null;
+  const id = new URL(url).pathname.match(/\/status\/(\d+)/)?.[1];
+  if (!id || id.length > 19) return null;
+  const value = BigInt(id); if (value < (1n << 22n) || value >= (1n << 63n)) return null;
+  const timestamp = Number((value >> 22n) + 1288834974657n);
+  return new Date(timestamp).toISOString().slice(0, 10);
 }

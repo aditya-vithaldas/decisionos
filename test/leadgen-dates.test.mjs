@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { verifiedPostDate } from '../scripts/leadgen-dates.mjs';
+import { verifiedPostDate, xPostDate } from '../scripts/leadgen-dates.mjs';
 import { checkedResults } from '../scripts/leadgen-api.mjs';
 
 test('posting dates require cited evidence and stay inside the last 30 days', () => {
@@ -23,4 +23,13 @@ test('fresh results exclude old and undated posts and sort newest before fit', (
   const rows = dates.map((date, sourceIndex) => ({ sourceIndex, isQuestion: true, question: 'Which agent harness?', reason: 'Relevant offering', postedAt: date, dateEvidence: date ? `Posted ${date}` : '', fit: sourceIndex === 0 ? 'Strong' : 'Possible' }));
   const results = checkedResults(rows, sources, ['Reddit'], '2026-10-08');
   assert.deepEqual(results.map(item => item.postedAt), ['2026-10-07', '2026-09-30']);
+});
+
+test('X posting dates come from the cited status ID without trusting a model date', () => {
+  assert.equal(xPostDate('https://x.com/Wikipedia/status/1541815603606036480'), '2022-06-28');
+  const id = ((BigInt(Date.parse('2026-10-07T12:00:00Z')) - 1288834974657n) << 22n).toString();
+  assert.equal(xPostDate(`https://mobile.twitter.com/person/status/${id}`), '2026-10-07');
+  assert.equal(xPostDate(`https://x.com/i/web/status/${id}`), '2026-10-07');
+  assert.equal(xPostDate(`https://x.com.attacker.com/person/status/${id}`), null);
+  assert.equal(xPostDate('https://x.com/person/status/123'), null);
 });

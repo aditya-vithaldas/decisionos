@@ -30,3 +30,14 @@ test('sparse recent searches broaden once and merge distinct source URLs', async
   assert.equal(found.sources.length, 2);
   assert.ok(events.some(event => event.status === 'expanding'));
 });
+
+test('a failed first search retries; a failed follow-up preserves partial results', async () => {
+  const source = { url: 'https://reddit.com/r/agents/comments/abc123/help/' };
+  const input = { profile: {}, queries: [{ platform: 'Reddit' }], today: '2026-10-08', since: '2026-09-09' };
+  let calls = 0;
+  const recovered = await searchPlatforms(async () => { if (++calls === 1) throw Error('Timeout'); return { sources: [source] }; }, 'Find recent questions.', input);
+  assert.equal(calls, 2); assert.equal(recovered.sources.length, 1); assert.deepEqual(recovered.failedPlatforms, []);
+  calls = 0;
+  const limited = await searchPlatforms(async () => { if (++calls === 2) throw Error('Timeout'); return { sources: [source] }; }, 'Find recent questions.', input);
+  assert.equal(limited.sources.length, 1); assert.deepEqual(limited.limitedPlatforms, ['Reddit']);
+});

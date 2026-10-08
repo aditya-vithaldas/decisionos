@@ -9,9 +9,10 @@ export function publicURL(value) {
 export function postPlatform(value) {
   const safe = publicURL(value); if (!safe) return null;
   const { hostname, pathname } = new URL(safe), host = hostname.replace(/^www\./, '');
-  if (host === 'reddit.com' && /^\/r\/[^/]+\/comments\/[a-z0-9]+(?:\/|$)/i.test(pathname)) return 'Reddit';
-  if (host === 'linkedin.com' && /^\/(?:posts\/[^/]+|feed\/update\/urn:li:activity:\d+)/.test(pathname)) return 'LinkedIn';
-  if (['x.com', 'twitter.com'].includes(host) && /^\/[^/]+\/status\/\d+(?:\/|$)/.test(pathname)) return 'X';
+  let path; try { path = decodeURIComponent(pathname); } catch { return null; }
+  if (['reddit.com', 'old.reddit.com', 'new.reddit.com'].includes(host) && /^\/r\/[^/]+\/comments\/[a-z0-9]+(?:\/|$)/i.test(path)) return 'Reddit';
+  if ((host === 'linkedin.com' || /^(?:[a-z]{2}|m)\.linkedin\.com$/.test(host)) && /^\/(?:posts\/[^/]+|feed\/update\/urn:li:activity:\d+)/.test(path)) return 'LinkedIn';
+  if (['x.com', 'twitter.com', 'mobile.twitter.com', 'mobile.x.com', 'm.twitter.com'].includes(host) && /^\/(?:[^/]+|i\/web)\/status\/\d+(?:\/|$)/.test(path)) return 'X';
   return null;
 }
 

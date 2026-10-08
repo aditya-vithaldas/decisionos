@@ -15,6 +15,11 @@ test('source URLs must be individual posts on exact public HTTPS platform hosts'
   assert.equal(postPlatform('https://linkedin.com/posts/someone_harness-activity-123'), 'LinkedIn');
   assert.equal(postPlatform('https://linkedin.com/feed/update/urn:li:activity:123'), 'LinkedIn');
   assert.equal(postPlatform('https://twitter.com/person/status/123'), 'X');
+  assert.equal(postPlatform('https://x.com/i/web/status/123'), 'X');
+  assert.equal(postPlatform('https://mobile.twitter.com/person/status/123'), 'X');
+  assert.equal(postPlatform('https://uk.linkedin.com/feed/update/urn%3Ali%3Aactivity%3A123'), 'LinkedIn');
+  assert.equal(postPlatform('https://old.reddit.com/r/agents/comments/abc123/help/'), 'Reddit');
+  assert.equal(postPlatform('https://linkedin.com.attacker.com/posts/person'), null);
   for (const url of ['https://linkedin.com/company/acme', 'https://reddit.com/r/agents', 'https://x.com/search?q=agents', 'https://reddit.com.attacker.com/r/a/comments/abc/', 'http://x.com/person/status/123', 'javascript:alert(1)', 'https://user:password@x.com/person/status/123']) assert.equal(postPlatform(url), null, url);
   for (const url of ['http://127.0.0.1', 'https://127.0.0.1', 'https://localhost', 'https://metadata.google.internal', 'https://[::1]']) assert.equal(publicURL(url), null, url);
   assert.throws(() => checkedProfile(undefined), /Review/);
