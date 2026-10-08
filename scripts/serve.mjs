@@ -5,6 +5,7 @@ import { createCrmHandler } from './crm-api.mjs';
 import { createPublicLeadgenHandler } from './leadgen-api.mjs';
 import { createImageQAHandler } from './image-qa-api.mjs';
 import { commerceSession } from './commerce-api.mjs';
+import { createAnalyticsInjector } from './google-analytics.mjs';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { extname, resolve, sep } from 'node:path';
@@ -20,6 +21,7 @@ const contactHandler = createContactHandler();
 const crmHandler = createCrmHandler();
 const leadgenHandler = createPublicLeadgenHandler();
 const imageQAHandler = createImageQAHandler();
+const injectAnalytics = createAnalyticsInjector(process.env.GOOGLE_ANALYTICS_MEASUREMENT_ID);
 createServer(async (req, res) => {
   try {
     if (new URL(req.url, 'http://localhost').pathname.startsWith('/api/leadgen/')) { await leadgenHandler(req, res); return; }
@@ -42,6 +44,7 @@ createServer(async (req, res) => {
     if (!path.startsWith(root + sep)) { res.writeHead(403).end(); return; }
     let body = await readFile(path);
     const type = types[extname(path)] || 'application/octet-stream';
+    if (type.startsWith('text/html')) body = Buffer.from(injectAnalytics(body.toString('utf8')));
     const immutable = /\/assets\/[^/]+-[\w-]{8,}\.(js|css)$/.test(url.pathname) || (/^[a-f0-9]{10,64}$/.test(url.searchParams.get('v') || '') && /\.(js|css|glb)$/.test(path));
     const headers = { 'Content-Type': type, 'Cache-Control': immutable ? 'public, max-age=31536000, immutable' : 'no-cache', 'X-Content-Type-Options': 'nosniff', Vary: 'Accept-Encoding' };
     if (/^\/(?:crm|feedback)(?:\/|$)/.test(url.pathname)) headers['X-Robots-Tag'] = 'noindex,nofollow,nosnippet';
