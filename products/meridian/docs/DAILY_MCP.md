@@ -73,3 +73,14 @@ The versioned Page templates are in `docs/dashboard/`. `node scripts/render-dash
 - Serving image: `sha256:562e0d5828e6e8efccf089737477291aca9c4f28cb0021d1da32c68cd2e97cdd`.
 - Validation: four local tests passed; the actual remote MCP initialization and all five read tools returned the new guidance. The connected Meridian tool returned 40 category rows, three channel rows and date-specific follow-up cues.
 - The updated performance template passed desktop and 320px-wide layout checks, smooth-curve checks, category/channel coverage, decline coloring and the exact-date investigation action. The inline preview in the requesting chat uses this template. Existing saved Page embeds retain their previous layout until refreshed with the new template.
+
+## Dashboard design release — 8 October 2026
+
+- Source commit: `4ee35cee4bea0fe645a6b42e81bf8bd90d329128`, pushed to `main` from a clean source snapshot.
+- MCP version `1.1.1`; reporting policy `2026-10-08.2`; canonical HTML sources `sales-dashboard` and `sales-drop-analysis`.
+- Cloud Build `9826fb08-b4a4-4622-9602-fc2e641e5221` succeeded.
+- Serving revision `meridian-commerce-mcp-00004-7h2`, independently verified at 100% traffic.
+- Serving image digest `sha256:d6b43faa255a140c3ad1c7dd3f4a42556aa3c025c279e6bc1d421a41e0efff4a`; revision source label matches the source commit.
+- Both saved Page embeds were replaced with the live plugin's canonical fragments. Page readback confirms the two new assets and snapshot timestamp 8 October 2026 at 15:37:52 Europe/Berlin, sequence 13. This completes the Page refresh left outstanding by the earlier reporting release.
+- Five local tests passed. Live MCP initialization, all five tools, policy version, reconciled category/channel splits, date-specific decline cues and both canonical HTML sources passed. The installed connector returned the new HTML and policy.
+- The actual deployed fragments passed desktop, dark appearance and 320px-wide rendering checks, 40-category/three-channel coverage, smooth-curve inspection and the exact-date investigation action. No browser script errors or narrow-width overflow were observed. Saved assets matched the live canonical source byte for byte; a native Page tab was queued to open, but the native viewer was not visually inspected.
