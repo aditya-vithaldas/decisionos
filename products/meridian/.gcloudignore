@@ -2,5 +2,11 @@
 !server/
 !server/**
 server/node_modules/
+server/mcp/node_modules/
+
+!docs/
+!docs/dashboard/
+!docs/dashboard/performance.html
+!docs/dashboard/rca.html
 
 !principles.md

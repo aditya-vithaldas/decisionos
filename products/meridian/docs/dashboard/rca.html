@@ -1,26 +1,58 @@
-<div id="commerce-rca">
-  <div class="viz-row"><h2>What changed revenue?</h2><span class="viz-badge">Database evidence</span></div>
-  <p id="rca-period" class="text-small text-muted"></p>
-  <div class="viz-grid"><div class="card viz-stat"><span>Same weekday last week</span><div id="rca-baseline" class="viz-stat-value tabular-nums"></div></div><div class="card viz-stat"><span>Latest complete day</span><div id="rca-current" class="viz-stat-value tabular-nums"></div></div><div class="card viz-stat"><span>Revenue change · USD</span><div id="rca-change" class="viz-stat-value tabular-nums"></div><span id="rca-percent" class="text-small"></span></div></div>
-  <h3>Revenue bridge</h3><div id="rca-bridge"></div>
-  <div id="rca-drivers" class="viz-row"></div><div id="rca-evidence" class="text-small" aria-live="polite"></div>
-  <h3>Largest measured segment declines</h3>
-  <label class="form-label" for="rca-dimension">Breakdown</label><select class="form-select" id="rca-dimension"><option value="categories">Category</option><option value="regions">Region</option><option value="channels">Channel</option></select>
-  <div class="table-responsive"><table class="table table-sm"><thead><tr><th>Segment</th><th class="text-end">Baseline</th><th class="text-end">Current</th><th class="text-end">Change · USD</th></tr></thead><tbody id="rca-segments"></tbody></table></div>
-  <p class="text-small text-muted">Each breakdown reconciles separately. Changes across category, region and channel overlap.</p>
-  <div id="rca-context" class="text-small"></div><footer id="rca-source" class="text-small text-muted"></footer>
+<div id="commerce-rca" data-dashboard-layout="compact-v2">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500&display=swap">
+  <style>
+    #commerce-rca { color-scheme:light dark; --sales-ink:light-dark(#15233d,#e9f0fc); --sales-muted:light-dark(#65758b,#a4b3ca); --sales-line:light-dark(#e3eaf4,#293952); --sales-track:light-dark(#edf2f8,#27364d); --sales-surface:light-dark(#ffffff,#152238); --sales-blue:light-dark(#337fef,#74acff); --driver-up:light-dark(#187447,#71ddb2); --driver-down:light-dark(#b93847,#ff9baa); color:var(--sales-ink); background:light-dark(#f3f7fc,#0d1728); font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:14px; line-height:1.5; padding:24px; border-radius:20px; }
+    #commerce-rca * { box-sizing:border-box; }
+    #commerce-rca .sales-small { font-size:12px; }
+    #commerce-rca .sales-muted { color:var(--sales-muted); }
+    #commerce-rca .sales-number { font-variant-numeric:tabular-nums; }
+    #commerce-rca h2 { font-size:20px; font-weight:500; letter-spacing:-.035em; margin:0; }
+    #commerce-rca h3 { font-size:15px; font-weight:500; margin:0; }
+    #commerce-rca .driver-header { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:20px; padding-inline-end:76px; }
+    #commerce-rca .driver-panel { background:var(--sales-surface); border:1px solid var(--sales-line); border-radius:16px; padding:20px; }
+    #commerce-rca .driver-total { display:flex; justify-content:space-between; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:18px; }
+    #commerce-rca .driver-total h1 { font-size:34px; font-weight:500; line-height:1.2; letter-spacing:-.045em; margin:6px 0 0; }
+    #commerce-rca #rca-percent { font-size:19px; margin-bottom:5px; }
+    #commerce-rca .driver-row { margin:18px 0; }
+    #commerce-rca .driver-label { display:flex; justify-content:space-between; gap:12px; margin-bottom:8px; }
+    #commerce-rca .driver-track { height:8px; background:var(--sales-track); }
+    #commerce-rca .driver-fill { height:100%; }
+    #commerce-rca .change-up { color:var(--driver-up); }
+    #commerce-rca .change-down { color:var(--driver-down); }
+    #commerce-rca .fill-up { background:var(--driver-up); }
+    #commerce-rca .fill-down { background:var(--driver-down); }
+    #commerce-rca .driver-breakdowns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:18px 0 12px; }
+    #commerce-rca .segment-row { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-top:14px; }
+    #commerce-rca .segment-row > span:last-child { flex-shrink:0; }
+    #commerce-rca .driver-question { display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; margin:18px 0; padding:18px 20px; border:1px solid var(--sales-line); background:light-dark(#eaf2ff,#1c2c47); border-radius:14px; }
+    #commerce-rca .driver-question > div { flex:1; min-width:200px; }
+    #commerce-rca .sales-button { font:inherit; font-weight:500; color:light-dark(#ffffff,#15233d); background:light-dark(#15233d,#cde0ff); border:0; border-radius:10px; padding:10px 15px; }
+    #commerce-rca button:focus-visible,#commerce-rca summary:focus-visible { outline:2px solid var(--sales-blue); outline-offset:3px; }
+    #commerce-rca hr { display:none; }
+    #commerce-rca footer { margin-top:18px; }
+    #commerce-rca #rca-context { margin-top:12px; }
+    @media(max-width:600px) { #commerce-rca { padding:16px; } #commerce-rca .driver-breakdowns { grid-template-columns:1fr; gap:16px; } #commerce-rca .driver-panel { padding:16px; } }
+  </style>
+  <header class="driver-header"><div><h2>Revenue drivers</h2><div id="rca-period" class="sales-small sales-muted"></div></div><span class="sales-small sales-muted">Measured contributions</span></header>
+  <div class="driver-total driver-panel"><div><span class="sales-small sales-muted">Net revenue change · USD</span><h1 id="rca-change" class="sales-number"></h1></div><div><h3 id="rca-percent" class="sales-number"></h3><span id="rca-comparison" class="sales-small sales-muted"></span></div></div>
+  <section class="driver-panel" aria-labelledby="rca-bridge-title"><h3 id="rca-bridge-title">What contributed to the change</h3><div id="rca-bridge"></div><div class="sales-small sales-muted">Traffic → completed conversion → basket value. Contributions reconcile to the revenue change.</div></section>
+  <hr>
+  <div class="driver-breakdowns"><section class="driver-panel"><h3>Largest category falls</h3><div id="rca-categories"></div></section><section class="driver-panel"><h3>Channel changes</h3><div id="rca-channels"></div></section></div>
+  <div class="sales-small sales-muted">Category and channel contributions overlap; compare each split separately.</div>
+  <hr>
+  <div class="driver-question"><div><span class="sales-small sales-muted">Investigate next</span><div id="rca-question"></div></div><button id="rca-investigate" class="sales-button" type="button">Investigate</button></div>
+  <details><summary>Scenario context and evidence limits</summary><div id="rca-context" class="sales-small"></div></details>
+  <footer id="rca-source" class="sales-small sales-muted"></footer>
+  <script id="commerce-snapshot" type="application/json">__COMMERCE_SNAPSHOT__</script>
+  <script>
+  (()=>{
+    const root=document.getElementById('commerce-rca'),q=id=>root.querySelector('#'+id),d=JSON.parse(q('commerce-snapshot').textContent),money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v),compact=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',notation:'compact',maximumFractionDigits:1}).format(v),date=v=>new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(v+'T12:00:00Z')),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),cls=v=>v<0?'change-down':v>0?'change-up':'';
+    q('rca-period').textContent=date(d.dataThrough)+' '+d.dataThrough.slice(0,4)+' · vs '+date(d.baselineDate);q('rca-change').textContent=(d.change<0?'−':'+')+money(Math.abs(d.change));q('rca-change').classList.add(cls(d.change)||'sales-number');q('rca-percent').textContent=(d.change<0?'↓ ':'↑ ')+Math.abs(d.changePct).toFixed(1)+'%';q('rca-percent').classList.add(cls(d.change)||'sales-number');q('rca-comparison').textContent=compact(d.baseline.revenue)+' → '+compact(d.current.revenue);
+    const max=Math.max(...d.attribution.effects.map(e=>Math.abs(e.effect)),0);q('rca-bridge').innerHTML=d.attribution.effects.map(e=>'<div class="driver-row" data-tooltip="'+esc(e.driver+': '+money(e.effect)+' mathematical contribution')+'"><div class="driver-label"><span>'+esc(e.driver)+'</span><span class="sales-number '+cls(e.effect)+'">'+(e.effect<0?'↓ −':'↑ +')+money(Math.abs(e.effect))+'</span></div><div class="driver-track"><div class="driver-fill '+(e.effect<0?'fill-down':'fill-up')+'" style="width:'+(max?Math.abs(e.effect)/max*100:0).toFixed(2)+'%"></div></div></div>').join('');
+    const segmentRows=rows=>rows.map(v=>'<div class="segment-row"><span>'+esc(v.label.replaceAll('_',' '))+'</span><span class="sales-small sales-number '+cls(v.current-v.baseline)+'">'+(v.current<v.baseline?'↓ −':'↑ +')+compact(Math.abs(v.current-v.baseline))+'</span></div>').join('');
+    const categories=d.categories.filter(v=>v.current<v.baseline).sort((a,b)=>(a.current-a.baseline)-(b.current-b.baseline)).slice(0,5);q('rca-categories').innerHTML=categories.length?segmentRows(categories):'<span class="sales-small sales-muted">No category declines</span>';q('rca-channels').innerHTML=segmentRows([...d.channels].sort((a,b)=>(a.current-a.baseline)-(b.current-b.baseline)));
+    const weakest=[...d.channels].sort((a,b)=>(a.current-a.baseline)-(b.current-b.baseline))[0],question=weakest&&weakest.current<weakest.baseline?'What explains the '+compact(weakest.baseline-weakest.current)+' fall in '+weakest.label.replaceAll('_',' ')+' sales?':'Which categories and channels account for the change?';q('rca-question').textContent=question;q('rca-investigate').addEventListener('click',async()=>{if(window.openai?.sendFollowUpMessage)await window.openai.sendFollowUpMessage({prompt:'Investigate '+question+' Compare '+d.dataThrough+' versus '+d.baselineDate+'. Query category and channel splits, traffic, completed conversion and average order value; distinguish measured contribution from unproven causality. Use the canonical Meridian dashboard and end with a specific forward question.',title:'Investigate revenue drivers'});});
+    q('rca-context').textContent=d.events.map(e=>e.event_name+' — '+e.summary).join(' · ')+'. Synthetic scenario context does not establish a cause. Inventory availability and payment errors are unmeasured.';q('rca-source').textContent='Synthetic demo data · sequential decomposition · unexplained residual '+money(d.attribution.unexplained);
+  })();
+  </script>
 </div>
-<style>
-#commerce-rca{color:var(--foreground)}#commerce-rca .viz-row{justify-content:space-between}#commerce-rca h3{margin-top:18px}#commerce-rca footer{margin-top:12px;overflow-wrap:anywhere}#commerce-rca svg{display:block;width:100%}#commerce-rca svg text{fill:var(--foreground);font-size:12px;font-weight:400}#commerce-rca #rca-drivers{justify-content:flex-start;margin:8px 0}#commerce-rca td:first-child{overflow-wrap:anywhere}
-</style>
-<script id="commerce-snapshot" type="application/json">__COMMERCE_SNAPSHOT__</script>
-<script>
-(()=>{const root=document.getElementById('commerce-rca'),q=id=>root.querySelector('#'+id),d=JSON.parse(document.getElementById('commerce-snapshot').textContent),effects=d.attribution.effects;const usd=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v),short=v=>new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:1}).format(v),signed=v=>(v<0?'−':'+')+usd(Math.abs(v)),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let selected=0;
-q('rca-period').textContent=d.dataThrough+' vs '+d.baselineDate+' · Complete days · USD';q('rca-baseline').textContent=usd(d.baseline.revenue);q('rca-current').textContent=usd(d.current.revenue);q('rca-change').textContent=signed(d.change);q('rca-percent').textContent=(d.changePct>=0?'+':'')+d.changePct.toFixed(2)+'%';
-function evidence(){const e=effects[selected],value=v=>e.unit==='USD'?usd(v):e.unit==='%'?v.toFixed(2)+'%':Math.round(v).toLocaleString('en-US');q('rca-evidence').textContent=e.driver+': '+value(e.baseline)+' → '+value(e.current)+' · '+signed(e.effect)+' mathematical contribution. '+(selected===1?'Completed orders / sessions; includes cancelled and returned orders only in the traffic denominator. ':'')+'Sequential decomposition; this is not causal proof.';q('rca-drivers').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===selected)));}
-q('rca-drivers').innerHTML=effects.map((e,i)=>'<button type="button" class="btn" data-driver="'+i+'" aria-pressed="'+(i===selected)+'">'+esc(e.driver)+' · '+signed(e.effect)+'</button>').join('');q('rca-drivers').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{selected=+b.dataset.driver;evidence();draw();}));
-function segments(){const all=d[q('rca-dimension').value],negative=all.filter(x=>x.current<x.baseline).sort((a,b)=>(a.current-a.baseline)-(b.current-b.baseline)).slice(0,5);q('rca-segments').innerHTML=negative.length?negative.map(x=>'<tr><td>'+esc(x.label)+'</td><td class="text-end">'+usd(x.baseline)+'</td><td class="text-end">'+usd(x.current)+'</td><td class="text-end">'+signed(x.current-x.baseline)+'</td></tr>').join(''):'<tr><td colspan="4">No segment declines in this breakdown.</td></tr>';}
-q('rca-dimension').addEventListener('change',segments);q('rca-context').textContent='Scenario context: '+d.events.map(x=>x.event_name+' — '+x.summary).join(' · ')+' Context is synthetic and does not establish a cause. Inventory availability and payment-error measurements are unavailable.';q('rca-source').textContent=d.datasetVersion+' · Data through '+d.dataThrough+' · '+d.source.generation.model+' · Unexplained residual '+usd(d.attribution.unexplained);
-function draw(){const bars=[{name:'Baseline',lo:0,hi:d.baseline.revenue,amount:d.baseline.revenue}],level=d.baseline.revenue;let cursor=level;effects.forEach((e,i)=>{const end=cursor+e.effect;bars.push({name:['Traffic','Conversion','AOV'][i],lo:Math.min(cursor,end),hi:Math.max(cursor,end),amount:e.effect,driver:i});cursor=end;});if(Math.abs(d.attribution.unexplained)>.01){const end=cursor+d.attribution.unexplained;bars.push({name:'Residual',lo:Math.min(cursor,end),hi:Math.max(cursor,end),amount:d.attribution.unexplained});}bars.push({name:'Current',lo:0,hi:d.current.revenue,amount:d.current.revenue});const w=Math.max(280,q('rca-bridge').clientWidth),h=224,l=68,r=12,t=28,b=50,pw=w-l-r,ph=h-t-b,minimum=Math.min(0,...bars.map(x=>x.lo)),maximum=Math.max(...bars.map(x=>x.hi)),span=maximum-minimum,pad=span*.15,min=minimum<0?minimum-pad:0,max=maximum+pad,y=v=>t+ph*(1-(v-min)/(max-min)),step=pw/bars.length,bw=step*.52;let s='<rect data-chart-frame x="'+l+'" y="'+t+'" width="'+pw+'" height="'+ph+'" fill="none" stroke="var(--border)"/>';[min,(min+max)/2,max].forEach(v=>s+='<text x="'+(l-8)+'" y="'+(y(v)+4)+'" text-anchor="end">'+short(v)+'</text>');bars.forEach((a,i)=>{const x=l+step*(i+.24),color=a.driver===undefined?'var(--viz-series-1)':a.amount<0?'var(--red)':'var(--green)';s+='<rect x="'+x+'" y="'+y(a.hi)+'" width="'+bw+'" height="'+Math.max(.8,y(a.lo)-y(a.hi))+'" fill="'+color+'" opacity="'+(a.driver===undefined||a.driver===selected?1:.5)+'" data-tooltip="'+esc(a.name+': '+(a.driver===undefined?usd(a.amount):signed(a.amount)))+'"/><text x="'+(x+bw/2)+'" y="'+(y(a.hi)-7)+'" text-anchor="middle">'+(a.driver===undefined?'':a.amount<0?'−':'+')+short(Math.abs(a.amount))+'</text><text x="'+(x+bw/2)+'" y="'+(h-28)+'" text-anchor="middle">'+(w<450?({'Baseline':'Base','Conversion':'Conv.','Current':'Now'}[a.name]||a.name):a.name)+'</text>';});s+='<text class="axis-title" data-axis="y" x="0" y="16">USD</text><text class="axis-title" data-axis="x" x="'+(l+pw/2)+'" y="'+(h-5)+'" text-anchor="middle">Revenue and driver effects</text>';q('rca-bridge').innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc('Revenue bridge in USD. '+bars.map(x=>x.name+' '+usd(x.amount)).join('; '))+'">'+s+'</svg>';}
-new ResizeObserver(draw).observe(q('rca-bridge'));evidence();segments();draw();})();
-</script>

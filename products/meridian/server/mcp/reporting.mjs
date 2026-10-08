@@ -1,5 +1,7 @@
 export const reportingPolicy = {
- version: '2026-10-08.1',
+ version: '2026-10-08.2',
+ canonicalDashboard: 'Fetch id sales-dashboard for the canonical Meridian sales dashboard HTML fragment, or sales-drop-analysis for its driver view. Render that returned fragment when visualization is supported rather than rebuilding a generic dashboard. It contains the current snapshot, measured values and investigation actions.',
+ dashboardStyle: 'Use the compact chart-first Meridian layout: a clear revenue headline, restrained readable green/red changes, a smooth trend, category and channel bar splits side by side when space permits, one specific forward question, and complete tables inside optional details. Keep raw product rankings and long explanatory text out of the main dashboard.',
  presentation: 'Always show a sales dashboard when supported, followed by a concise interpretation and a specific forward question.',
  temporalCharts: 'Always use a smooth shape-preserving curve (for example, monotone cubic interpolation) for temporal trends. Keep observed points, exact values and dates visible; smoothing is presentation, not invented observations. Use bars for categorical splits and revenue bridges.',
  changeColors: 'Color favorable changes green, unfavorable changes red, and unchanged or unknown changes neutral. Keep arrows, signs and labels so meaning does not depend on color. Revenue, orders, conversion and average order value increases are favorable; cancellation increases are unfavorable.',

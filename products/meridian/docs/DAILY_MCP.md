@@ -25,7 +25,7 @@ The Page embeds contain saved results read from `/dashboard`; the Page sandbox d
 
 The latest complete day is compared with the same weekday one week earlier. Revenue equals completed orders' net amount, excluding tax, shipping, cancelled orders and returns. A sequential traffic → completed conversion → average-order-value decomposition reconciles to the revenue change. Category, region and channel changes reconcile independently; they overlap and must not be added together. Synthetic scenario events provide context, not evidence of an external causal effect. Inventory availability and payment errors are unmeasured and cannot be claimed as findings.
 
-## Sales reporting contract — 1.1.0
+## Sales reporting contract — 1.1.1
 
 The MCP initialization instructions, tool description, schema/query responses and sales-intelligence evidence carry the reporting contract in `server/mcp/reporting.mjs`. Sales-performance answers show a dashboard when supported, use smooth shape-preserving temporal curves with observed values retained, and color favorable changes green and unfavorable changes red. Cancellation increases are unfavorable. Signs and labels accompany colors.
 
@@ -33,7 +33,9 @@ Every performance answer includes both category and channel revenue splits with 
 
 The evidence contains computed `presentation.breakdowns`, per-day `declineCues` with exact comparison dates and investigation prompts, and up to three pattern-based `nextQuestions`. Every mentioned drop gets a specific investigation cue, and every sales-performance response ends with a useful forward question. Historical daily dips must not be explained using the latest day's weekly segment comparison or an unrelated scenario event.
 
-The performance template includes a smooth daily trend, direction-colored deltas, simultaneous category/channel splits, a day inspection control, and follow-up actions. Category totals show the leading eight categories and a reconciled remainder, with all category details available. The existing hosted Page needs its saved template refreshed before these presentation changes appear there; the connected plugin receives the reporting guidance directly from the live service.
+The performance template includes a smooth daily trend, direction-colored deltas, simultaneous category/channel splits, a day inspection control, and one follow-up action. Category totals show the leading five categories and a reconciled remainder, with every category and channel figure inside optional details. The templates use Meridian typography, themed metric cards and panels, and responsive layouts in light and dark appearance.
+
+The plugin serves the rendered, current-data HTML fragments through `fetch({id:"sales-dashboard"})` and `fetch({id:"sales-drop-analysis"})`. They are also available in the `text` field of `/source/{id}`. The Docker image contains both templates, so server instructions and the actual dashboard design ship together. Render the canonical returned fragment instead of rebuilding a generic report. The fragment contains the snapshot and performs no network data requests. Saved Page embeds must be refreshed explicitly after a template change; updating MCP guidance alone does not replace them.
 
 ## Checks
 

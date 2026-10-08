@@ -1,58 +1,120 @@
-<div id="commerce-performance">
-  <div class="viz-row"><h2>Sales performance</h2><span class="viz-badge">Synthetic database</span></div>
-  <p id="performance-period" class="text-small text-muted"></p>
-  <div class="viz-grid">
-    <div class="card viz-stat"><span>Completed revenue · USD</span><div id="performance-revenue" class="viz-stat-value tabular-nums"></div><span id="performance-change" class="text-small"></span></div>
-    <div class="card viz-stat"><span>Completed orders</span><div id="performance-orders" class="viz-stat-value tabular-nums"></div><span id="performance-sessions" class="text-small"></span></div>
-    <div class="card viz-stat"><span>Average order value · USD</span><div id="performance-aov" class="viz-stat-value tabular-nums"></div><span id="performance-conversion" class="text-small"></span></div>
+<div id="commerce-performance" data-dashboard-layout="compact-v2">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500&display=swap">
+  <style>
+    #commerce-performance { color-scheme:light dark; --sales-ink:light-dark(#15233d,#e9f0fc); --sales-muted:light-dark(#65758b,#a4b3ca); --sales-line:light-dark(#e3eaf4,#293952); --sales-track:light-dark(#edf2f8,#27364d); --sales-surface:light-dark(#ffffff,#152238); --sales-up:light-dark(#187447,#71ddb2); --sales-down:light-dark(#b93847,#ff9baa); --sales-blue:light-dark(#337fef,#74acff); color:var(--sales-ink); background:light-dark(#f3f7fc,#0d1728); position:relative; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:14px; line-height:1.5; padding:24px; border-radius:20px; }
+    #commerce-performance * { box-sizing:border-box; }
+    #commerce-performance .sales-small { font-size:12px; }
+    #commerce-performance .sales-muted { color:var(--sales-muted); }
+    #commerce-performance .sales-number { font-variant-numeric:tabular-nums; }
+    #commerce-performance .sales-header { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; padding-inline-end:76px; margin-bottom:20px; }
+    #commerce-performance .sales-brand { display:flex; gap:10px; align-items:center; }
+    #commerce-performance .sales-brand-mark { width:34px; height:34px; display:grid; place-items:center; border-radius:11px; background:linear-gradient(135deg,#00a994,#337fef 65%,#8338ec); color:#ffffff; font-weight:500; font-size:18px; }
+    #commerce-performance h2 { font-size:20px; font-weight:500; margin:0; letter-spacing:-.035em; }
+    #commerce-performance h3 { font-size:15px; font-weight:500; margin:0; }
+    #commerce-performance .sales-panel,#commerce-performance .sales-summary { background:var(--sales-surface); border:1px solid var(--sales-line); border-radius:16px; padding:20px; }
+    #commerce-performance .sales-summary { margin-bottom:18px; }
+    #commerce-performance .sales-headline { display:flex; justify-content:space-between; align-items:center; gap:18px; flex-wrap:wrap; padding-bottom:20px; }
+    #commerce-performance .sales-headline h1 { font-size:34px; line-height:1.2; font-weight:500; margin:6px 0 0; letter-spacing:-.045em; }
+    #commerce-performance .sales-headline #performance-change { font-size:19px; margin-bottom:5px; }
+    #commerce-performance .sales-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; border-top:1px solid var(--sales-line); padding-top:18px; }
+    #commerce-performance .sales-stats h3 { font-size:19px; margin:4px 0; }
+    #commerce-performance .section-head { display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+    #commerce-performance .sales-chart { display:block; width:100%; }
+    #commerce-performance .sales-chart text { fill:var(--sales-ink); font-size:12px; font-weight:400; }
+    #commerce-performance .sales-chart .domain { display:none; }
+    #commerce-performance .sales-chart .tick line { stroke:var(--sales-line); }
+    #commerce-performance .chart-inspection { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin:8px 0 0; }
+    #commerce-performance .chart-inspection select { max-width:100%; }
+    #commerce-performance .sales-splits { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:18px 0 12px; }
+    #commerce-performance .split-row { margin:14px 0; }
+    #commerce-performance .split-top,#commerce-performance .split-meta { display:flex; justify-content:space-between; gap:8px; align-items:baseline; }
+    #commerce-performance .split-top > span:first-child { min-width:0; }
+    #commerce-performance .split-top .change { flex-shrink:0; }
+    #commerce-performance .split-meta { margin-top:5px; }
+    #commerce-performance .split-track { height:7px; background:var(--sales-track); margin-top:7px; }
+    #commerce-performance .split-fill { height:100%; background:var(--sales-blue); }
+    #commerce-performance .change-up { color:var(--sales-up); }
+    #commerce-performance .change-down { color:var(--sales-down); }
+    #commerce-performance .change-flat { color:var(--sales-muted); }
+    #commerce-performance .next-question { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin:18px 0; padding:18px 20px; border:1px solid var(--sales-line); background:light-dark(#eaf2ff,#1c2c47); border-radius:14px; }
+    #commerce-performance .next-question > div { flex:1; min-width:200px; }
+    #commerce-performance details { margin-top:16px; }
+    #commerce-performance footer { margin-top:18px; }
+    #commerce-performance .plot-tooltip { position:absolute; pointer-events:none; }
+    #commerce-performance .sales-tooltip { padding:7px 10px; border:1px solid var(--sales-line); border-radius:8px; background:var(--sales-surface); color:var(--sales-ink); font-size:12px; }
+    #commerce-performance .sales-label { display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:12px; color:var(--sales-muted); }
+    #commerce-performance .sales-select { font:inherit; color:var(--sales-ink); background:var(--sales-surface); border:1px solid var(--sales-line); border-radius:9px; padding:6px 9px; }
+    #commerce-performance .sales-button { font:inherit; font-weight:500; color:light-dark(#ffffff,#15233d); background:light-dark(#15233d,#cde0ff); border:0; border-radius:10px; padding:10px 15px; }
+    #commerce-performance button:focus-visible,#commerce-performance select:focus-visible,#commerce-performance summary:focus-visible { outline:2px solid var(--sales-blue); outline-offset:3px; }
+    #commerce-performance .sales-table-scroll { overflow-x:auto; }
+    #commerce-performance .sales-table { border-collapse:collapse; width:100%; font-size:12px; }
+    #commerce-performance .sales-table td,#commerce-performance .sales-table th { padding:9px 4px; border-bottom:1px solid var(--sales-line); text-align:left; }
+    #commerce-performance .sales-table .text-end { text-align:right; }
+    #commerce-performance hr { display:none; }
+    @media(max-width:600px) { #commerce-performance { padding:16px; } #commerce-performance .sales-splits { grid-template-columns:1fr; gap:16px; } #commerce-performance .sales-stats { gap:12px; } #commerce-performance .sales-panel,#commerce-performance .sales-summary { padding:16px; } }
+    @media(max-width:400px) { #commerce-performance .sales-stats { grid-template-columns:1fr; gap:12px; } #commerce-performance .sales-stats > div { display:grid; grid-template-columns:1fr auto; align-items:center; gap:2px 8px; } #commerce-performance .sales-stats > div > span:last-child { grid-column:1/-1; } #commerce-performance .sales-headline h1 { font-size:30px; } }
+  </style>
+  <header class="sales-header">
+    <div class="sales-brand"><span class="sales-brand-mark" aria-hidden="true">M</span><div><h2>Meridian</h2><div id="performance-period" class="sales-small sales-muted"></div></div></div>
+    <span class="sales-small sales-muted">Synthetic demo data</span>
+  </header>
+  <div class="sales-summary"><div class="sales-headline">
+    <div><span class="sales-small sales-muted">Net sales · USD</span><h1 id="performance-revenue" class="sales-number"></h1></div>
+    <div><h3 id="performance-change" class="sales-number"></h3><span id="performance-change-amount" class="sales-small sales-muted"></span></div>
   </div>
-  <div id="performance-activity" class="text-small tabular-nums"></div>
-  <div class="viz-row"><h3>Last seven complete days</h3><span id="performance-week" class="text-small tabular-nums"></span></div>
-  <div id="performance-chart"></div>
-  <div class="viz-row text-small"><span class="change-up">↑ Increase vs previous day</span><span class="change-down">↓ Decrease vs previous day</span></div>
-  <label class="form-label" for="performance-day">Inspect day</label><input id="performance-day" class="form-range" type="range" min="0" max="6" value="6">
-  <div id="performance-detail" class="text-small" aria-live="polite"></div>
-  <div id="performance-drop-cue" class="text-small" aria-live="polite"></div>
-  <button id="performance-investigate" class="btn" type="button" hidden>Investigate this drop</button>
-  <h3>Category revenue split</h3>
-  <p class="text-small text-muted">Revenue, share and change versus the same baseline as the headline metrics.</p>
-  <div class="table-responsive"><table class="table table-sm"><thead><tr><th>Category</th><th class="text-end">USD</th><th class="text-end">Share</th><th class="text-end">Change USD</th><th class="text-end">Change %</th></tr></thead><tbody id="performance-categories"></tbody></table></div>
-  <details><summary>All category details</summary><div class="table-responsive"><table class="table table-sm"><thead><tr><th>Category</th><th class="text-end">USD</th><th class="text-end">Share</th><th class="text-end">Change USD</th><th class="text-end">Change %</th></tr></thead><tbody id="performance-all-categories"></tbody></table></div></details>
-  <h3>Channel revenue split</h3>
-  <div class="table-responsive"><table class="table table-sm"><thead><tr><th>Channel</th><th class="text-end">USD</th><th class="text-end">Share</th><th class="text-end">Change USD</th><th class="text-end">Change %</th></tr></thead><tbody id="performance-channels"></tbody></table></div>
-  <p class="text-small text-muted">Category and channel changes overlap; each split reconciles separately.</p>
-  <h3>Top products by completed revenue</h3>
-  <div class="table-responsive"><table class="table table-sm"><thead><tr><th>Product</th><th class="text-end">Units</th><th class="text-end">USD</th></tr></thead><tbody id="performance-products"></tbody></table></div>
-  <div id="performance-forward-question" aria-live="polite"></div>
-  <button id="performance-forward-action" class="btn" type="button">Investigate this question</button>
-  <footer class="text-small text-muted" id="performance-source"></footer>
+  <div class="sales-stats">
+    <div><span class="sales-small sales-muted">Completed orders</span><h3 id="performance-orders" class="sales-number"></h3><span id="performance-orders-change" class="sales-small sales-number"></span></div>
+    <div><span class="sales-small sales-muted">Average order value</span><h3 id="performance-aov" class="sales-number"></h3><span id="performance-aov-change" class="sales-small sales-number"></span></div>
+    <div><span class="sales-small sales-muted">Cancelled orders</span><h3 id="performance-cancelled" class="sales-number"></h3><span id="performance-cancelled-change" class="sales-small sales-number"></span></div>
+  </div></div>
+  <section class="sales-panel" aria-labelledby="performance-trend-title">
+    <div class="section-head"><h3 id="performance-trend-title">Revenue trend</h3><span class="sales-small sales-muted">14 complete days</span></div>
+    <div id="performance-chart"><svg class="sales-chart" role="img" aria-label="Fourteen-day net sales trend"></svg></div>
+    <div class="chart-inspection">
+      <label class="sales-label" for="performance-day">Inspect day <select id="performance-day" class="sales-select"></select></label>
+      <span id="performance-detail" class="sales-small sales-number" aria-live="polite"></span>
+    </div>
+  </section>
+  <hr>
+  <div class="sales-splits">
+    <section class="sales-panel" aria-labelledby="performance-category-title"><div class="section-head"><h3 id="performance-category-title">Category split</h3><span class="sales-small sales-muted">Leading five</span></div><div id="performance-categories"></div><div id="performance-other" class="sales-small sales-muted"></div></section>
+    <section class="sales-panel" aria-labelledby="performance-channel-title"><div class="section-head"><h3 id="performance-channel-title">Channel split</h3><span class="sales-small sales-muted">All channels</span></div><div id="performance-channels"></div><div id="performance-activity" class="sales-small sales-muted"></div></section>
+  </div>
+  <div class="sales-small sales-muted">Shares of net sales. Changes compare the same weekday last week. The two splits overlap.</div>
+  <hr>
+  <div class="next-question"><div><span class="sales-small sales-muted">Investigate next</span><div id="performance-forward-question"></div></div><button id="performance-forward-action" class="sales-button" type="button">Investigate</button></div>
+  <details><summary>All category and channel figures</summary><div class="sales-table-scroll"><table class="sales-table"><thead><tr><th>Category / channel</th><th class="text-end">Net sales</th><th class="text-end">Share</th><th class="text-end">Change</th></tr></thead><tbody id="performance-full-breakdown"></tbody></table></div></details>
+  <footer id="performance-source" class="sales-small sales-muted"></footer>
+  <div id="performance-tooltip" class="sales-tooltip plot-tooltip" role="tooltip" hidden></div>
+  <script id="commerce-snapshot" type="application/json">__COMMERCE_SNAPSHOT__</script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script>
+  (()=>{
+    const root=document.getElementById('commerce-performance'),q=id=>root.querySelector('#'+id),d=JSON.parse(q('commerce-snapshot').textContent),days=d.daily.map(v=>({...v,x:new Date(v.date+'T00:00:00Z')}));
+    const money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v),money2=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(v),compact=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',notation:'compact',maximumFractionDigits:2}).format(v),num=v=>new Intl.NumberFormat('en-US').format(v),date=v=>new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(v+'T12:00:00Z')),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const cls=(change,inverse=false)=>change===0?'change-flat':(change>0)!==inverse?'change-up':'change-down';
+    const percent=(current,baseline)=>baseline?(current-baseline)/baseline*100:null;
+    const deltaText=(current,baseline)=>{const pct=percent(current,baseline);return (current<baseline?'↓ ':current>baseline?'↑ ':'')+(pct===null?'No baseline':Math.abs(pct).toFixed(1)+'%');};
+    q('performance-period').textContent=date(d.dataThrough)+' '+d.dataThrough.slice(0,4)+' · vs '+date(d.baselineDate);
+    q('performance-revenue').textContent=money(d.current.revenue);q('performance-change').textContent=deltaText(d.current.revenue,d.baseline.revenue);q('performance-change').classList.add(cls(d.change));q('performance-change-amount').textContent=money(Math.abs(d.change))+(d.change<0?' less':' more')+' than '+date(d.baselineDate);
+    const aov=d.current.orders?d.current.revenue/d.current.orders:0,oldAov=d.baseline.orders?d.baseline.revenue/d.baseline.orders:0;
+    for(const [id,value,baseline,format,inverse] of [['orders',d.current.orders,d.baseline.orders,num,false],['aov',aov,oldAov,money2,false],['cancelled',d.current.cancelled_orders,d.baseline.cancelled_orders,num,true]]){q('performance-'+id).textContent=format(value);const el=q('performance-'+id+'-change');el.textContent=deltaText(value,baseline)+' vs last week';el.classList.add(cls(value-baseline,inverse));}
+    const categories=[...d.categories].sort((a,b)=>b.current-a.current),channels=[...d.channels].sort((a,b)=>b.current-a.current);
+    function split(rows){const max=Math.max(...rows.map(v=>v.current),0);return rows.map(v=>{const share=d.current.revenue?v.current/d.current.revenue*100:0,change=v.current-v.baseline;return '<div class="split-row" data-tooltip="'+esc(v.label+': '+money(v.current)+'; '+share.toFixed(1)+'% of net sales; change '+money(change)+' versus '+d.baselineDate)+'"><div class="split-top"><span>'+esc(v.label.replaceAll('_',' '))+'</span><span class="change sales-small sales-number '+cls(change)+'">'+deltaText(v.current,v.baseline)+'</span></div><div class="split-track"><div class="split-fill" style="width:'+(max?v.current/max*100:0).toFixed(2)+'%"></div></div><div class="split-meta sales-small"><span class="sales-number">'+compact(v.current)+'</span><span class="sales-muted sales-number">'+share.toFixed(1)+'% of sales</span></div></div>';}).join('');}
+    q('performance-categories').innerHTML=split(categories.slice(0,5));q('performance-channels').innerHTML=split(channels);
+    const rest=categories.slice(5),restRevenue=rest.reduce((s,v)=>s+v.current,0);q('performance-other').textContent=rest.length+' other categories · '+compact(restRevenue)+' · '+(d.current.revenue?restRevenue/d.current.revenue*100:0).toFixed(1)+'% of sales';
+    q('performance-activity').textContent=num(d.current.sessions)+' visits · '+(d.current.sessions?d.current.orders/d.current.sessions*100:0).toFixed(2)+'% completed conversion';
+    q('performance-full-breakdown').innerHTML=[...categories,...channels].map(v=>'<tr><td>'+esc(v.label.replaceAll('_',' '))+'</td><td class="text-end">'+money(v.current)+'</td><td class="text-end">'+(d.current.revenue?v.current/d.current.revenue*100:0).toFixed(1)+'%</td><td class="text-end '+cls(v.current-v.baseline)+'">'+(v.current<v.baseline?'−':'+')+money(Math.abs(v.current-v.baseline))+' · '+deltaText(v.current,v.baseline)+'</td></tr>').join('');
+    q('performance-day').innerHTML=days.map(v=>'<option value="'+v.date+'">'+date(v.date)+'</option>').join('');let selected=days.length-1,forwardPrompt='',inspectSpecific=false;
+    const dips=days.slice(1).map((v,i)=>({day:v,previous:days[i],change:v.revenue-days[i].revenue})).filter(v=>v.change<0).sort((a,b)=>a.change-b.change),biggest=dips[0];
+    function updateQuestion(){const day=days[selected],previous=days[selected-1],dip=inspectSpecific&&previous&&day.revenue<previous.revenue?{day,previous,change:day.revenue-previous.revenue}:biggest;if(dip){const pct=percent(dip.day.revenue,dip.previous.revenue);q('performance-forward-question').textContent='Why did sales fall '+(pct===null?money(-dip.change):Math.abs(pct).toFixed(1)+'%')+' on '+date(dip.day.date)+'?';forwardPrompt='Investigate the sales drop on '+dip.day.date+' versus '+dip.previous.date+'. Query traffic, completed conversion, average order value, and BOTH category and channel splits for those exact dates. Quantify measured contributions, avoid unproven causality, use the canonical Meridian sales-dashboard design with smooth graphs, and end with a specific forward question.';}else{q('performance-forward-question').textContent='Which categories and channels drove the change on '+date(d.dataThrough)+'?';forwardPrompt='Investigate category and channel contributions on '+d.dataThrough+' versus '+d.baselineDate+'.';}}
+    function applySelection(value){const i=days.findIndex(v=>v.date===value);inspectSpecific=i>=0;selected=i>=0?i:days.length-1;q('performance-day').value=days[selected].date;const day=days[selected],previous=days[selected-1];q('performance-detail').textContent=money(day.revenue)+(previous?' · '+deltaText(day.revenue,previous.revenue)+' vs '+date(previous.date):'');q('performance-detail').className='sales-small sales-number '+(previous?cls(day.revenue-previous.revenue):'');updateQuestion();draw();}
+    function applyState(state){applySelection(state?.privateContent?.selectedDate);}
+    function save(){if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{selectedDate:days[selected].date,baselineDate:d.baselineDate},privateContent:{selectedDate:days[selected].date}}).catch(()=>{});}
+    q('performance-day').addEventListener('change',e=>{applySelection(e.target.value);save();});q('performance-forward-action').addEventListener('click',async()=>{if(window.openai?.sendFollowUpMessage)await window.openai.sendFollowUpMessage({prompt:forwardPrompt,title:'Investigate this sales pattern'});});
+    q('performance-source').textContent='Completed net sales · excludes tax and shipping · data through '+date(d.dataThrough);
+    function draw(){if(typeof d3==='undefined')return;const node=q('performance-chart').querySelector('svg'),w=q('performance-chart').clientWidth;if(w<100)return;const h=246,frame={x:68,y:18,w:w-82,h:174},svg=d3.select(node),extent=d3.extent(days,v=>v.revenue),pad=(extent[1]-extent[0]||Math.abs(extent[0])||1)*.12,x=d3.scaleUtc().domain(d3.extent(days,v=>v.x)).range([frame.x+6,frame.x+frame.w-6]),y=d3.scaleLinear().domain([extent[0]-pad,extent[1]+pad]).range([frame.y+frame.h-6,frame.y+6]);svg.attr('viewBox',`0 0 ${w} ${h}`);svg.selectAll('*').remove();svg.append('title').text('Fourteen-day net sales in USD');svg.append('desc').text(days.map(v=>v.date+' '+money(v.revenue)).join('; '));svg.append('rect').attr('data-chart-frame','').attr('x',frame.x).attr('y',frame.y).attr('width',frame.w).attr('height',frame.h).attr('fill','none').attr('stroke','var(--sales-line)');svg.append('g').attr('transform',`translate(${frame.x},0)`).call(d3.axisLeft(y).ticks(4).tickFormat(v=>'$'+(v/1000000).toFixed(1)+'m').tickSize(-frame.w).tickPadding(8));const ticks=w<420?[days[0].x,days[6].x,days[13].x]:[days[0].x,days[4].x,days[8].x,days[13].x],axis=svg.append('g').attr('transform',`translate(0,${frame.y+frame.h})`).call(d3.axisBottom(x).tickValues(ticks).tickFormat(d3.utcFormat('%-d %b')).tickSize(0).tickPadding(10));axis.selectAll('.tick text').attr('text-anchor',(v,i)=>i===0?'start':i===ticks.length-1?'end':'middle');svg.append('text').attr('class','axis-title').attr('data-axis','y').attr('x',frame.x).attr('y',12).text('Net sales · USD');svg.append('text').attr('class','axis-title').attr('data-axis','x').attr('x',frame.x+frame.w/2).attr('y',h-8).attr('text-anchor','middle').text('Date · '+d.dataThrough.slice(0,4));svg.append('path').datum(days).attr('fill','var(--sales-blue)').attr('opacity',.06).attr('d',d3.area().x(v=>x(v.x)).y0(frame.y+frame.h).y1(v=>y(v.revenue)).curve(d3.curveMonotoneX));svg.append('path').attr('data-smooth-trend','').datum(days).attr('fill','none').attr('stroke','var(--sales-blue)').attr('stroke-width',2).attr('d',d3.line().x(v=>x(v.x)).y(v=>y(v.revenue)).curve(d3.curveMonotoneX));svg.selectAll('.observed-point').data(days).enter().append('circle').attr('class','observed-point').attr('cx',v=>x(v.x)).attr('cy',v=>y(v.revenue)).attr('r',(v,i)=>i===selected?5:2.5).attr('fill',(v,i)=>i===0?'var(--sales-blue)':v.revenue<days[i-1].revenue?'var(--sales-down)':'var(--sales-up)');const guide=svg.append('line').attr('y1',frame.y).attr('y2',frame.y+frame.h).attr('stroke','var(--sales-line)').attr('visibility','hidden'),tooltip=q('performance-tooltip');function inspect(event,persist){const px=Math.max(frame.x+6,Math.min(frame.x+frame.w-6,d3.pointer(event,node)[0])),index=d3.bisector(v=>v.x).center(days,x.invert(px)),day=days[index];guide.attr('x1',x(day.x)).attr('x2',x(day.x)).attr('visibility','visible');tooltip.textContent=date(day.date)+' · '+money(day.revenue);tooltip.hidden=false;const r=root.getBoundingClientRect(),s=node.getBoundingClientRect();tooltip.style.left=Math.max(0,Math.min(w-180,x(day.x)-70))+'px';tooltip.style.top=(s.top-r.top+Math.max(0,y(day.revenue)-38))+'px';if(persist){applySelection(day.date);save();tooltip.hidden=true;}}svg.append('rect').attr('data-chart-hit','').attr('x',frame.x).attr('y',frame.y).attr('width',frame.w).attr('height',frame.h).attr('fill','transparent').on('pointermove',event=>inspect(event,false)).on('click',event=>inspect(event,true)).on('pointerleave',()=>{tooltip.hidden=true;guide.attr('visibility','hidden');});let last;axis.selectAll('.tick text').each(function(){const box=this.getBoundingClientRect();if(last&&box.left<last.right+4)this.style.display='none';else last=box;});}
+    applyState(window.openai?.widgetState);window.addEventListener('openai:set_globals',event=>{if(event.detail?.globals&&'widgetState' in event.detail.globals)applyState(event.detail.globals.widgetState);});new ResizeObserver(draw).observe(q('performance-chart'));
+  })();
+  </script>
 </div>
-<style>
-#commerce-performance{color:var(--foreground)}#commerce-performance .viz-row{justify-content:space-between}#commerce-performance h3{margin-top:18px}#commerce-performance footer{margin-top:12px;overflow-wrap:anywhere}#commerce-performance svg{display:block;width:100%}#commerce-performance svg text{fill:var(--foreground);font-size:12px;font-weight:400}#commerce-performance td:first-child{overflow-wrap:anywhere}#commerce-performance .product-category{display:block}#commerce-performance .change-up{color:var(--green)}#commerce-performance .change-down{color:var(--red)}#commerce-performance .change-flat{color:var(--muted-foreground)}#commerce-performance #performance-drop-cue,#commerce-performance #performance-forward-question{margin:12px 0}
-</style>
-<script id="commerce-snapshot" type="application/json">__COMMERCE_SNAPSHOT__</script>
-<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-<script>
-(()=>{const root=document.getElementById('commerce-performance'),q=id=>root.querySelector('#'+id),d=JSON.parse(document.getElementById('commerce-snapshot').textContent),days=d.daily.slice(-7);const usd=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v),num=v=>new Intl.NumberFormat('en-US').format(v),short=v=>new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:1}).format(v),signed=v=>(v<0?'−':'+')+usd(Math.abs(v)),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let selected=days.length-1;
-q('performance-period').textContent=d.dataThrough+' · Full day · Compared with '+d.baselineDate;
-q('performance-revenue').textContent=usd(d.current.revenue);q('performance-change').textContent=signed(d.change)+' ('+(d.changePct>=0?'+':'')+d.changePct.toFixed(1)+'%) vs last week';q('performance-orders').textContent=num(d.current.orders);q('performance-sessions').textContent=num(d.current.sessions)+' sessions';q('performance-aov').textContent=usd(d.current.revenue/d.current.orders);q('performance-conversion').textContent=(d.current.orders/d.current.sessions*100).toFixed(2)+'% completed conversion';q('performance-week').textContent=usd(days.reduce((s,x)=>s+x.revenue,0))+' total';q('performance-day').max=days.length-1;q('performance-day').value=selected;
-q('performance-products').innerHTML=d.products.map(p=>'<tr><td>'+esc(p.name)+'<span class="product-category text-small text-muted">'+esc(p.category)+'</span></td><td class="text-end">'+num(p.units)+'</td><td class="text-end">'+usd(p.revenue)+'</td></tr>').join('');q('performance-source').textContent='Google Cloud · '+d.datasetVersion+' · Updated '+d.source.updatedAt+' · '+num(d.source.totalRows)+' records · '+d.source.generation.model;
-const changeClass=value=>value===0?'change-flat':value>0?'change-up':'change-down';
-q('performance-change').classList.add(changeClass(d.change));
-const ordersChange=d.current.orders-d.baseline.orders,aovCurrent=d.current.orders?d.current.revenue/d.current.orders:0,aovBaseline=d.baseline.orders?d.baseline.revenue/d.baseline.orders:0,aovChange=aovCurrent-aovBaseline;
-q('performance-sessions').textContent=(ordersChange<0?'↓ ':ordersChange>0?'↑ ':'')+num(Math.abs(ordersChange))+' '+(ordersChange<0?'fewer':'more')+' orders'+(d.baseline.orders?' ('+(ordersChange>=0?'+':'')+(ordersChange/d.baseline.orders*100).toFixed(1)+'%)':'');q('performance-sessions').classList.add(changeClass(ordersChange));
-q('performance-conversion').textContent=(aovChange<0?'↓ ':aovChange>0?'↑ ':'')+signed(aovChange)+(aovBaseline?' ('+(aovChange>=0?'+':'')+(aovChange/aovBaseline*100).toFixed(1)+'%)':'');q('performance-conversion').classList.add(changeClass(aovChange));
-q('performance-activity').textContent=num(d.current.sessions)+' sessions · '+(d.current.sessions?d.current.orders/d.current.sessions*100:0).toFixed(2)+'% completed conversion';
-function splitRows(rows){return rows.map(row=>{const change=row.current-row.baseline,pct=row.baseline?change/row.baseline*100:null,share=d.current.revenue?row.current/d.current.revenue*100:null,cls=changeClass(change);return '<tr><td>'+esc(row.label.replaceAll('_',' '))+'</td><td class="text-end">'+usd(row.current)+'</td><td class="text-end">'+(share===null?'—':share.toFixed(1)+'%')+'</td><td class="text-end '+cls+'">'+(change<0?'↓ ':change>0?'↑ ':'')+signed(change)+'</td><td class="text-end '+cls+'">'+(pct===null?'New / no baseline':(pct>0?'+':'')+pct.toFixed(1)+'%')+'</td></tr>';}).join('');}
-const categories=[...d.categories].sort((a,b)=>b.current-a.current),visible=categories.slice(0,8),rest=categories.slice(8);
-if(rest.length)visible.push({label:'Other categories ('+rest.length+')',current:rest.reduce((s,x)=>s+x.current,0),baseline:rest.reduce((s,x)=>s+x.baseline,0)});
-q('performance-categories').innerHTML=splitRows(visible);q('performance-all-categories').innerHTML=splitRows(categories);q('performance-channels').innerHTML=splitRows([...d.channels].sort((a,b)=>b.current-a.current));
-let selectedQuestion='';
-const forwardQuestion=d.presentation?.nextQuestions?.[0]||'Do you want to investigate which categories and channels contributed most to the '+usd(Math.abs(d.change))+' '+(d.change<0?'decline':'change')+' on '+d.dataThrough+' versus '+d.baselineDate+'?';
-q('performance-forward-question').textContent=forwardQuestion;
-async function investigate(prompt){if(window.openai?.sendFollowUpMessage)await window.openai.sendFollowUpMessage({prompt,title:'Investigate sales performance'});}
-q('performance-investigate').addEventListener('click',()=>investigate(selectedQuestion));q('performance-forward-action').addEventListener('click',()=>investigate(forwardQuestion));
-function detail(){const v=days[selected],globalIndex=d.daily.findIndex(x=>x.date===v.date),previous=d.daily[globalIndex-1];q('performance-detail').textContent=v.date+' · '+usd(v.revenue)+' revenue · '+num(v.orders)+' completed orders · '+num(v.sessions)+' sessions';const drop=previous&&v.revenue<previous.revenue;q('performance-investigate').hidden=!drop;q('performance-drop-cue').textContent='';selectedQuestion='';if(drop){const change=v.revenue-previous.revenue,pct=previous.revenue?change/previous.revenue*100:null;q('performance-drop-cue').textContent='↓ '+usd(-change)+(pct===null?'':' ('+Math.abs(pct).toFixed(1)+'%)')+' versus '+previous.date+'. Do you want to investigate traffic, conversion, basket size, and category and channel contributions for this drop?';q('performance-drop-cue').className='text-small change-down';selectedQuestion='Investigate the sales drop on '+v.date+' versus '+previous.date+'. Query traffic, completed conversion, average order value, and category and channel revenue splits for these exact dates. Quantify measured contributions; do not assume causality. Finish with a specific forward question.';}}
-function draw(){if(typeof d3==='undefined'){detail();return;}const w=q('performance-chart').clientWidth;if(w<100)return;const h=230,l=68,r=14,t=28,b=50,pw=w-l-r,ph=h-t-b,extent=d3.extent(days,x=>x.revenue),pad=(extent[1]-extent[0]||Math.abs(extent[0])||1)*.18,min=extent[0]-pad,max=extent[1]+pad,y=d3.scaleLinear().domain([min,max]).range([t+ph-6,t+6]),x=d3.scalePoint().domain(days.map(x=>x.date)).range([l+6,l+pw-6]);let s='<rect data-chart-frame x="'+l+'" y="'+t+'" width="'+pw+'" height="'+ph+'" fill="none" stroke="var(--border)"/>';y.ticks(4).forEach(v=>s+='<line x1="'+l+'" x2="'+(l+pw)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--border)"/><text x="'+(l-8)+'" y="'+(y(v)+4)+'" text-anchor="end">'+short(v)+'</text>');s+='<path data-smooth-trend d="'+d3.line().x(v=>x(v.date)).y(v=>y(v.revenue)).curve(d3.curveMonotoneX)(days)+'" fill="none" stroke="var(--viz-series-1)" stroke-width="2"/>';days.forEach((v,i)=>{const globalIndex=d.daily.findIndex(a=>a.date===v.date),before=d.daily[globalIndex-1],color=!before||v.revenue===before.revenue?'var(--viz-series-1)':v.revenue>before.revenue?'var(--green)':'var(--red)';s+='<circle cx="'+x(v.date)+'" cy="'+y(v.revenue)+'" r="'+(i===selected?5:3)+'" fill="'+color+'"/><circle data-chart-hit cx="'+x(v.date)+'" cy="'+y(v.revenue)+'" r="16" fill="transparent" data-tooltip="'+esc(v.date+': '+usd(v.revenue))+'"/>';if(i===0||i===days.length-1||i===Math.floor(days.length/2))s+='<text x="'+x(v.date)+'" y="'+(h-28)+'" text-anchor="'+(i===0?'start':i===days.length-1?'end':'middle')+'">'+v.date.slice(5)+'</text>';});s+='<text class="axis-title" data-axis="y" x="'+l+'" y="16">Net sales · USD</text><text class="axis-title" data-axis="x" x="'+(l+pw/2)+'" y="'+(h-4)+'" text-anchor="middle">Date · MM-DD</text>';q('performance-chart').innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc('Smooth daily completed revenue trend; green increases and red decreases versus the previous day. '+days.map(x=>x.date+' '+usd(x.revenue)).join('; '))+'">'+s+'</svg>';detail();}
-q('performance-day').addEventListener('input',e=>{selected=+e.target.value;draw();});new ResizeObserver(draw).observe(q('performance-chart'));draw();})();
-</script>
