@@ -3,7 +3,7 @@ import { dirname } from 'node:path';
 import { createHash } from 'node:crypto';
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
-for (const path of ['index.html', 'design-system.html', 'case-studies.html', 'thanks.html', 'analytics', 'commerce', 'crm', 'feedback', 'leadgen', 'assets', 'toptal-application.html', 'toptal-application.css', 'toptal-application.js', 'images']) {
+for (const path of ['index.html', 'design-system.html', 'case-studies.html', 'thanks.html', 'analytics', 'commerce', 'crm', 'feedback', 'leadgen', 'goods', 'assets', 'toptal-application.html', 'toptal-application.css', 'toptal-application.js', 'images']) {
   await cp(path, `dist/${path}`, { recursive: true });
 }
 // Publish registered detail pages; unlisted source pages stay available for later.

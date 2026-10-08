@@ -3,6 +3,7 @@ import { analyticsSession } from './analytics-api.mjs';
 import { createContactHandler } from './contact-api.mjs';
 import { createCrmHandler } from './crm-api.mjs';
 import { createPublicLeadgenHandler } from './leadgen-api.mjs';
+import { createGoodsHandler } from './goods-api.mjs';
 import { createImageQAHandler } from './image-qa-api.mjs';
 import { commerceSession } from './commerce-api.mjs';
 import { createAnalyticsInjector } from './google-analytics.mjs';
@@ -21,9 +22,11 @@ const contactHandler = createContactHandler();
 const crmHandler = createCrmHandler();
 const leadgenHandler = createPublicLeadgenHandler();
 const imageQAHandler = createImageQAHandler();
+const goodsHandler = createGoodsHandler();
 const injectAnalytics = createAnalyticsInjector(process.env.GOOGLE_ANALYTICS_MEASUREMENT_ID);
 createServer(async (req, res) => {
   try {
+    if (new URL(req.url, 'http://localhost').pathname.startsWith('/api/goods/')) { await goodsHandler(req,res); return; }
     if (new URL(req.url, 'http://localhost').pathname.startsWith('/api/leadgen/')) { await leadgenHandler(req, res); return; }
     if (new URL(req.url,'http://localhost').pathname.startsWith('/api/image-qa/')) {await imageQAHandler(req,res);return;}
     if (new URL(req.url, 'http://localhost').pathname === '/commerce/api/realtime') { await commerceSession(req, res); return; }
@@ -38,7 +41,7 @@ createServer(async (req, res) => {
     if (decodedPath === '/games/berlin-combat' || decodedPath.startsWith('/games/berlin-combat/')) { res.writeHead(410, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' }).end(req.method === 'HEAD' ? undefined : 'This game is no longer available.'); return; }
     if (redirects[url.pathname]) { res.writeHead(301, { Location: redirects[url.pathname] + url.search }).end(); return; }
     if (url.pathname === '/health') { res.writeHead(200, { 'Content-Type': 'text/plain' }).end(req.method === 'HEAD' ? '' : 'ok'); return; }
-    const pathname = url.pathname === '/leadgen' ? '/leadgen/index.html' : url.pathname === '/analytics' ? '/analytics/index.html' : url.pathname === '/crm' ? '/crm/index.html' : url.pathname === '/feedback' ? '/feedback/index.html' :
+    const pathname = url.pathname === '/goods' ? '/goods/index.html' : url.pathname === '/leadgen' ? '/leadgen/index.html' : url.pathname === '/analytics' ? '/analytics/index.html' : url.pathname === '/crm' ? '/crm/index.html' : url.pathname === '/feedback' ? '/feedback/index.html' :
       /^(?:\/commerce\/?|\/commerce\/search|\/commerce\/product\/[^/]+)$/.test(url.pathname) ? '/commerce/index.html' : url.pathname;
     const path = resolve(root, '.' + decodeURIComponent(pathname.endsWith('/') ? pathname + 'index.html' : pathname));
     if (!path.startsWith(root + sep)) { res.writeHead(403).end(); return; }
