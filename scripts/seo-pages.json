@@ -1,4 +1,5 @@
 [
+  {"file":"leadgen/index.html","path":"/leadgen","title":"B2B lead generator | Decision Axis","description":"Find public questions your B2B company can help answer on LinkedIn, Reddit and X. Review company recommendations and open the original conversation to reply.","type":"WebPage","service":"B2B lead generation from public questions"},
   {"file":"projects/image-object-pipeline.html","path":"/projects/image-object-pipeline.html","title":"Image Object Pipeline Quality Assurance | Decision Axis","description":"Ten sourced product photographs, visual catalog claims and actual OpenAI Decisions probabilities. Deliberate mismatches are labeled, never manipulated scores.","type":"WebPage"},
   {
     "file": "index.html",

@@ -6,6 +6,7 @@ import { createFeedbackHandler } from './feedback-api.mjs';
 import { workspaceTabs, workspaceQuery, workspaceThread, workspaceInstruction, validateWorkspace, checkedThemes, classifyTheme, mergeJobApplications } from './crm-workspace.mjs';
 import { createWorkspaceFlow } from './crm-workspace-flow.mjs';
 import {createCrmLive} from './crm-live.mjs';
+import { createLeadgenService } from './leadgen-api.mjs';
 
 const json = (res, status, value) => res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }).end(JSON.stringify(value));
 const b64 = value => Buffer.from(value).toString('base64url');
@@ -199,6 +200,7 @@ export function createCrmHandler() {
   const feedback = createFeedbackHandler(cloudToken);
   const workspaceFlow = createWorkspaceFlow({ googleRequest, firestore, storedList, encrypt, decrypt, seal, unseal });
   const crmLive=createCrmLive({firestore,seal,unseal});
+  const leadgen = createLeadgenService({ save: saveUser, encrypt, decrypt });
   // Short-lived, account-scoped warm caches; never shared across customer identities.
   const analysisCache = new Map(), snapshots = new Map(), runningScans = new Set(), progress = new Map();
   const remember = (map, key, value, limit = 5000) => {
@@ -226,7 +228,7 @@ export function createCrmHandler() {
           scope: [...(gmail || identity ? scopes.slice(0, 3) : scopes), ...(gmail ? gmailScopes : [])].join(' '), state, code_challenge: challenge, code_challenge_method: 'S256',
           access_type: 'offline', prompt: 'consent', include_granted_scopes: gmail ? 'true' : 'false' });
         res.writeHead(302, { Location: `https://accounts.google.com/o/oauth2/v2/auth?${params}`,
-          'Set-Cookie': cookieHeader('crm_oauth', seal({ state, verifier, gmail, identity, destination: url.searchParams.get('return') === 'feedback' ? '/feedback/' : '/crm', uid, exp: Date.now() + 600000 }, config.sessionSecret), 600, config.secure, '/crm/api/oauth'),
+          'Set-Cookie': cookieHeader('crm_oauth', seal({ state, verifier, gmail, identity, destination: url.searchParams.get('return') === 'feedback' ? '/feedback/' : url.searchParams.get('return') === 'leadgen' ? '/leadgen' : '/crm', uid, exp: Date.now() + 600000 }, config.sessionSecret), 600, config.secure, '/crm/api/oauth'),
           'Cache-Control': 'no-store' }).end(); return;
       }
       if (path === '/oauth/callback' && req.method === 'GET') {
@@ -263,6 +265,10 @@ export function createCrmHandler() {
       const uid = requireSession(req, config);
       const user = await getUser(uid);
       if (!user) throw Object.assign(new Error('Sign in to continue.'), { status: 401 });
+      if (path.startsWith('/leadgen/')) {
+        if (req.method !== 'GET') sameOrigin(req, config);
+        return json(res, 200, await leadgen(path.slice('/leadgen'.length), req, uid, user, config, req.method === 'POST' ? await readBody(req) : {}));
+      }
       if (path === '/disconnect' && req.method === 'POST') {
         sameOrigin(req, config);
         for (const map of [analysisCache, snapshots]) for (const key of map.keys()) if (key.startsWith(`${uid}:`)) map.delete(key);

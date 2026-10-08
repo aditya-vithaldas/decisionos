@@ -54,3 +54,11 @@ products/meridian/.wrangler/
 
 !scripts/demo-api.mjs
 !scripts/demo-planner.mjs
+!scripts/leadgen-api.mjs
+!scripts/crm-workspace.mjs
+!scripts/crm-workspace-flow.mjs
+!scripts/crm-live.mjs
+!scripts/image-qa-api.mjs
+!scripts/image-qa-catalog.mjs
+!leadgen/
+!leadgen/**

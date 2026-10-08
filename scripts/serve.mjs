@@ -33,7 +33,7 @@ createServer(async (req, res) => {
     if (decodedPath === '/games/berlin-combat' || decodedPath.startsWith('/games/berlin-combat/')) { res.writeHead(410, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' }).end(req.method === 'HEAD' ? undefined : 'This game is no longer available.'); return; }
     if (redirects[url.pathname]) { res.writeHead(301, { Location: redirects[url.pathname] + url.search }).end(); return; }
     if (url.pathname === '/health') { res.writeHead(200, { 'Content-Type': 'text/plain' }).end(req.method === 'HEAD' ? '' : 'ok'); return; }
-    const pathname = url.pathname === '/analytics' ? '/analytics/index.html' : url.pathname === '/crm' ? '/crm/index.html' : url.pathname === '/feedback' ? '/feedback/index.html' :
+    const pathname = url.pathname === '/leadgen' ? '/leadgen/index.html' : url.pathname === '/analytics' ? '/analytics/index.html' : url.pathname === '/crm' ? '/crm/index.html' : url.pathname === '/feedback' ? '/feedback/index.html' :
       /^(?:\/commerce\/?|\/commerce\/search|\/commerce\/product\/[^/]+)$/.test(url.pathname) ? '/commerce/index.html' : url.pathname;
     const path = resolve(root, '.' + decodeURIComponent(pathname.endsWith('/') ? pathname + 'index.html' : pathname));
     if (!path.startsWith(root + sep)) { res.writeHead(403).end(); return; }
