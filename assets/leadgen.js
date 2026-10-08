@@ -18,27 +18,61 @@
       const tick = () => {
         const seconds = Math.floor((Date.now() - startedAt) / 1000);
         $('progress-time').textContent = `Working · ${seconds}s elapsed`;
-        $('progress-note').textContent = seconds >= 45 ? 'Still working. Public searches can take a few minutes.' : 'This can take a couple of minutes. You can keep this page open while we work.';
+        if (seconds >= 300) $('progress-estimate').textContent = 'Taking longer than estimated · still working';
       };
       tick(); activityTimer = setInterval(tick, 1000);
     }
-    const finding = stage === 'search';
+    const stages = ['website', 'questions', 'search', 'review'];
+    const index = stages.indexOf(stage);
+    if (index < 0) return;
     $('search-progress').hidden = false;
-    $('progress-title').textContent = finding ? 'Searching LinkedIn, X and Reddit' : 'Reading your website';
-    $('progress-stage').textContent = finding ? 'Step 2 of 2' : 'Step 1 of 2';
-    $('discover').textContent = finding ? 'Searching conversations…' : 'Reading website…';
-    $('progress-read').classList.toggle('complete', finding);
-    for (const id of ['progress-read', 'progress-find']) $(id).removeAttribute('aria-current');
-    $(finding ? 'progress-find' : 'progress-read').setAttribute('aria-current', 'step');
+    $('progress-title').textContent = ['Reading your website', 'Choosing question themes', 'Searching LinkedIn, X and Reddit', 'Checking relevance and reply status'][index];
+    $('progress-stage').textContent = `Step ${index + 1} of 4`;
+    $('discover').textContent = ['Reading website…', 'Choosing themes…', 'Searching conversations…', 'Checking fit…'][index];
+    ['progress-read', 'progress-questions', 'progress-find', 'progress-review'].forEach((id, i) => {
+      $(id).classList.toggle('complete', i < index); $(id).removeAttribute('aria-current');
+      if (i === index) $(id).setAttribute('aria-current', 'step');
+    });
+    $('progress-note').textContent = ['Learning what your business can help with.', 'Turning your expertise into questions people ask.', 'Looking for a real need, not just a mention.', 'Keeping useful questions; filtering out promotions.'][index];
+    $('platform-activity').hidden = index < 2;
+  }
+  function progress(event) {
+    if (event.platform) {
+      const chip = [...$('platform-activity').children].find(node => node.dataset.platform === event.platform);
+      if (chip) { chip.dataset.state = event.status; chip.textContent = `${event.platform} · ${event.status === 'done' ? `${event.sourceCount} sources found` : event.status === 'unavailable' ? 'Unavailable' : 'Searching'}`; }
+      return;
+    }
+    activity(event.stage);
+    $('progress-detail').textContent = event.detail || '';
+    $('progress-estimate').textContent = `Estimated 2–5 minutes overall${event.estimate ? ` · ${event.estimate}` : ''}`;
   }
   async function api(path, body) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 210000);
     try {
-      const response = await fetch(`/api/leadgen/${path}`, { method: 'POST', credentials: 'omit', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: controller.signal });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Could not finish. Please try again.');
-      return data;
+      const response = await fetch(`/api/leadgen/${path}`, { method: 'POST', credentials: 'omit', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, progress: true }), signal: controller.signal });
+      if (!response.ok || !response.headers.get('content-type')?.includes('application/x-ndjson')) {
+        const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Could not finish. Please try again.'); return data;
+      }
+      const reader = response.body.getReader(), decoder = new TextDecoder(); let pending = '', result;
+      const consume = line => {
+        if (!line.trim()) return;
+        const event = JSON.parse(line);
+        if (event.type === 'stage') progress(event);
+        if (event.type === 'error') throw new Error(event.error);
+        if (event.type === 'result') result = event.data;
+      };
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) { pending += decoder.decode(); consume(pending); break; }
+          pending += decoder.decode(value, { stream: true });
+          if (pending.length > 200000) throw new Error('The response was too large. Please try again.');
+          const lines = pending.split('\n'); pending = lines.pop(); for (const line of lines) consume(line);
+        }
+      } finally { await reader.cancel().catch(() => {}); }
+      if (!result) throw new Error('The connection ended before the search finished. Please try again.');
+      return result;
     } catch (error) {
       if (error.name === 'AbortError') throw new Error('The search took too long. Please try again.');
       throw error;
@@ -70,6 +104,8 @@
     }
   }
   async function search() {
+    $('platform-activity').replaceChildren();
+    for (const platform of ['LinkedIn', 'X', 'Reddit']) { const chip = el('span', '', `${platform} · Searching`); chip.dataset.platform = platform; chip.dataset.state = 'searching'; $('platform-activity').append(chip); }
     activity('search');
     status('Finding relevant questions on LinkedIn, X and Reddit…');
     const found = await api('search', { profile, platforms: ['LinkedIn', 'X', 'Reddit'] });
@@ -85,6 +121,8 @@
     catch { return status('Enter a public website, such as https://yourcompany.com.', true); }
     controls(true); profile = null; results = []; filter = 'all';
     activity('website');
+    $('progress-detail').textContent = `Checking ${new URL(website).hostname}.`;
+    $('progress-estimate').textContent = 'Estimated 2–5 minutes overall';
     document.querySelectorAll('[data-filter]').forEach(node => node.setAttribute('aria-pressed', String(node.dataset.filter === filter)));
     $('question-plan').hidden = true; $('inbox').hidden = true; $('retry-search').hidden = true; attribution('');
     status('Reading your website and finding the questions your business can answer…');
