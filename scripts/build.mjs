@@ -14,7 +14,7 @@ for (const page of pages.filter(page => page.file.startsWith('projects/') || pag
   await cp(page.file, `dist/${page.file}`);
 }
 const versions = {};
-for (const name of ['leadgen.css', 'leadgen.js', 'styles.css', 'motion.js', 'concepts.js', 'contact.js', 'service-carousel.js','crm.css','crm-workspace.css','crm.js','crm-live.js','crm-live-commands.js','crm-live-capture.js']) {
+for (const name of ['hero-art-motion.css', 'hero-art-motion.js', 'leadgen.css', 'leadgen.js', 'styles.css', 'motion.js', 'concepts.js', 'contact.js', 'service-carousel.js','crm.css','crm-workspace.css','crm.js','crm-live.js','crm-live-commands.js','crm-live-capture.js']) {
   versions[name] = createHash('sha256').update(await readFile(`assets/${name}`)).digest('hex').slice(0, 10);
 }
 // Pin the entire Live module graph, not only the HTML entry. Changing a child
@@ -32,7 +32,7 @@ async function versionPages(dir) {
     else if (entry.name.endsWith('.html')) {
       const html = (await readFile(path, 'utf8'))
         .replace(/<header class="site-header">[\s\S]*?<\/header>/, siteHeader)
-        .replace(/(assets\/(leadgen\.css|leadgen\.js|styles\.css|motion\.js|concepts\.js|contact\.js|service-carousel\.js|crm\.css|crm-workspace\.css|crm\.js|crm-live\.js|crm-live-commands\.js|crm-live-capture\.js))(?:\?v=[^"\s]+)?/g, (_, url, name) => `${url}?v=${versions[name]}`);
+        .replace(/(assets\/(hero-art-motion\.css|hero-art-motion\.js|leadgen\.css|leadgen\.js|styles\.css|motion\.js|concepts\.js|contact\.js|service-carousel\.js|crm\.css|crm-workspace\.css|crm\.js|crm-live\.js|crm-live-commands\.js|crm-live-capture\.js))(?:\?v=[^"\s]+)?/g, (_, url, name) => `${url}?v=${versions[name]}`);
       await writeFile(path, html);
     }
   }
