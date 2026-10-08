@@ -65,3 +65,4 @@ products/meridian/.wrangler/
 !scripts/leadgen-search.mjs
 !scripts/leadgen-urls.mjs
 !scripts/google-analytics.mjs
+!scripts/leadgen-dates.mjs
