@@ -1,0 +1,29 @@
+<div id="commerce-performance">
+  <div class="viz-row"><h2>Sales performance</h2><span class="viz-badge">Synthetic database</span></div>
+  <p id="performance-period" class="text-small text-muted"></p>
+  <div class="viz-grid">
+    <div class="card viz-stat"><span>Completed revenue · USD</span><div id="performance-revenue" class="viz-stat-value tabular-nums"></div><span id="performance-change" class="text-small"></span></div>
+    <div class="card viz-stat"><span>Completed orders</span><div id="performance-orders" class="viz-stat-value tabular-nums"></div><span id="performance-sessions" class="text-small"></span></div>
+    <div class="card viz-stat"><span>Average order value · USD</span><div id="performance-aov" class="viz-stat-value tabular-nums"></div><span id="performance-conversion" class="text-small"></span></div>
+  </div>
+  <div class="viz-row"><h3>Last seven complete days</h3><span id="performance-week" class="text-small tabular-nums"></span></div>
+  <div id="performance-chart"></div>
+  <label class="form-label" for="performance-day">Inspect day</label><input id="performance-day" class="form-range" type="range" min="0" max="6" value="6">
+  <div id="performance-detail" class="text-small" aria-live="polite"></div>
+  <h3>Top products by completed revenue</h3>
+  <div class="table-responsive"><table class="table table-sm"><thead><tr><th>Product</th><th class="text-end">Units</th><th class="text-end">USD</th></tr></thead><tbody id="performance-products"></tbody></table></div>
+  <footer class="text-small text-muted" id="performance-source"></footer>
+</div>
+<style>
+#commerce-performance{color:var(--foreground)}#commerce-performance .viz-row{justify-content:space-between}#commerce-performance h3{margin-top:18px}#commerce-performance footer{margin-top:12px;overflow-wrap:anywhere}#commerce-performance svg{display:block;width:100%}#commerce-performance svg text{fill:var(--foreground);font-size:12px;font-weight:400}#commerce-performance td:first-child{overflow-wrap:anywhere}#commerce-performance .product-category{display:block}
+</style>
+<script id="commerce-snapshot" type="application/json">__COMMERCE_SNAPSHOT__</script>
+<script>
+(()=>{const root=document.getElementById('commerce-performance'),q=id=>root.querySelector('#'+id),d=JSON.parse(document.getElementById('commerce-snapshot').textContent),days=d.daily.slice(-7);const usd=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v),num=v=>new Intl.NumberFormat('en-US').format(v),short=v=>new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:1}).format(v),signed=v=>(v<0?'−':'+')+usd(Math.abs(v)),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let selected=days.length-1;
+q('performance-period').textContent=d.dataThrough+' · Full day · Compared with '+d.baselineDate;
+q('performance-revenue').textContent=usd(d.current.revenue);q('performance-change').textContent=signed(d.change)+' ('+(d.changePct>=0?'+':'')+d.changePct.toFixed(1)+'%) vs last week';q('performance-orders').textContent=num(d.current.orders);q('performance-sessions').textContent=num(d.current.sessions)+' sessions';q('performance-aov').textContent=usd(d.current.revenue/d.current.orders);q('performance-conversion').textContent=(d.current.orders/d.current.sessions*100).toFixed(2)+'% completed conversion';q('performance-week').textContent=usd(days.reduce((s,x)=>s+x.revenue,0))+' total';q('performance-day').max=days.length-1;q('performance-day').value=selected;
+q('performance-products').innerHTML=d.products.map(p=>'<tr><td>'+esc(p.name)+'<span class="product-category text-small text-muted">'+esc(p.category)+'</span></td><td class="text-end">'+num(p.units)+'</td><td class="text-end">'+usd(p.revenue)+'</td></tr>').join('');q('performance-source').textContent='Google Cloud · '+d.datasetVersion+' · Updated '+d.source.updatedAt+' · '+num(d.source.totalRows)+' records · '+d.source.generation.model;
+function detail(){const v=days[selected];q('performance-detail').textContent=v.date+' · '+usd(v.revenue)+' revenue · '+num(v.orders)+' completed orders · '+num(v.sessions)+' sessions';}
+function draw(){const w=Math.max(280,q('performance-chart').clientWidth),h=206,l=68,r=12,t=26,b=46,pw=w-l-r,ph=h-t-b,max=Math.max(...days.map(x=>x.revenue))*1.22,y=v=>t+ph*(1-v/max),step=pw/days.length,bw=step*.56;let s='<rect data-chart-frame x="'+l+'" y="'+t+'" width="'+pw+'" height="'+ph+'" fill="none" stroke="var(--border)"/>';[0,max/2,max].forEach(v=>s+='<text x="'+(l-8)+'" y="'+(y(v)+4)+'" text-anchor="end">'+short(v)+'</text>');days.forEach((v,i)=>{let x=l+step*(i+.22);s+='<rect x="'+x+'" y="'+y(v.revenue)+'" width="'+bw+'" height="'+(y(0)-y(v.revenue))+'" fill="var(--viz-series-1)" opacity="'+(i===selected?1:.55)+'" data-tooltip="'+esc(v.date+': '+usd(v.revenue))+'"/><text x="'+(x+bw/2)+'" y="'+(y(v.revenue)-6)+'" text-anchor="middle">'+short(v.revenue)+'</text>';if(w>450||i===0||i===2||i===4||i===6)s+='<text x="'+(x+bw/2)+'" y="'+(h-26)+'" text-anchor="middle">'+v.date.slice(5)+'</text>';});s+='<text class="axis-title" data-axis="y" x="0" y="16">USD</text><text class="axis-title" data-axis="x" x="'+(l+pw/2)+'" y="'+(h-4)+'" text-anchor="middle">Date · MM-DD</text>';q('performance-chart').innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc('Daily completed revenue in USD. '+days.map(x=>x.date+' '+usd(x.revenue)).join('; '))+'">'+s+'</svg>';detail();}
+q('performance-day').addEventListener('input',e=>{selected=+e.target.value;draw();});new ResizeObserver(draw).observe(q('performance-chart'));draw();})();
+</script>
