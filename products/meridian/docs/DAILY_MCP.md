@@ -61,3 +61,13 @@ The initial catch-up appended 30 September–7 October: 10,215,426 total records
 Cloud Run had traffic pinned to an older revision. After updating the image, explicitly moving traffic to the latest revision was required; check the actual serving image rather than relying on the deployment command's printed revision.
 
 The versioned Page templates are in `docs/dashboard/`. `node scripts/render-dashboard.mjs snapshot.json output-directory` validates a database response and embeds the same JSON into both fragments. The hosted refresh can replace only the `commerce-snapshot` script data while retaining the existing layout. The saved fragments perform no network requests and no random generation.
+
+## Reporting release — 8 October 2026
+
+- Source commit: `fc2f2d0e82b8f58100e7d80f496de5274b24a14b`, pushed to `main`.
+- MCP server version: `1.1.0`; reporting policy: `2026-10-08.1`.
+- Cloud Build: `b907c299-da96-4d15-863d-5b72a4de461f`, successful, built from that committed source snapshot.
+- Serving revision: `meridian-commerce-mcp-00003-cz8`, verified at 100% traffic.
+- Serving image: `sha256:562e0d5828e6e8efccf089737477291aca9c4f28cb0021d1da32c68cd2e97cdd`.
+- Validation: four local tests passed; the actual remote MCP initialization and all five read tools returned the new guidance. The connected Meridian tool returned 40 category rows, three channel rows and date-specific follow-up cues.
+- The updated performance template passed desktop and 320px-wide layout checks, smooth-curve checks, category/channel coverage, decline coloring and the exact-date investigation action. The inline preview in the requesting chat uses this template. Existing saved Page embeds retain their previous layout until refreshed with the new template.
