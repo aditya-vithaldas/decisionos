@@ -69,3 +69,11 @@ Source `90c93b3` adds an active-speaker voice-only Zoom concept with a live summ
 Build `0648a99f-27c0-406b-8a88-6aec7dacd1be`; image `sha256:48bb6ef6a6f36888ac5e6b77d36b6c5fa33414768118ff6492d6c6f3f8931869`; revision `chatpm-asana-voice-rag-90c93b3`, serving 100% traffic. Targeted static layer over the actual prior image preserves existing application runtimes. Focused build, JavaScript syntax, whole-diff whitespace checks, eleven preview route checks and exact deployed script/style/image byte matches passed. Browser verification covered keep/undo and the live Helix summary; public article and assistant screenshot bytes were checked. Source was pushed and merged into main.
 
 The primary Delightful AI Products draft was updated with the Helix greeting/RAG copy, replaced assistant image, voice-only example and its screenshot. Reload confirmed 15 images, one native video and both new images loaded from Substack’s CDN. Draft remains unpublished. Unrelated JEV profile remains excluded.
+
+## Simplified meeting outcomes
+
+Commits `1367a9e` and `27c2c0c` replace the large voice area with a compact recording strip and three consistent sections: key conversation on the left, updated Gantt on the right, key decisions across the bottom. Short row comments explain changed owners and new work; previous values are struck through. Keep/undo remains a local sample interaction. The website article and primary Substack draft use the shorter explanation and final matching screenshot. The film is unchanged.
+
+Build `b1925693-b9a0-4865-9fad-98bf676b39bb`; image `sha256:797f0b45e27ec8ef44ee1e506d38a64a67b75d0831bfe6f1a7a3c7ae1d6c000c`; revision `chatpm-asana-meeting-simple-27c2c0c`, serving 100% traffic. Static layer over the actual previous serving image. Syntax, focused build, whole-diff checks, eleven preview route checks, exact script/style/image byte matches and public article/image checks passed. Browser checks verified the layout, keep/undo and live headings. Source was pushed and fast-forwarded into main.
+
+The Delightful AI Products draft reload verified the short copy, 15 images, one native video and the final meeting image loaded from Substack’s CDN. It remains unpublished. The reusable workflow was aligned with the three-section design outside Git. Unrelated JEV profile remains excluded.
