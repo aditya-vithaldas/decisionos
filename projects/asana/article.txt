@@ -68,7 +68,7 @@ Project management is a fantastic use case for real-time voice.
 
 In a Zoom meeting, I should be able to say, “Move the review to Priya, keep the launch date, and flag anything that puts it at risk.” Asana prepares the changes, and we check them while we’re still talking.
 
-Have Asana join your meeting and handle the follow-through. It turns the discussion into a summary, proposed plan changes and action items. Keep the recording compact. Put the summary beside the updated Gantt, with old values struck out and comments explaining the changes. Below that, use a familiar vertical task list: one action per row, with an owner, date and status. Let me sign off the plan changes without pretending every follow-up is already complete.
+Have Asana join your meeting and handle the follow-through. During the call, it listens and captures the discussion. When the meeting ends, the call goes away and the full Asana view takes over: a general summary, the updated Gantt with old values struck out, comments explaining each change, and a vertical action list with owners, dates and status. Let me sign off the plan changes. Keeping the plan is different from confirming that every follow-up is complete.
 
 [SCREEN: voice-only-zoom-summary]
 
@@ -104,21 +104,13 @@ The view can change, but we should still be looking at the same work. And I shou
 
 Start the day with what matters
 
-The biggest job of task management software is telling people where things stand, based on what they care most about.
+The biggest job of task management software is telling people where things stand, based on what they care most about. But the brief should also tell me what has already moved forward.
 
-A morning brief is a simple way to do that. What’s going well? What needs attention? And what should I do next?
+Hello Aditya. Here is the project plan, what is on track and what is blocked. Asana has already followed up with Sam. Sam replied that the authentication callback depends on the identity service. The blocker has been escalated to Nina in Platform, with the failed check and the launch dependency attached. The next check is at 10:00.
 
-For a project manager, be specific. API integration is off track because the authentication check is failing. Security review is at risk because Sam is overloaded. The design and customer feedback session are on track. Then give me two recommendations: get Sam’s fix plan today, and move the security review to Priya. For a developer, bring the failing check and the next task to the front. Same project, different priorities.
+Show that activity beside the plan, with the timestamps and conversation available. Routine follow-ups and escalation can happen within the rules the team has approved. Bring me in for the decision that needs my judgment: should Priya take the security review while Sam focuses on the fix? That is a more useful morning than another list of people I need to chase.
 
-Then help me follow through. “Ask Sam for his fix plan.” “Review the reassignment to Priya.” “Prepare an update for the launch board.” Bring the relevant context into the draft so I don’t have to assemble it again.
-
-The morning brief is a starting point. If something important changes during the day, bring it back to me when it matters. Don’t wait for me to open a dashboard and find it.
-
-[SCREEN: morning-brief]
-
-Hello Aditya, here’s the status of your project Helix. Start with an overall summary and red, amber and green status, then the Gantt. Tick the work that’s on track in green. Then bring forward the items that are slipping, explain why, and propose what to do next. In this example, the authentication check is failing and Sam is over capacity. The brief recommends getting a fix plan from Sam and moving the review to Priya. I can review both actions from there.
-
-[SCREEN: morning-gantt-briefing]
+Proactive monitoring, already acted upon. Explore the plan and activity →
 
 Where the delight comes from
 
@@ -148,7 +140,7 @@ There is another opportunity here. Asana can help produce the work it is asking 
 
 Suppose I give it a brief and ten approved design references. Could it draft a starting flow? Turn a conversation into a requirements document? Prepare an implementation plan?
 
-Use an interview and deep research together. Ask me one clear question, while checking the brief, customer evidence and relevant research on the side. Show what is being reviewed, the finding and where it came from. If the evidence challenges my first answer, bring that back as a better question. Keep the evolving definition visible, with known sections filled and the gaps marked Pending. In this concept the research is simulated with fictional evidence.
+Use an interview and deep research together. When I submit an answer, Asana spots what is missing and starts researching that gap by itself. I should not have to ask it to research or approve each search. Show the investigation on the side, bring the finding back into the next question, and use it to make the definition more complete. Keep the evidence and open assumptions visible. In this concept, the research uses fictional sample material.
 
 Some people will want to take that into Figma. Others will want to work in Claude Code or Codex. Give them a useful base and a clean handoff.
 
