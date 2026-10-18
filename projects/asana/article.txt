@@ -148,7 +148,7 @@ There is another opportunity here. Asana can help produce the work it is asking 
 
 Suppose I give it a brief and ten approved design references. Could it draft a starting flow? Turn a conversation into a requirements document? Prepare an implementation plan?
 
-Make it an interview. Ask me one clear question at a time, in large, bold text on the right. I answer, and the project definition takes shape on the left: who it is for, what the first version does, and what done means. Then let me review it and take the definition, context and acceptance criteria into Codex or Claude Code.
+Use voice to guide me toward a better definition. Put one large, clear question on the left. On the right, show the problem definition, customer cohort and metrics already filled in, with the user story and requirements still pending. Ask what the customer needs to do and what must work before launch. Turn those answers into a user story and requirements for me to review.
 
 Some people will want to take that into Figma. Others will want to work in Claude Code or Codex. Give them a useful base and a clean handoff.
 
