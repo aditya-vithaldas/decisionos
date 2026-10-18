@@ -139,3 +139,10 @@ Build `2f2a1230-1b75-458a-825a-2ff8a1eb529c` succeeded; immutable image `sha256:
 The Delightful AI Products draft at https://delightfulaiproducts.substack.com/publish/post/220965260 is saved and unpublished, with one native v9 hero first, its intro poster, 16 loaded images and 12 section headings. Reload verified the new research wording and all current screenshots. No newsletter was published or emailed.
 
 The new video is publicly listed on the owner's Aditya Vithaldas YouTube channel: https://youtu.be/zww6_o5YFFI . Copyright and Community Guidelines checks completed with no issues. The correct intro thumbnail, description, not-made-for-kids selection and AI-use disclosure are saved. The public watch player reports 60.021 seconds, readyState4, no media error and successful playback. Previous uploads remain untouched. Local publishing metadata and proof screenshots were updated; private captures, credentials, caches, renderer output and the unrelated JEV profile remain excluded from Git.
+
+
+## Answer-specific deep research status
+
+Source `c8a600f` explicitly shows “Doing research” and “Doing deep research based on your answer.” Each of the three sample answers gets its own document/evidence context and investigation: response-time baseline, request ownership/next steps, or recovery/accessibility. The finding still enriches the definition automatically. Updated captures 56-57, website/local article, Substack paragraph and rehosted screenshot, and parent reusable workflow/principles match. Substack remains saved and unpublished with one v9 hero and 16 loaded images; the video content is unchanged.
+
+Build `37ee4af1-a57e-48cc-bcd9-60b559bfd304` succeeded; image `sha256:8144efdd0dc06463fa08e02a4a6bb57e2c9889f9c97e21656fa9f4a49ad11bc8`; revision `chatpm-asana-answer-c8a600f` serves 100% traffic. Syntax and whole-diff checks passed; eleven preview routes, eight asset byte matches and video range checks passed. Browser verification covered all three answer-specific states and the production heading; public script bytes and article wording match source. Source pushed and fast-forwarded into main. Unrelated JEV profile remains excluded.
