@@ -68,7 +68,7 @@ Project management is a fantastic use case for real-time voice.
 
 In a Zoom meeting, I should be able to say, “Move the review to Priya, keep the launch date, and flag anything that puts it at risk.” Asana prepares the changes, and we check them while we’re still talking.
 
-Have Asana join the Zoom meeting, then turn the discussion into a summary, proposed plan changes and action items. Keep the recording compact. Put the summary beside the updated Gantt, with old values struck out and comments explaining the changes. Below that, use a familiar vertical task list: one action per row, with an owner, date and status. Let me sign off the plan changes without pretending every follow-up is already complete.
+Have Asana join your meeting and handle the follow-through. It turns the discussion into a summary, proposed plan changes and action items. Keep the recording compact. Put the summary beside the updated Gantt, with old values struck out and comments explaining the changes. Below that, use a familiar vertical task list: one action per row, with an owner, date and status. Let me sign off the plan changes without pretending every follow-up is already complete.
 
 [SCREEN: voice-only-zoom-summary]
 
