@@ -140,7 +140,7 @@ There is another opportunity here. Asana can help produce the work it is asking 
 
 Suppose I give it a brief and ten approved design references. Could it draft a starting flow? Turn a conversation into a requirements document? Prepare an implementation plan?
 
-Use an interview and deep research together. When I submit an answer, Asana spots what is missing and starts researching that gap by itself. I should not have to ask it to research or approve each search. Show the investigation on the side, bring the finding back into the next question, and use it to make the definition more complete. Keep the evidence and open assumptions visible. In this concept, the research uses fictional sample material.
+Use an interview and deep research together. When I submit an answer, Asana starts deep research based on what I actually said. If I mention a one-minute update, it checks the relevant documents and evidence to fill in the missing detail. Show “Doing deep research based on your answer,” and make the connection clear. I should not have to ask it to research or approve each search. Show the investigation on the side, bring the finding back into the next question, and use it to make the definition more complete. Keep the evidence and open assumptions visible. In this concept, the research uses fictional sample material.
 
 Some people will want to take that into Figma. Others will want to work in Claude Code or Codex. Give them a useful base and a clean handoff.
 
