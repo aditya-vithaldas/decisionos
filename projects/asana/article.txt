@@ -112,6 +112,20 @@ The morning brief is a starting point. If something important changes during the
 
 [SCREEN: morning-brief]
 
+Where the delight comes from
+
+I want a moment where I open the product and think, “Oh, you’ve already done that for me.”
+
+Imagine coming back after a meeting. Asana says, “I turned that conversation into a plan.” The accessibility check is there. Alex is assigned. Priya has the review. The launch date is still where we wanted it.
+
+Let me tap a line from the conversation and see exactly where it landed in the plan. Show me the before and after. I can keep the changes or adjust them. I don’t have to organize the meeting all over again.
+
+There are smaller moments too. It remembers why I deliberately gave someone overlapping work. It brings back the document I was about to look for. It has the follow-up ready with the right context.
+
+The surprise comes from how well it understands the work. The relief comes from realizing there is one less thing for me to do.
+
+Concept: words become a reviewable plan. Try it: https://decisionaxis.co/projects/asana/prototype/#meeting-plan
+
 Do we need a cast of agents?
 
 I’m less convinced that users need to choose a project manager agent, a designer agent, and a coordinator agent before they can get anything done.
