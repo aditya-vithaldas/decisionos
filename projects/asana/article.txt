@@ -112,6 +112,10 @@ The morning brief is a starting point. If something important changes during the
 
 [SCREEN: morning-brief]
 
+Hi Aditya, here’s the progress of your key items. Start with the Gantt. Tick the work that’s on track in green. Then bring forward the items that are slipping, explain why, and propose what to do next. In this example, the authentication check is failing and Sam is over capacity. The brief recommends getting a fix plan from Sam and moving the review to Priya. I can review both actions from there.
+
+[SCREEN: morning-gantt-briefing]
+
 Where the delight comes from
 
 I want a moment where I open the product and think, “Oh, you’ve already done that for me.”
