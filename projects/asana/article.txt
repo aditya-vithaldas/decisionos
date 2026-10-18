@@ -68,6 +68,10 @@ Project management is a fantastic use case for real-time voice.
 
 In a Zoom meeting, I should be able to say, “Move the review to Priya, keep the launch date, and flag anything that puts it at risk.” Asana prepares the changes, and we check them while we’re still talking.
 
+In a voice-only call, put the speaker on one side and the meeting summary on the other. Show what changed: strike out Sam and put Priya beside him. Add the new accessibility task for Alex. Keep the decision to hold October 30 separate from the work that still needs to happen. I should be able to review the changes while we’re still talking.
+
+[SCREEN: voice-only-zoom-summary]
+
 In a physical meeting room, put the project on the screen. Let us ask, “Are we still on for Friday?” and see what supports that answer. Bring up the dependency, the missing review, or the decision we need to make.
 
 And when I’m working alone, let me talk through the plan. I’m talking on the left, and the Gantt chart on the right updates as we go. I say, “Add an accessibility check before security review,” and see the proposed change appear.
@@ -112,7 +116,7 @@ The morning brief is a starting point. If something important changes during the
 
 [SCREEN: morning-brief]
 
-Hi Aditya, here’s the progress of your key items. Start with the Gantt. Tick the work that’s on track in green. Then bring forward the items that are slipping, explain why, and propose what to do next. In this example, the authentication check is failing and Sam is over capacity. The brief recommends getting a fix plan from Sam and moving the review to Priya. I can review both actions from there.
+Hello Aditya, here’s the status of your project Helix. Start with an overall summary and red, amber and green status, then the Gantt. Tick the work that’s on track in green. Then bring forward the items that are slipping, explain why, and propose what to do next. In this example, the authentication check is failing and Sam is over capacity. The brief recommends getting a fix plan from Sam and moving the review to Priya. I can review both actions from there.
 
 [SCREEN: morning-gantt-briefing]
 
