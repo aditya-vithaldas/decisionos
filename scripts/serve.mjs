@@ -1,3 +1,4 @@
+import {serveVideo} from './serve-video.mjs';
 import {demoAPI} from './demo-api.mjs';
 import { analyticsSession } from './analytics-api.mjs';
 import { createContactHandler } from './contact-api.mjs';
@@ -46,6 +47,7 @@ createServer(async (req, res) => {
       /^(?:\/commerce\/?|\/commerce\/search|\/commerce\/product\/[^/]+)$/.test(url.pathname) ? '/commerce/index.html' : url.pathname;
     const path = resolve(root, '.' + decodeURIComponent(pathname.endsWith('/') ? pathname + 'index.html' : pathname));
     if (!path.startsWith(root + sep)) { res.writeHead(403).end(); return; }
+    if (extname(path) === '.mp4') { await serveVideo(req,res,path); return; }
     let body = await readFile(path);
     const type = types[extname(path)] || 'application/octet-stream';
     if (type.startsWith('text/html')) body = Buffer.from(injectAnalytics(body.toString('utf8')));
