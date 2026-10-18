@@ -68,7 +68,7 @@ Project management is a fantastic use case for real-time voice.
 
 In a Zoom meeting, I should be able to say, “Move the review to Priya, keep the launch date, and flag anything that puts it at risk.” Asana prepares the changes, and we check them while we’re still talking.
 
-In a voice-only call, put the speaker on one side and the meeting summary on the other. Show what changed: strike out Sam and put Priya beside him. Add the new accessibility task for Alex. Keep the decision to hold October 30 separate from the work that still needs to happen. I should be able to review the changes while we’re still talking.
+Keep the recording in a small strip at the top. The useful part is what came out of the meeting: a short summary and the key decisions on the left, with the updated Gantt on the right. Strike out the old owner, show the new task, and put a comment against each change explaining what was agreed and why. Keep the October 30 launch decision visible, along with the dependency that is still unresolved. I can review the plan without going through the whole recording again.
 
 [SCREEN: voice-only-zoom-summary]
 
