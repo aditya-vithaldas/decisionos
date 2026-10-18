@@ -1,4 +1,4 @@
-AI product teardown: What would Asana look like if it is built from scratch?
+AI product teardown: Asana and the operating system for work
 
 Last week, I wrote about six things that AI-native products need to get right (https://decisionaxis.substack.com/p/six-principles-for-building-ai-products). Some of it can feel abstract, so I thought I’d take a couple of examples and make it more concrete.
 
@@ -104,9 +104,9 @@ The biggest job of task management software is telling people where things stand
 
 A morning brief is a simple way to do that. What’s going well? What needs attention? And what should I do next?
 
-For a project manager, that might be a launch risk and a decision that needs an owner. For a developer, it might be a failing check that is blocking the next review. Same project, different priorities.
+For a project manager, be specific. API integration is off track because the authentication check is failing. Security review is at risk because Sam is overloaded. The design and customer feedback session are on track. Then give me two recommendations: get Sam’s fix plan today, and move the security review to Priya. For a developer, bring the failing check and the next task to the front. Same project, different priorities.
 
-Then help me follow through. “Ask Priya to confirm the review.” “Prepare an update for the launch board.” Bring the relevant context into the draft so I don’t have to assemble it again.
+Then help me follow through. “Ask Sam for his fix plan.” “Review the reassignment to Priya.” “Prepare an update for the launch board.” Bring the relevant context into the draft so I don’t have to assemble it again.
 
 The morning brief is a starting point. If something important changes during the day, bring it back to me when it matters. Don’t wait for me to open a dashboard and find it.
 
