@@ -68,7 +68,7 @@ Project management is a fantastic use case for real-time voice.
 
 In a Zoom meeting, I should be able to say, “Move the review to Priya, keep the launch date, and flag anything that puts it at risk.” Asana prepares the changes, and we check them while we’re still talking.
 
-Keep the recording small. Put the key conversation on the left and the updated Gantt on the right. Strike out old values and add a short comment against each change. Keep the decisions together at the bottom. I can see what was said, what changed, and what we agreed.
+Keep the recording small. Put a general meeting summary on the left and the updated Gantt on the right. Strike out old values and add a short comment against each change. At the bottom, turn the decisions still needed into questions and to-dos: can Priya take the review, can Alex finish the accessibility check, and is the launch target still achievable?
 
 [SCREEN: voice-only-zoom-summary]
 
@@ -147,6 +147,8 @@ Get some of the work done, too
 There is another opportunity here. Asana can help produce the work it is asking people to manage.
 
 Suppose I give it a brief and ten approved design references. Could it draft a starting flow? Turn a conversation into a requirements document? Prepare an implementation plan?
+
+Show me the work it has already prepared: a requirements draft and an implementation brief, using the project brief, approved designs and meeting decisions. Let me review them, see what is still missing, and take the whole package into Codex or Claude Code. The context and acceptance criteria should travel with the work.
 
 Some people will want to take that into Figma. Others will want to work in Claude Code or Codex. Give them a useful base and a clean handoff.
 
