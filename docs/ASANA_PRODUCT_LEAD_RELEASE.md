@@ -27,3 +27,17 @@ Focused static release build, JavaScript syntax checks, local link/asset checks 
 The reusable workflow is stored separately at `/Users/aditya/programming/Teardowns/WORKFLOW.md`, outside this repository. Editable production assets remain in `/Users/aditya/programming/Teardowns/Asana`. Neither is silently uploaded in the public bundle. The unrelated local `docs/JEV_PROFILE_2026-10-07.md` remains excluded.
 
 Public-domain checks confirmed the homepage service card, offering, principle 3 signpost, Gantt prototype source and working 206 video range response. The final revision serves 100% of traffic.
+
+## Personalized dashboard and deliberate film focus
+
+Article title changed to **AI product teardown: Asana and the operating system for work**, including the browser title, editable text, social title and structured metadata.
+
+The personalized project-manager dashboard now names four tasks and their states: API integration is off track, security review is at risk, and portal design and the customer feedback session are on track. Two recommendations sit alongside them: get Sam’s fix plan today, and move the security review to Priya. Drafting the follow-up, drafting a board update, inspecting the blocker and reviewing reassignment are browser-only click-throughs. The homepage remains unchanged.
+
+The replacement film is approximately 60 seconds (60.004 seconds in the player), 1920×1080, with the original instrumental score extended to fit. Its 18-second dashboard sequence establishes the full view, zooms into task status and holds for 5.5 seconds, moves to the two recommendations and holds for six seconds, then pulls back out. Meeting and Gantt sequences each run 12 seconds with 7.5-second close-up holds and explicit pull-backs. Static-screen shots do not simulate clicks. The superseded public v5 movie is removed from the current bundle; local editable archives are retained.
+
+Content commits: `76b7d04` and `075e827`, pushed and merged into main. Build `2a24f3d4-fee0-4b41-bcfc-8534212900eb`; image `sha256:16cffe98fa1e19f5a175fd2879d44a3db51b71e24367aa8461410cd3a882c319`; revision `chatpm-asana-focus-075e827`.
+
+Release is a static layer over the actually serving prior digest `sha256:ce3c2daf52a13d5b0d48e654feae66e94db26624ce0a4dc1cd9a5b14c4aca0b0`. It updates the Asana public bundle and the collection’s film-duration description, preserving the homepage and application runtimes. Preview article title, social title, movie reference, all local asset references, script syntax and Git diff checks passed. Existing health, homepage, service, CRM, goods, analytics, commerce, feedback and leadgen routes returned 200. Preview prototype JS/CSS and complete movie bytes matched source. Browser checks covered follow-up and board drafts, reassignment navigation, role selection, camera focal frames and exported-movie playback without a media error.
+
+The final focus revision was promoted to 100% traffic. Public-domain checks confirmed the new title, v6 film reference, explicit task status/recommendations and a working video range response. Independent exported-file playback reached its end without error. Final publication screenshot is stored outside Git at `/Users/aditya/programming/Teardowns/Asana/publishing/personalized-dashboard-live.png`.
