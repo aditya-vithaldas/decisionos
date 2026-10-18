@@ -1,6 +1,19 @@
 [
-  {"file":"leadgen/index.html","path":"/leadgen","title":"B2B lead generator | Decision Axis","description":"Find public questions your B2B company can help answer on LinkedIn, Reddit and X. Review company recommendations and open the original conversation to reply.","type":"WebPage","service":"B2B lead generation from public questions"},
-  {"file":"projects/image-object-pipeline.html","path":"/projects/image-object-pipeline.html","title":"Image Object Pipeline Quality Assurance | Decision Axis","description":"Ten sourced product photographs, visual catalog claims and actual OpenAI Decisions probabilities. Deliberate mismatches are labeled, never manipulated scores.","type":"WebPage"},
+  {
+    "file": "leadgen/index.html",
+    "path": "/leadgen",
+    "title": "B2B lead generator | Decision Axis",
+    "description": "Find public questions your B2B company can help answer on LinkedIn, Reddit and X. Review company recommendations and open the original conversation to reply.",
+    "type": "WebPage",
+    "service": "B2B lead generation from public questions"
+  },
+  {
+    "file": "projects/image-object-pipeline.html",
+    "path": "/projects/image-object-pipeline.html",
+    "title": "Image Object Pipeline Quality Assurance | Decision Axis",
+    "description": "Ten sourced product photographs, visual catalog claims and actual OpenAI Decisions probabilities. Deliberate mismatches are labeled, never manipulated scores.",
+    "type": "WebPage"
+  },
   {
     "file": "index.html",
     "path": "/",
@@ -118,5 +131,22 @@
     "title": "Meridian eCommerce analytics demo | decisionos",
     "description": "Explore a working eCommerce analytics and voice analyst demo using illustrative commerce data. Ask sales questions, see SQL-backed charts, and test follow-ups.",
     "type": "WebPage"
+  },
+  {
+    "file": "services/ai-product-lead.html",
+    "path": "/services/ai-product-lead.html",
+    "title": "AI Product Lead as a Service | Decision Axis",
+    "description": "Hands-on product leadership for the AI shift: a clear direction, an interactive prototype and a focused first release.",
+    "type": "WebPage",
+    "service": "AI Product Lead as a Service",
+    "image": "projects/asana/illustrations/talk-to-your-plan-v2.png"
+  },
+  {
+    "file": "projects/asana/index.html",
+    "path": "/projects/asana/",
+    "title": "AI product teardown: What would Asana look like if it is built from scratch?",
+    "description": "An independent exploration of agent-native work management, with an article, clickable prototype and short concept film.",
+    "type": "Article",
+    "image": "projects/asana/illustrations/asana-in-the-meeting-v3.png"
   }
 ]

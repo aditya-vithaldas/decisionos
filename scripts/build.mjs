@@ -6,6 +6,7 @@ await mkdir('dist', { recursive: true });
 for (const path of ['index.html', 'design-system.html', 'case-studies.html', 'thanks.html', 'analytics', 'commerce', 'crm', 'feedback', 'leadgen', 'goods', 'assets', 'toptal-application.html', 'toptal-application.css', 'toptal-application.js', 'images']) {
   await cp(path, `dist/${path}`, { recursive: true });
 }
+await cp('projects/asana', 'dist/projects/asana', { recursive: true });
 // Publish registered detail pages; unlisted source pages stay available for later.
 const pages = JSON.parse(await readFile('scripts/seo-pages.json', 'utf8'));
 await mkdir('dist/projects', { recursive: true });

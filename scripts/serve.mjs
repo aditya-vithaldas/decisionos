@@ -17,6 +17,7 @@ const root = resolve('dist');
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.png': 'image/png', '.jpg': 'image/jpeg', '.mp3': 'audio/mpeg', '.glb': 'model/gltf-binary', '.json': 'application/json' };
 Object.assign(types, { '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml; charset=utf-8' });
 Object.assign(types, { '.mjs': 'text/javascript; charset=utf-8', '.wasm': 'application/wasm' });
+Object.assign(types, { '.mp4': 'video/mp4' });
 const redirects = { '/toptal-application': '/toptal-application.html', '/work.html': '/case-studies.html', '/index.html': '/', '/llm.txt': '/llms.txt' };
 const contactHandler = createContactHandler();
 const crmHandler = createCrmHandler();
