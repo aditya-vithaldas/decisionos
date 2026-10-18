@@ -101,3 +101,9 @@ Build `3ec19c7e-7d41-4023-85bd-8aa063fc3b97`; image `sha256:3973d3f14c1c1f751301
 Source `706c808` changes the voice definition’s initial state to two filled sections (problem statement, customer cohort) and three Pending sections, each with its question (metrics, user story, requirements). The three sample voice answers progress through 3/5, 4/5 and 5/5 defined. Website/local article and screenshot 46 match; Substack remains deferred.
 
 Build `ae50aa9d-b708-46e7-999a-f7ef03492557`; image `sha256:8d7de79c8da32afa6695e85beb06ee3e18e194831adb107828b6b9a27e6362ad`; revision `chatpm-asana-two-defined-706c808`, 100% traffic. Selected static files layered over the actual prior serving image. Syntax, focused build, whole diff, eleven route checks, exact script/image byte matches, article references and live initial state passed. Source pushed and fast-forwarded into main. Unrelated JEV profile excluded.
+
+## Claude v4 player for remote access
+
+Source `9640afb` adds a separate public HTTPS player and Claude’s 60-second, 1920×1080 H.264/AAC v4 MP4 at `/projects/asana/video/claude-promo/watch-v4.html`. This resolves localhost/local-file access from Codex Remote. The article’s v8 movie and Substack draft are unchanged.
+
+Build `8e4ef3d2-9257-40fd-af09-a448bc42a1bd`; image `sha256:460d3203935a46cabbd00f208b9b365cca899c164904ad23fb2e63fe76649008`; revision `chatpm-asana-claude-player-9640afb`, serving 100% traffic. A two-file static layer over the actual prior image preserves other content and applications. Preview health/home/article/prototype/player returned 200, full movie bytes matched source, and first/suffix ranges returned 206. Public browser metadata confirmed 60 seconds, 1920×1080, readyState 4 and no media error. Source pushed and merged into main. Unrelated JEV profile excluded.
