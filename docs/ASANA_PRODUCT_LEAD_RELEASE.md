@@ -95,3 +95,9 @@ Source `f6a04da` replaces the text interview with a voice-mode concept. A large 
 Browser checks verified the exact initial state (3 of 5 defined, two Pending), both sample-answer transitions, 5-of-5 completion, ready-for-review action and reset. New screenshots 44–45, website article, local HTML/text draft and reusable workflow match the corrected layout. Substack sync remains deferred at the user’s request; its pending-sync note points to screenshot 44. The v8 film is unchanged.
 
 Build `3ec19c7e-7d41-4023-85bd-8aa063fc3b97`; image `sha256:3973d3f14c1c1f751301f235cf7b6fb77d3a4359b289ddcb1ce817655a1541e1`; revision `chatpm-asana-voice-definition-f6a04da`, serving 100% traffic. Selected-file static layer over the actual previous image preserves existing apps and media. Syntax, focused build, whole-diff checks, eleven preview route checks, exact script/style/image byte matches, article references and live initial-state checks passed. Source was pushed and fast-forwarded into main. Unrelated JEV profile remains excluded.
+
+## Two defined sections, three pending questions
+
+Source `706c808` changes the voice definition’s initial state to two filled sections (problem statement, customer cohort) and three Pending sections, each with its question (metrics, user story, requirements). The three sample voice answers progress through 3/5, 4/5 and 5/5 defined. Website/local article and screenshot 46 match; Substack remains deferred.
+
+Build `ae50aa9d-b708-46e7-999a-f7ef03492557`; image `sha256:8d7de79c8da32afa6695e85beb06ee3e18e194831adb107828b6b9a27e6362ad`; revision `chatpm-asana-two-defined-706c808`, 100% traffic. Selected static files layered over the actual prior serving image. Syntax, focused build, whole diff, eleven route checks, exact script/image byte matches, article references and live initial state passed. Source pushed and fast-forwarded into main. Unrelated JEV profile excluded.
