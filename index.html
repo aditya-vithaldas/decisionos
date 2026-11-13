@@ -20,14 +20,18 @@
       <nav aria-label="Main navigation"><a href="#services">Services</a><a href="#products">Products</a><a href="#training">Training</a></nav>
     </header>
     <main id="main" tabindex="-1">
-      <section class="home-intro" id="about" aria-labelledby="intro-title">
+      <section class="home-intro" id="intro" aria-labelledby="intro-title">
         <span class="legacy-anchor" id="approach" aria-hidden="true"></span>
         <div class="intro-copy"><h1 id="intro-title">From idea to<br>working product.</h1><p>Decision Axis brings product thinking, design and engineering together to build useful software.</p></div>
-        <figure class="concept-illustration"><img src="/assets/decision-axis-concepts.png" width="2172" height="724" alt="Planning notes connect to a wireframe and a finished software interface."><figcaption><span>Product</span><span>Design</span><span>Engineering</span></figcaption></figure>
+        <figure class="concept-film"><video id="idea-film" controls muted playsinline loop preload="none" poster="/assets/idea-to-product-poster.png" width="800" height="450" aria-label="From idea to a product people use" aria-describedby="film-caption"><source src="/assets/idea-to-product.mp4" type="video/mp4"><a href="/assets/idea-to-product.mp4">Watch the idea-to-product film</a>.</video><figcaption id="film-caption"><span>Idea → Design → Code → In use</span><button class="film-toggle" type="button" aria-controls="idea-film" hidden>Play animation</button><span class="visually-hidden">. A customer problem becomes a sketch, then working code, then a product where a person completes a task. Silent, 18 seconds.</span></figcaption></figure>
+      </section>
+      <section class="home-section home-about" id="about" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <div class="about-summary"><p>I’m Aditya, the product thinker and hands-on builder behind Decision Axis.</p><p>My expertise spans eCommerce, SaaS and enabling product lines with AI agents—bringing product strategy, design and engineering together.</p></div>
       </section>
       <section class="home-section" id="services" aria-labelledby="services-title">
         <span class="legacy-anchor" id="common-services" aria-hidden="true"></span>
-        <h2 class="section-label" id="services-title"><svg class="section-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true" focusable="false"><rect x="5" y="5" width="30" height="30" rx="8" fill="#eff3f9"/><path d="M11 14h18M11 26h18" stroke="#8998af" stroke-width="2" stroke-linecap="round"/><path d="M11 20h18" stroke="#34445d" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="14" r="3" fill="#b5c9ed" stroke="#4971bb" stroke-width="1.5"/><circle cx="25" cy="20" r="3" fill="#4971bb"/><circle cx="18" cy="26" r="3" fill="#b5c9ed" stroke="#34445d" stroke-width="1.5"/></svg><span>Services</span></h2>
+        <h2 class="section-label" id="services-title"><svg class="section-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true" focusable="false"><rect x="5" y="5" width="30" height="30" rx="8" fill="#f4e4c4"/><path d="M11 14h18M11 26h18" stroke="#9bbca9" stroke-width="2" stroke-linecap="round"/><path d="M11 20h18" stroke="#334248" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="14" r="3" fill="#9bbca9" stroke="#d18b75" stroke-width="1.5"/><circle cx="25" cy="20" r="3" fill="#d18b75"/><circle cx="18" cy="26" r="3" fill="#9bbca9" stroke="#334248" stroke-width="1.5"/></svg><span>Services</span></h2>
         <div class="section-content">
           <a class="item-row" href="/services/ai-enable-your-teams.html"><span><strong>AI-enable your teams</strong><span class="item-description">Build the workflows, context and skills that make AI useful in everyday work.</span></span><span class="item-arrow" aria-hidden="true">↗</span></a>
           <a class="item-row" href="mailto:aditya@decisionos.me?subject=MVP%20and%20value%20proposition"><span><strong>MVPs for investment &amp; value proposition testing</strong><span class="item-description">Turn a proposition into a focused product customers and investors can try.</span></span><span class="item-arrow" aria-hidden="true">↗</span></a>
@@ -37,7 +41,7 @@
       </section>
       <section class="home-section" id="products" aria-labelledby="products-title">
         <span class="legacy-anchor" id="b2b-saas" aria-hidden="true"></span>
-        <h2 class="section-label" id="products-title"><svg class="section-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true" focusable="false"><path d="m20 5 14 7-14 7-14-7Z" fill="#eff3f9"/><path d="M6 12v16l14 7V19Z" fill="#b5c9ed"/><path d="M34 12v16l-14 7V19Z" fill="#4971bb"/><path d="m20 5 14 7v16l-14 7-14-7V12Zm-14 7 14 7 14-7M20 19v16" stroke="#34445d" stroke-width="1.5" stroke-linejoin="round"/><path d="m13 8.5 14 7V21l-4 2v-5.5l-14-7Z" fill="#8998af"/></svg><span>Products</span></h2>
+        <h2 class="section-label" id="products-title"><svg class="section-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true" focusable="false"><path d="m20 5 14 7-14 7-14-7Z" fill="#f4e4c4"/><path d="M6 12v16l14 7V19Z" fill="#9bbca9"/><path d="M34 12v16l-14 7V19Z" fill="#d18b75"/><path d="m20 5 14 7v16l-14 7-14-7V12Zm-14 7 14 7 14-7M20 19v16" stroke="#334248" stroke-width="1.5" stroke-linejoin="round"/><path d="m13 8.5 14 7V21l-4 2v-5.5l-14-7Z" fill="#9bbca9"/></svg><span>Products</span></h2>
         <div class="section-content product-list">
           <a class="item-row" id="ecommerce-product-consulting" href="/analytics"><span><strong>Meridian</strong><span class="item-description">Business insights, in conversation.</span></span><span class="item-arrow" aria-hidden="true">↗</span></a>
           <a class="item-row" id="ai-first-experiences" href="/commerce/"><span><strong>Voice shopping</strong><span class="item-description">Find products through a natural conversation.</span></span><span class="item-arrow" aria-hidden="true">↗</span></a>
@@ -47,16 +51,28 @@
         </div>
       </section>
       <section class="home-section" id="training" aria-labelledby="training-title">
-        <h2 class="section-label" id="training-title"><svg class="section-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true" focusable="false"><path d="M20 10C15 7 9 7 5 10v24c4-3 10-3 15 0Z" fill="#eff3f9"/><path d="M20 10c5-3 11-3 15 0v24c-4-3-10-3-15 0Z" fill="#b5c9ed"/><path d="M20 10C15 7 9 7 5 10v24c4-3 10-3 15 0 5-3 11-3 15 0V10c-4-3-10-3-15 0Zm0 0v24" stroke="#34445d" stroke-width="1.5" stroke-linejoin="round"/><path d="M27 8v12l3-2 3 2V8" fill="#4971bb"/><path d="M10 16h5m-5 5h5m-5 5h5" stroke="#8998af" stroke-width="1.5" stroke-linecap="round"/></svg><span>Training &amp; coaching</span></h2>
+        <h2 class="section-label" id="training-title"><svg class="section-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true" focusable="false"><path d="M20 10C15 7 9 7 5 10v24c4-3 10-3 15 0Z" fill="#f4e4c4"/><path d="M20 10c5-3 11-3 15 0v24c-4-3-10-3-15 0Z" fill="#9bbca9"/><path d="M20 10C15 7 9 7 5 10v24c4-3 10-3 15 0 5-3 11-3 15 0V10c-4-3-10-3-15 0Zm0 0v24" stroke="#334248" stroke-width="1.5" stroke-linejoin="round"/><path d="M27 8v12l3-2 3 2V8" fill="#d18b75"/><path d="M10 16h5m-5 5h5m-5 5h5" stroke="#9bbca9" stroke-width="1.5" stroke-linecap="round"/></svg><span>Training &amp; coaching</span></h2>
         <div class="section-content">
           <a class="item-row" id="maven-lesson" href="https://maven.com/p/0bbc6d/design-agentic-experiences-for-non-technical-users"><span><strong>Designing Agent UX</strong><span class="item-description">A Maven class on agent experiences for non-technical users.</span></span><span class="item-arrow" aria-hidden="true">↗</span></a>
           <a class="item-row" href="https://claude.ai/artifact/PE6kA2Gy3WdkwCr1myutTg" target="_blank" rel="noopener"><span><strong>Jev &amp; decision models</strong><span class="item-description">A talk on typed AI decisions, costs and practical case studies.</span></span><span class="item-arrow" aria-hidden="true">↗</span></a>
           <a class="item-row" href="mailto:aditya@decisionos.me?subject=Training%20and%20coaching"><span><strong>Product &amp; AI coaching</strong><span class="item-description">Talk through what you’re building and where you need help.</span></span><span class="item-arrow" aria-hidden="true">↗</span></a>
         </div>
       </section>
+      <section class="home-section company-section" aria-labelledby="companies-title">
+        <h2 id="companies-title">Companies I’ve<br>worked with</h2>
+        <div class="company-logos">
+          <div class="company-logo"><img src="/assets/companies/zalando.svg" alt="Zalando" width="120" height="32" loading="lazy"></div>
+          <div class="company-logo company-logo-with-name"><img src="/assets/companies/flipkart.png" alt="" width="32" height="32" loading="lazy"><span>Flipkart</span></div>
+          <div class="company-logo"><span class="logo-crop logo-ebay"><img src="/assets/companies/ebay.svg" alt="eBay" width="96" height="96" loading="lazy"></span></div>
+          <div class="company-logo"><img src="/assets/companies/fundsindia.svg" alt="FundsIndia" width="132" height="32" loading="lazy"></div>
+          <div class="company-logo"><span class="logo-crop logo-holidayiq"><img src="/assets/companies/holidayiq.jpg" alt="HolidayIQ" width="132" height="132" loading="lazy"></span></div>
+          <div class="company-logo"><span class="logo-crop logo-ignitetech"><img src="/assets/companies/ignitetech.png" alt="IgniteTech" width="132" height="132" loading="lazy"></span></div>
+        </div>
+      </section>
     </main>
     <footer class="home-section home-contact" id="contact" aria-labelledby="contact-title"><h2 id="contact-title">Connect with Aditya</h2><a class="email-link" href="mailto:aditya@decisionos.me">aditya@decisionos.me <span aria-hidden="true">↗</span></a></footer>
     <div class="home-signoff"><span>Decision Axis</span><span>Product · Design · Engineering</span></div>
   </div>
+  <script src="/assets/home-film.js" defer></script>
 </body>
 </html>

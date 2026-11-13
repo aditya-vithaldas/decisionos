@@ -1,0 +1,15 @@
+{
+  "name": "decision-axis-idea-to-product-motion",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "render": "remotion render src/index.ts IdeaToProduct out/idea-to-product.mp4 --codec=h264 --crf=20 --pixel-format=yuv420p --muted --concurrency=2",
+    "poster": "remotion still src/index.ts IdeaToProduct out/idea-to-product-poster.png --frame=420"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.543",
+    "remotion": "4.0.543",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  }
+}
