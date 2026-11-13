@@ -33,6 +33,17 @@ h1 { font-size: clamp(34px, 4.1vw, 48px); line-height: 1.15; font-weight: 500; l
 .item-row:hover .item-arrow { color: var(--accent); transform: translate(2px, -2px); }
 .more-link { display: inline-flex; gap: 18px; align-items: center; min-height: 44px; color: var(--accent); font-size: 12px; margin-top: 9px; }
 .pilot-label { display: inline-block; font-size: 10px; font-weight: 400; color: var(--muted); margin-left: 8px; letter-spacing: 0; }
+.service-examples { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 5px; color: var(--accent); font-size: 12px; }
+.service-examples a { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; }
+.service-article { max-width: 710px; margin: 35px auto 75px; }
+.article-back { color: var(--muted); font-size: 12px; display: inline-block; padding-block: 10px; }
+.article-intro { padding: 30px 0 35px; border-bottom: 1px solid var(--line); }
+.article-intro h1 { font-size: clamp(32px, 5vw, 46px); }
+.article-intro p { color: var(--muted); font-size: 18px; line-height: 1.7; margin-top: 20px; }
+.article-body { font-size: 15px; line-height: 1.85; }
+.article-body h2 { font-size: 22px; line-height: 1.4; font-weight: 500; letter-spacing: -.035em; margin: 36px 0 14px; }
+.article-body p { margin-top: 20px; color: #475464; }
+.article-body .email-link { margin-top: 24px; }
 .home-contact { align-items: baseline; padding-block: 36px; }
 .home-contact h2 { padding-top: 0; }
 .email-link { display: inline-flex; gap: 18px; align-items: center; min-height: 44px; color: var(--accent); font-size: 16px; letter-spacing: -.025em; }

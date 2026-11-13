@@ -1,5 +1,12 @@
 [
   {
+    "file": "services/ai-enable-your-teams.html",
+    "path": "/services/ai-enable-your-teams.html",
+    "title": "AI-enable your teams | Decision Axis",
+    "description": "Help your team turn AI into useful everyday work through focused workflows, usable context, practical training and clear ownership.",
+    "type": "Article"
+  },
+  {
     "file": "leadgen/index.html",
     "path": "/leadgen",
     "title": "B2B lead generator | Decision Axis",
