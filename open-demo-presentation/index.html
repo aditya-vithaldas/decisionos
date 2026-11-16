@@ -4,34 +4,114 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#FAFAF9">
   <title>Product Builder – Vertical Experiences · A proposal for Open by Aditya Vithaldas</title>
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *{box-sizing:border-box;margin:0}
-    body{font-family:Inter,system-ui,sans-serif;background:#FAFAF9;color:#0D0D0D;-webkit-font-smoothing:antialiased}
-    main{max-width:1120px;margin:0 auto;padding:56px 24px 72px}
-    .eyebrow{font-size:14px;color:#78716C}
-    h1{font-size:clamp(28px,4vw,44px);font-weight:500;letter-spacing:-.02em;line-height:1.1;margin-top:10px}
-    .film{margin-top:32px;border-radius:16px;overflow:hidden;background:#000;box-shadow:0 1px 2px rgba(0,0,0,.04),0 24px 60px rgba(0,0,0,.08)}
-    video{display:block;width:100%;height:auto;aspect-ratio:16/9}
-    footer{margin-top:20px;font-size:14px;color:#78716C}
-    footer a{color:#0D0D0D}
+    html,body{height:100%}
+    body{font-family:Inter,system-ui,sans-serif;background:#FAFAF9;color:#0D0D0D;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow:hidden}
+    header{display:flex;align-items:baseline;gap:14px;padding:16px 24px 0;flex-wrap:wrap}
+    header .eyebrow{font-size:13px;color:#78716C}
+    header h1{font-size:16px;font-weight:500}
+    #viewport{flex:1;display:flex;align-items:center;justify-content:center;padding:14px 24px;min-height:0}
+    #frame{position:relative;width:1280px;height:720px;transform-origin:top left;border-radius:16px;overflow:hidden;background:#FAFAF9;box-shadow:0 1px 2px rgba(0,0,0,.04),0 24px 60px rgba(0,0,0,.08);cursor:pointer}
+    #frame iframe{position:absolute;inset:0;width:1280px;height:720px;border:0;pointer-events:none;opacity:0;transition:opacity .25s ease}
+    #frame iframe.on{opacity:1}
+    #sizer{position:relative}
+    nav{display:flex;align-items:center;justify-content:center;gap:16px;padding:0 24px 18px}
+    button{font:inherit;font-size:14px;font-weight:500;border-radius:9999px;padding:9px 20px;cursor:pointer;border:1px solid #D4D4D4;background:#fff;color:#0D0D0D}
+    button.primary{background:#0D0D0D;color:#fff;border-color:#0D0D0D}
+    button:disabled{opacity:.35;cursor:default}
+    .dots{display:flex;gap:6px;align-items:center}
+    .dots i{width:7px;height:7px;border-radius:50%;background:#D6D3D1;display:block}
+    .dots i.on{background:#0D0D0D;width:18px;border-radius:9999px}
+    .count{font-size:13px;color:#78716C;min-width:92px;text-align:center}
+    .hint{font-size:12px;color:#A8A29E}
+    @media (max-width:700px){.hint{display:none}.dots{display:none}}
   </style>
 </head>
 <body>
-  <main>
-    <div class="eyebrow">A proposal for Open by Aditya Vithaldas</div>
-    <h1>Product Builder – Vertical Experiences (eCommerce and Fintech)</h1>
-    <div class="film">
-      <video controls playsinline preload="metadata" poster="/open-demo-presentation/poster.jpg">
-        <source src="/open-demo-presentation/open-vertical-engine.mp4" type="video/mp4">
-      </video>
-    </div>
-    <footer>Concept demo with sample data. Not affiliated with or endorsed by Open. · <a href="/">decisionaxis.co</a></footer>
-  </main>
+  <header><span class="eyebrow">A proposal for Open by Aditya Vithaldas</span><h1>Product Builder – Vertical Experiences (eCommerce and Fintech)</h1></header>
+  <div id="viewport"><div id="sizer"><div id="frame" aria-live="polite">
+    <iframe id="film" src="film.html?capture=1" title="Presentation slide" tabindex="-1"></iframe>
+    <iframe id="app0" src="app.html?capture=1&amp;s=0" title="Case 1: catalog manager" tabindex="-1"></iframe>
+    <iframe id="app1" src="app.html?capture=1&amp;s=1" title="Case 2: travel product manager" tabindex="-1"></iframe>
+    <iframe id="app2" src="app.html?capture=1&amp;s=2" title="Case 3: customer service lead" tabindex="-1"></iframe>
+  </div></div></div>
+  <nav>
+    <button id="back" aria-label="Previous">← Back</button>
+    <div class="dots" id="dots"></div>
+    <span class="count" id="count"></span>
+    <button id="next" class="primary" aria-label="Next">Next →</button>
+    <span class="hint">or use ← → keys</span>
+  </nav>
+<script>
+/* Click-through version of the film. Each slide plays its own short intro animation;
+   the three app cases advance stage by stage (connect, analyze, insights, act) on Next. */
+const SLIDES = [
+  {f:0},{f:1},{f:2},{f:3},{f:4},{f:5},{f:6},{f:7},{f:8},{f:9},{f:10},
+  {a:0},{a:1},{a:2},
+  {f:11}
+];
+const APP_STOPS = [3.7, 6.6, 10.4, 13.0];   // connected · analyzed · insights · acted
+const frames = { film: document.getElementById('film'), a: [0,1,2].map(i => document.getElementById('app'+i)) };
+let idx = 0, stop = 0, t = 0, target = 0, last = 0, ready = 0;
+
+function fit(){
+  const vp = document.getElementById('viewport'), fr = document.getElementById('frame'), sz = document.getElementById('sizer');
+  const s = Math.min((vp.clientWidth - 48) / 1280, (vp.clientHeight - 28) / 720, 1.25);
+  fr.style.transform = `scale(${s})`; sz.style.width = 1280*s + 'px'; sz.style.height = 720*s + 'px';
+}
+function win(el){ try { return el.contentWindow; } catch(e){ return null; } }
+function current(){ const s = SLIDES[idx]; return 'f' in s ? frames.film : frames.a[s.a]; }
+function show(){
+  const s = SLIDES[idx];
+  [frames.film, ...frames.a].forEach(el => el.classList.toggle('on', el === current()));
+  t = 0; stop = 0;
+  if ('f' in s) { const w = win(frames.film); w.setScene(s.f); target = w.SC[s.f].dur - 0.45; }
+  else { target = APP_STOPS[0]; }
+  render();
+  document.getElementById('back').disabled = idx === 0 && stop === 0;
+  const isEnd = idx === SLIDES.length - 1;
+  document.getElementById('next').disabled = isEnd;
+  document.getElementById('count').textContent = `${idx+1} / ${SLIDES.length}`;
+  document.querySelectorAll('#dots i').forEach((d,i) => d.classList.toggle('on', i === idx));
+}
+function render(){ const w = win(current()); if (w && w.setT) w.setT(t); }
+function next(){
+  if (ready < 4) return;
+  const s = SLIDES[idx];
+  if ('a' in s && stop < APP_STOPS.length - 1) { stop++; target = APP_STOPS[stop]; return; }
+  if (idx < SLIDES.length - 1) { idx++; show(); }
+}
+function back(){
+  if (ready < 4) return;
+  const s = SLIDES[idx];
+  if ('a' in s && stop > 0) { stop--; target = APP_STOPS[stop]; t = stop ? APP_STOPS[stop-1] : 0; render(); return; }
+  if (idx > 0) { idx--; show(); }
+}
+function loop(now){
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (ready < 4) {
+    const n = [frames.film, ...frames.a].filter(el => { const w = win(el); return w && typeof w.setT === 'function'; }).length;
+    if (n === 4) { ready = 4; show(); }
+  } else if (t < target) { t = Math.min(target, t + dt); render(); }
+  requestAnimationFrame(loop);
+}
+document.getElementById('dots').innerHTML = SLIDES.map(() => '<i></i>').join('');
+document.getElementById('next').onclick = next;
+document.getElementById('back').onclick = back;
+document.getElementById('frame').onclick = next;
+addEventListener('keydown', e => {
+  if (['ArrowRight','PageDown',' ','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); back(); }
+});
+addEventListener('resize', fit);
+fit(); requestAnimationFrame(n => { last = n; loop(n); });
+</script>
 </body>
 </html>
