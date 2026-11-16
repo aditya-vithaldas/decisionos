@@ -4,7 +4,7 @@
 # on a machine where gcloud is signed in.
 set -euo pipefail
 PROJECT=striking-loop-447915-q3; REGION=europe-west1; SERVICE=chatpm
-SHA=$(git rev-parse --short HEAD)
+SHA=$(git rev-parse --short HEAD)-$(date +%H%M)
 REPO=$REGION-docker.pkg.dev/$PROJECT/cloud-run-source-deploy/$SERVICE
 
 REV=$(gcloud run services describe $SERVICE --region $REGION --project $PROJECT \
@@ -15,13 +15,20 @@ echo "Serving revision: $REV"; echo "Base image: $BASE"
 
 CTX=$(mktemp -d)
 cp -R open-demo-presentation "$CTX/"
+cp scripts/serve-video.mjs "$CTX/serve-video-od.mjs"
 cat > "$CTX/Dockerfile" <<DOCKER
 FROM $BASE
 USER root
 COPY --chown=node:node open-demo-presentation /app/dist/open-demo-presentation
+COPY --chown=node:node serve-video-od.mjs /app/scripts/serve-video-od.mjs
+# 1) /open-demo-presentation -> /open-demo-presentation/
 RUN grep -q "'/open-demo-presentation'" /app/scripts/serve.mjs || \
     sed -i "s#const redirects = { #const redirects = { '/open-demo-presentation': '/open-demo-presentation/', #" /app/scripts/serve.mjs && \
     grep -q "'/open-demo-presentation'" /app/scripts/serve.mjs
+# 2) stream .mp4 with byte ranges (seeking, Safari/iOS playback) if the serving image lacks it
+RUN grep -q "serveVideo" /app/scripts/serve.mjs || \
+    sed -i "s#    let body = await readFile(path);#    if (extname(path) === '.mp4') { const { serveVideo } = await import('./serve-video-od.mjs'); await serveVideo(req, res, path); return; } let body = await readFile(path);#" /app/scripts/serve.mjs && \
+    grep -q "serveVideo" /app/scripts/serve.mjs && node --check /app/scripts/serve.mjs
 USER node
 DOCKER
 IMAGE=$REPO:open-demo-$SHA
@@ -37,7 +44,7 @@ echo "Preview: $URL"
 fail=0
 for p in /health / /open-demo-presentation/ /open-demo-presentation/poster.jpg; do
   c=$(curl -s -o /dev/null -w '%{http_code}' "$URL$p"); echo "$p $c"; [ "$c" = 200 ] || fail=1; done
-c=$(curl -s -o /dev/null -w '%{http_code}' -r 0-1023 "$URL/open-demo-presentation/open-vertical-engine.mp4"); echo "video range $c"; [ "$c" = 206 ] || fail=1
+c=$(curl -s -o /dev/null -w '%{http_code} %{content_type}' -r 0-1023 "$URL/open-demo-presentation/open-vertical-engine.mp4"); echo "video range $c"; [ "$c" = "206 video/mp4" ] || fail=1
 if [ $fail = 1 ]; then echo "Preview checks failed; production traffic unchanged."; exit 1; fi
 gcloud run services update-traffic $SERVICE --region $REGION --project $PROJECT --to-revisions "$NEW=100"
 echo "Live: https://decisionaxis.co/open-demo-presentation  (revision $NEW, image $IMAGE)"
