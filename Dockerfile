@@ -13,6 +13,7 @@ COPY goods ./goods
 COPY assets ./assets
 COPY images ./images
 COPY toptal-application.html toptal-application.css toptal-application.js ./
+COPY open-demo-presentation ./open-demo-presentation
 RUN npm run build
 
 FROM node:22-alpine

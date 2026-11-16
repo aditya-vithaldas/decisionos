@@ -19,7 +19,7 @@ const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 
 Object.assign(types, { '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml; charset=utf-8' });
 Object.assign(types, { '.mjs': 'text/javascript; charset=utf-8', '.wasm': 'application/wasm' });
 Object.assign(types, { '.mp4': 'video/mp4' });
-const redirects = { '/toptal-application': '/toptal-application.html', '/work.html': '/case-studies.html', '/index.html': '/', '/llm.txt': '/llms.txt' };
+const redirects = { '/toptal-application': '/toptal-application.html', '/open-demo-presentation': '/open-demo-presentation/', '/work.html': '/case-studies.html', '/index.html': '/', '/llm.txt': '/llms.txt' };
 const contactHandler = createContactHandler();
 const crmHandler = createCrmHandler();
 const leadgenHandler = createPublicLeadgenHandler();
