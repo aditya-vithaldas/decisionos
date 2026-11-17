@@ -2,14 +2,14 @@
   {
     "file": "services/ai-enable-your-teams.html",
     "path": "/services/ai-enable-your-teams.html",
-    "title": "AI-enable your teams | Decision Axis",
+    "title": "AI-enable your teams | DecisionAxis",
     "description": "Help your team turn AI into useful everyday work through focused workflows, usable context, practical training and clear ownership.",
     "type": "Article"
   },
   {
     "file": "leadgen/index.html",
     "path": "/leadgen",
-    "title": "B2B lead generator | Decision Axis",
+    "title": "B2B lead generator | DecisionAxis",
     "description": "Find public questions your B2B company can help answer on LinkedIn, Reddit and X. Review company recommendations and open the original conversation to reply.",
     "type": "WebPage",
     "service": "B2B lead generation from public questions"
@@ -17,22 +17,21 @@
   {
     "file": "projects/image-object-pipeline.html",
     "path": "/projects/image-object-pipeline.html",
-    "title": "Image Object Pipeline Quality Assurance | Decision Axis",
+    "title": "Image Object Pipeline Quality Assurance | DecisionAxis",
     "description": "Ten sourced product photographs, visual catalog claims and actual OpenAI Decisions probabilities. Deliberate mismatches are labeled, never manipulated scores.",
     "type": "WebPage"
   },
   {
     "file": "index.html",
     "path": "/",
-    "title": "Decision Axis | Product, design & engineering",
-    "description": "Decision Axis brings product thinking, design and engineering together. Explore our services, try our products, and learn through training and coaching.",
-    "image": "assets/idea-to-product-poster.png",
+    "title": "Organizational Design & AI Agent Integration | DecisionAxis, Berlin",
+    "description": "DecisionAxis helps product teams clarify organizational structure and add AI agents to existing products. Work with Aditya Vithaldas in Berlin.",
     "type": "WebPage"
   },
   {
     "file": "case-studies.html",
     "path": "/case-studies.html",
-    "title": "Case studies \u2014 decisionos",
+    "title": "Case studies — DecisionAxis",
     "description": "Explore working commerce and analytics concepts: voice-first discovery, photo-first selling, focused shopping screens, and an analyst in the conversation.",
     "image": "assets/commerce-live-home.png",
     "type": "CollectionPage"
@@ -40,7 +39,7 @@
   {
     "file": "projects/agent-harness.html",
     "path": "/projects/agent-harness.html",
-    "title": "Agent harness setup: what does it actually mean? | Decision Axis",
+    "title": "Agent harness setup: what does it actually mean? | DecisionAxis",
     "description": "A practical guide to setting up an agent harness in Slack: permitted context, maintained Markdown playbooks, distinct reviewer perspectives and approval-gated workflows.",
     "type": "Article",
     "service": "Agent harness setup for your organization"
@@ -48,28 +47,28 @@
   {
     "file": "projects/live-feedback.html",
     "path": "/projects/live-feedback.html",
-    "title": "Live usability feedback for eCommerce | Decision Axis",
+    "title": "Live usability feedback for eCommerce | DecisionAxis",
     "description": "Create a private usability study, hear think-aloud feedback, and review timestamped likes, comments and friction. Explicit consent and private reports.",
     "type": "WebPage"
   },
   {
     "file": "projects/micro-crm.html",
     "path": "/projects/micro-crm.html",
-    "title": "Gmail Micro CRM and follow-up prompts | Decision Axis",
+    "title": "Gmail Micro CRM and follow-up prompts | DecisionAxis",
     "description": "A Gmail-first Micro CRM with editable private prompt templates, grounded prospect suggestions, source-thread evidence and reviewed outreach. Google Sheets optional.",
     "type": "WebPage"
   },
   {
     "file": "commerce/index.html",
     "path": "/commerce/",
-    "title": "Loop voice commerce search and browse demo | Decision Axis",
+    "title": "Loop voice commerce search and browse demo | DecisionAxis",
     "description": "Explore an illustrative eCommerce storefront, browse products and try voice product discovery. This demonstration does not process purchases.",
     "type": "WebPage"
   },
   {
     "file": "projects/commerce.html",
     "path": "/projects/commerce.html",
-    "title": "eCommerce Discovery Live Concept \u2014 decisionos",
+    "title": "eCommerce Discovery Live Concept — DecisionAxis",
     "description": "How voice-first shopping can turn a broad need into a useful shortlist. Explore the concept, see real demo screenshots, and try the live experience.",
     "image": "assets/commerce-live-home.png",
     "type": "Article"
@@ -77,21 +76,21 @@
   {
     "file": "projects/shelf-to-sell.html",
     "path": "/projects/shelf-to-sell.html",
-    "title": "\u201cWhat\u2019s my wardrobe worth?\u201d \u2014 The Missed Opportunity of C2C Selling \u2014 decisionos",
+    "title": "“What’s my wardrobe worth?” — The Missed Opportunity of C2C Selling — DecisionAxis",
     "description": "Reflections from eBay on C2C supply, the cost of cataloging, and making selling easier with bulk photos, AI, and experiences where customers already are.",
     "type": "Article"
   },
   {
     "file": "projects/surface.html",
     "path": "/projects/surface.html",
-    "title": "Defining a New Commerce Surface \u2014 decisionos",
+    "title": "Defining a New Commerce Surface — DecisionAxis",
     "description": "A voice-controlled shopping demo that shows products, reviews, attributes and comparisons in response to customer questions.",
     "type": "Article"
   },
   {
     "file": "services/ecommerce-product-consulting.html",
     "path": "/services/ecommerce-product-consulting.html",
-    "title": "eCommerce product consulting | decisionos",
+    "title": "eCommerce product consulting | DecisionAxis",
     "description": "eCommerce product consulting that connects customer insight, product strategy and hands-on delivery across discovery, buying and selling experiences.",
     "image": "assets/consumer-to-mvp-crayon.png",
     "type": "WebPage",
@@ -100,7 +99,7 @@
   {
     "file": "services/ai-first-experiences.html",
     "path": "/services/ai-first-experiences.html",
-    "title": "AI-first experiences | decisionos",
+    "title": "AI-first experiences | DecisionAxis",
     "description": "Design and build AI-first product experiences: voice commerce, conversational discovery and interfaces that respond to what customers need.",
     "image": "assets/consumer-to-mvp-crayon.png",
     "type": "WebPage",
@@ -109,7 +108,7 @@
   {
     "file": "services/executive-product-direction.html",
     "path": "/services/executive-product-direction.html",
-    "title": "Executive product direction | decisionos",
+    "title": "Executive product direction | DecisionAxis",
     "description": "Fractional product leadership and executive product direction: clarify the proposition, align priorities and connect product strategy with execution.",
     "image": "assets/consumer-to-mvp-crayon.png",
     "type": "WebPage",
@@ -118,7 +117,7 @@
   {
     "file": "services/full-stack-product-builder.html",
     "path": "/services/full-stack-product-builder.html",
-    "title": "Full-stack product builder | decisionos",
+    "title": "Full-stack product builder | DecisionAxis",
     "description": "A hands-on full-stack product builder connecting product strategy, experience design, frontend, backend and deployment to take your MVP from concept to launch.",
     "image": "assets/consumer-to-mvp-crayon.png",
     "type": "WebPage",
@@ -127,7 +126,7 @@
   {
     "file": "projects/analytics.html",
     "path": "/projects/analytics.html",
-    "title": "What if your analyst could join the call? \u2014 decisionos",
+    "title": "What if your analyst could join the call? — DecisionAxis",
     "description": "A live analytics concept that answers follow-up questions without losing the graph, and a product direction for an analyst that can participate in business calls.",
     "image": "assets/analytics-sales.svg",
     "type": "Article"
@@ -135,14 +134,14 @@
   {
     "file": "analytics/index.html",
     "path": "/analytics",
-    "title": "Meridian eCommerce analytics demo | decisionos",
+    "title": "Meridian eCommerce analytics demo | DecisionAxis",
     "description": "Explore a working eCommerce analytics and voice analyst demo using illustrative commerce data. Ask sales questions, see SQL-backed charts, and test follow-ups.",
     "type": "WebPage"
   },
   {
     "file": "services/ai-product-lead.html",
     "path": "/services/ai-product-lead.html",
-    "title": "AI Product Lead as a Service | Decision Axis",
+    "title": "AI Product Lead as a Service | DecisionAxis",
     "description": "Hands-on product leadership for the AI shift: a clear direction, an interactive prototype and a focused first release.",
     "type": "WebPage",
     "service": "AI Product Lead as a Service",
@@ -155,5 +154,23 @@
     "description": "An independent exploration of agent-native work management, with an article, clickable prototype and short concept film.",
     "type": "Article",
     "image": "projects/asana/illustrations/asana-in-the-meeting-v3.png"
+  },
+  {
+    "file": "services/organizational-structure-advisory.html",
+    "path": "/services/organizational-structure-advisory.html",
+    "title": "Organizational Structure Advisory in Berlin | DecisionAxis",
+    "description": "Organizational design and operating model advisory for product teams. Clarify team boundaries, ownership and decision rights with Aditya Vithaldas in Berlin.",
+    "type": "WebPage",
+    "service": "Organizational structure advisory",
+    "primary": true
+  },
+  {
+    "file": "services/ai-agent-integration.html",
+    "path": "/services/ai-agent-integration.html",
+    "title": "AI Agent Integration for Existing Products | DecisionAxis, Berlin",
+    "description": "Agent-enable your existing SaaS, commerce or CRM product. Use-case discovery, agent UX, APIs, MCP, evaluation and focused prototypes with DecisionAxis in Berlin.",
+    "type": "WebPage",
+    "service": "AI agent integration for existing products",
+    "primary": true
   }
 ]
