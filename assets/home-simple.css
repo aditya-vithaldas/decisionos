@@ -105,3 +105,32 @@ h1 { font-size: clamp(34px, 4.1vw, 48px); line-height: 1.15; font-weight: 500; l
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* Focused consulting homepage and shared service details. */
+.focused-intro{display:block;padding:64px 0 58px}
+.focused-intro .intro-copy{max-width:760px}
+.focused-intro .intro-copy p{max-width:620px}
+.intro-copy .intro-location,.intro-location{font-size:12px;letter-spacing:.06em;color:var(--muted);margin:0 0 18px}
+.focused-intro h1{font-size:clamp(40px,6vw,64px)}
+.focused-intro .email-link{margin-top:24px}
+.primary-service{padding:18px 0}
+.primary-service strong{font-size:20px;line-height:1.4}
+.primary-service .item-description{font-size:14px;max-width:580px;margin-top:8px}
+.work-note{font-size:12px;color:var(--muted);margin-top:18px}
+.section-content details{border-bottom:1px solid var(--line);padding:8px 0}
+summary{cursor:pointer;min-height:44px;padding:10px 0;font-weight:500}
+summary:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.article-body a:not(.email-link){color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.article-body ul{padding-left:22px;color:#475464}
+.article-body li+li{margin-top:12px}
+.article-body details{border-bottom:1px solid var(--line);padding:8px 0}
+.article-body details p{margin:6px 0 16px}
+.home-contact p{color:var(--muted);font-size:14px}
+@media(max-width:600px){
+ .home-header{flex-wrap:wrap;gap:8px;padding-block:16px}
+ .home-header nav{gap:20px}
+ .home-header nav a:last-child,.home-header nav a:nth-child(3){display:inline-flex}
+ .focused-intro{padding:30px 0 40px}
+ .primary-service strong{font-size:19px}
+ .primary-service .item-description{max-width:none}
+}
