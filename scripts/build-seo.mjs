@@ -2,9 +2,9 @@ import { readFile, writeFile } from 'node:fs/promises';
 const origin = 'https://decisionaxis.co';
 const pages = JSON.parse(await readFile(new URL('./seo-pages.json', import.meta.url), 'utf8'));
 const escape = value => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;');
-const person = { '@type': 'Person', '@id': `${origin}/#aditya`, name: 'Aditya Vithaldas', url: `${origin}/#about`, jobTitle: 'Product consultant and full-stack product builder' };
-const website = { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: 'Decision Axis', publisher: { '@id': `${origin}/#organization` } };
-const organization = { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'Decision Axis', url: `${origin}/`, email: 'aditya@decisionos.me', founder: { '@id': person['@id'] }, description: 'eCommerce and B2B products and solutions that help you stand out from the crowd.' };
+const person = { '@type': 'Person', '@id': `${origin}/#aditya`, name: 'Aditya Vithaldas', url: `${origin}/#about`, jobTitle: 'Product consultant and hands-on builder', homeLocation: { '@type': 'Place', name: 'Berlin, Germany' } };
+const website = { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: 'DecisionAxis', publisher: { '@id': `${origin}/#organization` } };
+const organization = { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'DecisionAxis', alternateName: ['Decision Axis', 'decisionos'], url: `${origin}/`, email: 'aditya@decisionos.me', founder: { '@id': person['@id'] }, description: 'Organizational structure advisory and AI agent integration for product teams, led by Aditya Vithaldas in Berlin.' };
 for (const page of pages) {
   const url = origin + page.path;
   let html = await readFile(`dist/${page.file}`, 'utf8');
@@ -19,20 +19,20 @@ for (const page of pages) {
   if (page.type !== 'Article') entity.isPartOf = { '@id': website['@id'] };
   if (page.path === '/') {
     entity.about = { '@id': person['@id'] };
-    organization.hasOfferCatalog = { '@type': 'OfferCatalog', name: 'Product consulting and building services', itemListElement: pages.filter(p => p.service).map(p => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', '@id': origin + p.path + '#service', name: p.service, url: origin + p.path } })) };
+    organization.hasOfferCatalog = { '@type': 'OfferCatalog', name: 'Organizational advisory and AI agent integration', itemListElement: pages.filter(p => p.primary).map(p => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', '@id': origin + p.path + '#service', name: p.service, url: origin + p.path } })) };
   }
   if (page.service) {
     const service = { '@type': 'Service', '@id': url + '#service', name: page.service, serviceType: page.service, description: page.description, url, provider: { '@id': organization['@id'] }, mainEntityOfPage: { '@id': entity['@id'] } };
     entity.mainEntity = { '@id': service['@id'] };
     graph.push(service, { '@type': 'BreadcrumbList', itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Decision Axis', item: origin + '/' },
+      { '@type': 'ListItem', position: 1, name: 'DecisionAxis', item: origin + '/' },
       { '@type': 'ListItem', position: 2, name: page.service, item: url }
     ] });
   }
   if (page.type === 'Article') {
     Object.assign(entity, { headline: page.title, author: { '@id': person['@id'] }, mainEntityOfPage: url });
     graph.push({ '@type': 'BreadcrumbList', itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Decision Axis', item: origin + '/' },
+      { '@type': 'ListItem', position: 1, name: 'DecisionAxis', item: origin + '/' },
       { '@type': 'ListItem', position: 2, name: page.path === '/projects/agent-harness.html' ? 'Common services' : 'Case studies', item: origin + (page.path === '/projects/agent-harness.html' ? '/#common-services' : '/case-studies.html') },
       { '@type': 'ListItem', position: 3, name: page.title.split(' — ')[0], item: url }
     ] });
@@ -41,7 +41,7 @@ for (const page of pages) {
   const tags = `<link rel="canonical" href="${url}">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="${page.type === 'Article' ? 'article' : 'website'}">
-<meta property="og:site_name" content="Decision Axis">
+<meta property="og:site_name" content="DecisionAxis">
 <meta property="og:title" content="${escape(page.title)}">
 <meta property="og:description" content="${escape(page.description)}">
 <meta property="og:url" content="${url}">
@@ -60,5 +60,5 @@ const privatePaths = ['\/archive/', '/crm', '/feedback', '/api/', '/analytics/ap
 const rules = privatePaths.map(path => `Disallow: ${path}`).join('\n');
 await writeFile('dist/robots.txt', `User-agent: OAI-SearchBot\nAllow: /\n${rules}\n\nUser-agent: *\nAllow: /\n${rules}\n\nSitemap: ${origin}/sitemap.xml\n`);
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map(p => `  <url><loc>${origin}${p.path}</loc></url>`).join('\n')}\n</urlset>\n`);
-await writeFile('dist/llms.txt', `# Decision Axis\n\n> eCommerce and B2B products and solutions that help you stand out from the crowd. Decision Axis connects product strategy, design and engineering, led by Aditya Vithaldas.\n\n## Products and services\n\nIndustry-specific offerings include Meridian proactive and conversational analytics, Loop voice commerce, a Gmail-first Micro CRM pilot, and private live usability feedback studies. Common services include AI-focused team structuring, ChatGPT product accessibility and agent harness setup. Agent harness setup is a consulting service and practical article, not a published Slack app. Conversational forms are a service inquiry, not a working demo.\n\n## Demonstration and privacy boundaries\n\nMeridian and the commerce catalogue use illustrative data. The demos do not process purchases or publish seller listings. Meeting participation remains a proposed extension. Micro CRM requires user authorization and explicit approval before sending. CRM workspaces, study invitations, participant data and reports are private and excluded from search. Public capability pages below explain those products without exposing private data.\n\n${pages.map(p => `- [${p.title}](${origin}${p.path}): ${p.description}`).join('\n')}\n\n## Contact\n\nUse the inquiry form at ${origin}/#contact.\n`);
+await writeFile('dist/llms.txt', `# DecisionAxis\n\n> DecisionAxis offers organizational structure advisory and AI agent integration for existing products, led by Aditya Vithaldas in Berlin.\n\n## Products and services\n\nThe two priority services are organizational structure advisory and AI agent integration for existing products. Supporting products and demonstrations include Meridian conversational analytics, Loop voice commerce, a Gmail-first Micro CRM pilot and private live usability feedback studies. Training and agent harness setup remain available as supporting services. Agent harness setup is a consulting service and practical article, not a published Slack app. Conversational forms are a service inquiry, not a working demo.\n\n## Demonstration and privacy boundaries\n\nMeridian and the commerce catalogue use illustrative data. The demos do not process purchases or publish seller listings. Meeting participation remains a proposed extension. Micro CRM requires user authorization and explicit approval before sending. CRM workspaces, study invitations, participant data and reports are private and excluded from search. Public capability pages below explain those products without exposing private data.\n\n${pages.map(p => `- [${p.title}](${origin}${p.path}): ${p.description}`).join('\n')}\n\n## Contact\n\nEmail aditya@decisionos.me or visit ${origin}/#contact.\n`);
 console.log(`SEO metadata, structured data, sitemap, robots.txt, and llms.txt generated for ${pages.length} pages.`);
