@@ -14,6 +14,7 @@ COPY assets ./assets
 COPY images ./images
 COPY toptal-application.html toptal-application.css toptal-application.js ./
 COPY open-demo-presentation ./open-demo-presentation
+COPY onboarding ./onboarding
 RUN npm run build
 
 FROM node:22-alpine
@@ -28,6 +29,7 @@ COPY --chown=node:node scripts/leadgen-api.mjs scripts/leadgen-search.mjs script
 COPY --chown=node:node scripts/goods-api.mjs scripts/goods-catalog.mjs ./scripts/
 COPY --chown=node:node scripts/image-qa-api.mjs scripts/image-qa-catalog.mjs ./scripts/
 COPY --chown=node:node scripts/google-analytics.mjs ./scripts/
+COPY --chown=node:node scripts/onboarding-api.mjs ./scripts/
 COPY --chown=node:node scripts/serve-video.mjs scripts/serve.mjs scripts/contact-api.mjs scripts/crm-api.mjs scripts/crm-opportunities.mjs scripts/crm-gmail.mjs scripts/crm-prompts.mjs scripts/feedback-api.mjs scripts/commerce-api.mjs scripts/analytics-api.mjs scripts/generate-analytics.mjs scripts/demo-api.mjs scripts/demo-planner.mjs ./scripts/
 USER node
 EXPOSE 8080

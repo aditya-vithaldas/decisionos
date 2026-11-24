@@ -73,3 +73,6 @@ products/meridian/.wrangler/
 !goods/**
 !open-demo-presentation/
 !open-demo-presentation/**
+!onboarding/
+!onboarding/**
+!scripts/onboarding-api.mjs

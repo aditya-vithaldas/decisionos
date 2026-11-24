@@ -5,6 +5,7 @@ import { createContactHandler } from './contact-api.mjs';
 import { createCrmHandler } from './crm-api.mjs';
 import { createPublicLeadgenHandler } from './leadgen-api.mjs';
 import { createGoodsHandler } from './goods-api.mjs';
+import { createOnboardingHandler } from './onboarding-api.mjs';
 import { createImageQAHandler } from './image-qa-api.mjs';
 import { commerceSession } from './commerce-api.mjs';
 import { createAnalyticsInjector } from './google-analytics.mjs';
@@ -19,16 +20,18 @@ const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 
 Object.assign(types, { '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml; charset=utf-8' });
 Object.assign(types, { '.mjs': 'text/javascript; charset=utf-8', '.wasm': 'application/wasm' });
 Object.assign(types, { '.mp4': 'video/mp4' });
-const redirects = { '/toptal-application': '/toptal-application.html', '/open-demo-presentation': '/open-demo-presentation/', '/work.html': '/case-studies.html', '/index.html': '/', '/llm.txt': '/llms.txt' };
+const redirects = { '/toptal-application': '/toptal-application.html', '/open-demo-presentation': '/open-demo-presentation/', '/onboarding': '/onboarding/', '/work.html': '/case-studies.html', '/index.html': '/', '/llm.txt': '/llms.txt' };
 const contactHandler = createContactHandler();
 const crmHandler = createCrmHandler();
 const leadgenHandler = createPublicLeadgenHandler();
 const imageQAHandler = createImageQAHandler();
 const goodsHandler = createGoodsHandler();
+const onboardingHandler = createOnboardingHandler();
 const injectAnalytics = createAnalyticsInjector(process.env.GOOGLE_ANALYTICS_MEASUREMENT_ID);
 createServer(async (req, res) => {
   try {
     if (new URL(req.url, 'http://localhost').pathname.startsWith('/api/goods/')) { await goodsHandler(req,res); return; }
+    if (new URL(req.url, 'http://localhost').pathname.startsWith('/api/onboarding/')) { await onboardingHandler(req,res); return; }
     if (new URL(req.url, 'http://localhost').pathname.startsWith('/api/leadgen/')) { await leadgenHandler(req, res); return; }
     if (new URL(req.url,'http://localhost').pathname.startsWith('/api/image-qa/')) {await imageQAHandler(req,res);return;}
     if (new URL(req.url, 'http://localhost').pathname === '/commerce/api/realtime') { await commerceSession(req, res); return; }
