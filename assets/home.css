@@ -60,6 +60,22 @@ main:focus { outline: none; }
 .more { display: inline-flex; margin-top: 6px; padding: 6px 0; font-size: 14px; color: var(--muted); }
 .more:hover { color: var(--ink); }
 
+/* Case studies: one big screenshot, name, one line on why it is good */
+.cases { margin-top: 48px; display: grid; gap: 56px; }
+.case .shot { display: block; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #fafafa; transition: border-color .15s ease; }
+.case .shot:hover { border-color: #d4d4d4; }
+.case .shot img { width: 100%; height: auto; }
+.case-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-top: 14px; }
+.case h2 { font-size: 15px; font-weight: 500; }
+.case h2 a:hover { color: var(--blue); }
+.case .links { display: flex; gap: 14px; font-size: 14px; }
+.case .links a { color: var(--blue); }
+.case .links a:hover { color: var(--blue-dark); }
+.case p { margin-top: 4px; font-size: 15px; color: var(--text); text-wrap: pretty; }
+.note { margin-top: 40px; font-size: 13px; color: var(--muted); }
+.note a { color: var(--blue); }
+.art.spot { max-width: 360px; margin-left: auto; margin-right: auto; }
+
 /* Illustration + footer */
 .art { margin-top: 64px; }
 .art img { width: 100%; height: auto; }
