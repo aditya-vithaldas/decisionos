@@ -189,7 +189,8 @@ export const COMPANIES = ROWS.split('\n').map(row => {
   return { name, symbol, sector, aliases: aliases ? aliases.split(',').map(a => a.trim()).filter(Boolean) : [] };
 });
 
-export const companyNames = () => COMPANIES.filter(c => c.symbol).map(c => c.name.replace(/ \(.*\)$/, ''));
+// Full names, keeping the familiar name in brackets ("Eternal (Zomato)") so the interviewer recognises it.
+export const companyNames = () => COMPANIES.filter(c => c.symbol).map(c => c.name);
 
 const norm = s => s.toLowerCase().replace(/&/g, ' and ').replace(/\b(ltd|limited|the|ltd\.)\b/g, ' ').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 
@@ -198,7 +199,7 @@ const KEYS = [];
 for (const c of COMPANIES) {
   const base = c.name.replace(/ \((.*)\)$/, '');
   const inner = /\((.*)\)/.exec(c.name)?.[1];
-  for (const k of [base, inner, c.symbol, ...c.aliases].filter(Boolean)) KEYS.push({ key: norm(k), company: c });
+  for (const k of [c.name, base, inner, c.symbol, ...c.aliases].filter(Boolean)) KEYS.push({ key: norm(k), company: c });
 }
 const EXACT = new Map();
 for (const { key, company } of KEYS) if (!EXACT.has(key)) EXACT.set(key, company);
@@ -230,7 +231,7 @@ export function match(heard) {
   const n = norm(String(heard || ''));
   if (!n) return null;
   if (GENERIC.has(n)) return { name: String(heard).trim(), symbol: '', sector: '', heard, matched: false };
-  const exact = EXACT.get(n);
+  const exact = EXACT.get(n) || EXACT.get(n.replace(/\b(group|companies|company|stocks|stock|shares|share)\b/g, ' ').replace(/\s+/g, ' ').trim());
   if (exact) return { ...exact, heard, matched: true };
   let best = null, bestScore = 0;
   for (const { key, company } of KEYS) {

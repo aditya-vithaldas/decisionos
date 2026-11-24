@@ -1,6 +1,6 @@
 // Voice onboarding page: Gemini 3.8 Live interviews the person; every answer
 // arrives as an update_profile tool call and fills the panel on the right.
-import { MODEL, TOOLS, QUESTIONS, LABELS, systemPrompt, score } from './interview.js';
+import { MODEL, TOOLS, QUESTIONS, LABELS, FIELD_QUESTION, systemPrompt, score } from './interview.js';
 import { match } from './companies.js';
 
 const $ = id => document.getElementById(id);
@@ -11,6 +11,7 @@ const FIELDS = [
   ['instruments', 'How you invest'],
   ['cap_tilt', 'Market caps'],
   ['fno_frequency', 'F&O or intraday'],
+  ['fno_outcome', 'F&O results'],
   ['companies', 'Companies'],
   ['interests', 'Interests'],
   ['interest_reasons', 'Why'],
@@ -145,7 +146,6 @@ function onTool(name, args) {
   if (name === 'update_profile') {
     const changed = [];
     for (const [key, value] of Object.entries(args)) {
-      if (key === 'current_question') { const n = Number(value); if (n >= 1 && n <= QUESTIONS.length) state.question = Math.max(state.question, n); continue; }
       if (key === 'quote') continue;
       if (LISTS.has(key)) addItems(key, Array.isArray(value) ? value : [value]);
       else if (typeof value === 'string' && value.trim()) state.profile[key] = value.trim();
@@ -154,6 +154,7 @@ function onTool(name, args) {
     }
     if (args.quote && changed.length) for (const k of changed) state.quotes[k] = String(args.quote).slice(0, 160);
     state.fresh = new Set(changed);
+    for (const k of changed) state.question = Math.max(state.question, FIELD_QUESTION[k] || 0);
     render();
     const companies = (state.profile.companies || []).filter(c => c.symbol).map(c => `${c.label} (${c.symbol})`);
     return { saved: changed, companies_on_record: companies };

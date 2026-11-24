@@ -26,6 +26,9 @@ export const QUESTIONS = [
   { id: 10, key: 'horizon', ask: 'How long can this money stay invested, and do you have savings outside the market to fall back on?' },
 ];
 
+// Which main question each field answers; progress is worked out from these, not from the model's count.
+export const FIELD_QUESTION = { currently_invests: 1, instruments: 2, cap_tilt: 2, fno_frequency: 2, fno_outcome: 2, companies: 3, interests: 4, interest_reasons: 5, risk_appetite: 6, drawdown_reaction: 7, will_do: 8, avoid: 9, horizon: 10, emergency_cushion: 10 };
+
 export const BANDS = ['Conservative', 'Moderately conservative', 'Balanced', 'Growth', 'Aggressive'];
 
 const ENUMS = {
@@ -33,6 +36,7 @@ const ENUMS = {
   instruments: ['direct_equity', 'mutual_funds_sip', 'etf_index', 'fno', 'intraday', 'ipo', 'sme_ipo', 'bonds_fd', 'gold', 'crypto', 'other'],
   cap_tilt: ['large', 'mid', 'small', 'mixed'],
   fno_frequency: ['never', 'occasionally', 'weekly', 'daily'],
+  fno_outcome: ['mostly_gains', 'mixed', 'mostly_losses'],
   risk_appetite: ['low', 'moderate', 'high', 'very_high'],
   drawdown_reaction: ['sell_all', 'sell_some', 'hold', 'buy_more'],
   horizon: ['under_1y', '1_3y', '3_5y', '5_10y', 'over_10y'],
@@ -49,11 +53,11 @@ export const TOOLS = [
     parametersJsonSchema: {
       type: 'object',
       properties: {
-        current_question: { type: 'integer', description: 'Number (1-10) of the main question you are on now.' },
         currently_invests: one('Do they invest in stocks today?', ENUMS.currently_invests),
         instruments: list('How they invest.', ENUMS.instruments),
         cap_tilt: one('Market-cap tilt of their stocks.', ENUMS.cap_tilt),
         fno_frequency: one('How often they trade F&O or intraday.', ENUMS.fno_frequency),
+        fno_outcome: one('How F&O or intraday trading has gone for them overall.', ENUMS.fno_outcome),
         companies: list('Indian listed companies they hold or follow, using the official name from the company list when it matches.'),
         interests: list('Sectors or themes that interest them, short phrases like "IT services" or "defence".'),
         interest_reasons: { type: 'string', description: 'Why those interest them, one short sentence in their words.' },
@@ -69,7 +73,7 @@ export const TOOLS = [
   },
   {
     name: 'finish_interview',
-    description: 'Call once, after you have read the summary back and the person confirmed or corrected it.',
+    description: 'Call once, only after you have read the summary back, asked if it is right, and heard the person\'s reply. Never call it in the same turn as recording question 10.',
     parametersJsonSchema: {
       type: 'object',
       properties: {
@@ -95,9 +99,9 @@ How to speak: one question at a time, short sentences, natural spoken English. I
 Follow this tree in order, adding a branch only when its condition holds:
 ${tree}
 
-After question 10, read back a short summary of what you heard (how they invest, what they like and why, their risk appetite, what they always do and never do, horizon) and ask if it is right. Fix anything they correct, then call finish_interview and thank them.
+After the answer to question 10, do not finish yet. Read back a short summary of what you heard (how they invest, the companies they named, what they like and why, their risk appetite, what they always do and never do, their horizon) and ask "Did I get that right?" Then stop and wait for their reply. If they correct something, call update_profile with the fix. Only after they reply, call finish_interview and thank them in one sentence.
 
-After every answer, call update_profile with the fields that answer gives you and current_question set to the question you are on. Record companies with their official names from this list of NSE and BSE companies when the person clearly means one of them, for example "Infosis" is Infosys and "HUL" is Hindustan Unilever: ${companyNames().join(', ')}.
+After every answer, call update_profile with the fields that answer gives you. Never drop a company, sector or exclusion the person mentions. Record companies with their names from this list of NSE and BSE companies when the person clearly means one of them, for example "Infosis" is Infosys, "HUL" is Hindustan Unilever and "Zomato" is Eternal (Zomato). If a company is not in the list, record it as they said it: ${companyNames().join(', ')}.
 
 Start now: greet them in one sentence, say you will ask about ten short questions about how they invest, then ask question 1.`;
 }
@@ -126,6 +130,7 @@ export const LABELS = {
   instruments: { direct_equity: 'Direct stocks', mutual_funds_sip: 'Mutual funds / SIP', etf_index: 'ETFs and index funds', fno: 'F&O', intraday: 'Intraday', ipo: 'IPOs', sme_ipo: 'SME IPOs', bonds_fd: 'Bonds / FDs', gold: 'Gold', crypto: 'Crypto', other: 'Other' },
   cap_tilt: { large: 'Large caps', mid: 'Mid caps', small: 'Small caps', mixed: 'Mixed' },
   fno_frequency: { never: 'Never', occasionally: 'Occasionally', weekly: 'Weekly', daily: 'Daily' },
+  fno_outcome: { mostly_gains: 'Mostly gains', mixed: 'Mixed', mostly_losses: 'Mostly losses' },
   risk_appetite: { low: 'Low', moderate: 'Moderate', high: 'High', very_high: 'Very high' },
   drawdown_reaction: { sell_all: 'Sell everything', sell_some: 'Sell some', hold: 'Hold', buy_more: 'Buy more' },
   horizon: { under_1y: 'Under 1 year', '1_3y': '1–3 years', '3_5y': '3–5 years', '5_10y': '5–10 years', over_10y: 'Over 10 years' },
