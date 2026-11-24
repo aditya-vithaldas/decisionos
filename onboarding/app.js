@@ -256,7 +256,7 @@ function draw() {
   const speaking = state.status === 'speaking', listening = state.status === 'listening';
   const target = live ? Math.min(1, (speaking ? live.level('out') : listening ? live.level('mic') : 0) * 5) : 0;
   level += (target - level) * 0.18; t += still ? 0 : 0.045;
-  const color = speaking ? '#204dff' : listening ? '#111318' : '#c9ccd3';
+  const color = speaking ? '#204dff' : listening ? '#171717' : '#d4d4d4';
   const lines = [[1, 1.6, 0], [0.55, 2.3, 1.7], [0.35, 3.1, 3.3]];
   for (const [amp, freq, phase] of lines) {
     g.beginPath();
