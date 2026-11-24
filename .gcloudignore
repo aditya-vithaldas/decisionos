@@ -68,3 +68,8 @@ products/meridian/.wrangler/
 !scripts/leadgen-dates.mjs
 
 !scripts/serve-video.mjs
+
+!goods/
+!goods/**
+!open-demo-presentation/
+!open-demo-presentation/**
