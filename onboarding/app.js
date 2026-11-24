@@ -230,7 +230,7 @@ async function start() {
     $('start').hidden = true; $('stop').hidden = false; $('start').disabled = false;
   } catch (err) {
     live?.close(); live = null;
-    $('said').textContent = err.message; setStatus('idle');
+    $('said').textContent = err.message; setStatus('idle'); render();
     $('start').disabled = false; $('start').textContent = 'Try again';
   }
 }
