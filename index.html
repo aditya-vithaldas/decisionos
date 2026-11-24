@@ -9,75 +9,99 @@
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/home.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="wrap">
   <header class="top">
-    <a class="brand" href="/" aria-label="DecisionAxis, home"><img src="/assets/favicon.svg" alt="" width="34" height="34">DecisionAxis</a>
-    <a class="link" href="mailto:aditya@decisionos.me">aditya@decisionos.me</a>
+    <a class="id" href="/" aria-label="DecisionAxis, home">
+      <img src="/assets/favicon.svg" alt="" width="44" height="44">
+      <span><strong>DecisionAxis</strong><span>Hands-on product builder · Berlin</span></span>
+    </a>
+    <nav class="social" aria-label="Elsewhere">
+      <a href="https://www.linkedin.com/in/adityavithaldas" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg></a>
+      <a href="https://decisionaxis.substack.com/" aria-label="Substack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14M5 8h14M5 12h14v8l-7-4-7 4z"/></svg></a>
+      <a href="mailto:aditya@decisionos.me" aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+    </nav>
   </header>
 
   <main id="main" tabindex="-1">
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="intro" aria-label="About">
       <span class="anchor" id="intro" aria-hidden="true"></span>
       <span class="anchor" id="approach" aria-hidden="true"></span>
-      <div class="hero-copy">
-        <h1 id="hero-title">Drive outcomes in weeks, not months.</h1>
-        <p>Hands-on product builder, focused on sharpening your proposition, 3 months at a time.</p>
+      <span class="anchor" id="about" aria-hidden="true"></span>
+      <p><b>Drive outcomes in weeks, not months.</b> I’m a hands-on product builder, focused on sharpening your proposition 3 months at a time. Over 15+ years I’ve led product and technology across SaaS, eCommerce, marketplaces and fintech, most recently at Zalando, Flipkart and eBay. Today I help teams put AI agents to work in their products and organisations.</p>
+      <div class="actions">
+        <a class="pill dark" href="mailto:aditya@decisionos.me">Email me</a>
+        <a class="pill soft" href="#case-studies">See case studies</a>
       </div>
-      <img class="hero-art" src="/assets/hero-line.png" alt="Line drawing of a person walking up a path that rises into an arrow" width="760" height="746" fetchpriority="high">
     </section>
 
-    <div class="columns">
-      <section class="column" id="services" aria-labelledby="services-title">
-        <span class="anchor" id="common-services" aria-hidden="true"></span>
-        <span class="anchor" id="training" aria-hidden="true"></span>
-        <h2 id="services-title"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z"/></svg>Services</h2>
-        <ul>
-          <li><a href="/services/organizational-structure-advisory.html"><span class="title">AI operating model and org design</span><span class="note">Ownership, decision rights and AI roles</span></a></li>
-          <li><a href="/services/ai-agent-integration.html"><span class="title">AI agent integration</span><span class="note">Agents in your product, or your product in ChatGPT via MCP</span></a></li>
-          <li><a href="/services/ai-enable-your-teams.html"><span class="title">AI enablement for teams</span><span class="note">Workflows, context and skills for everyday work</span></a></li>
-        </ul>
-      </section>
+    <section class="block" id="experience" aria-labelledby="experience-title">
+      <h2 id="experience-title">Work experience</h2>
+      <ol class="rows">
+        <li><span class="what">Chief Product &amp; Technology Officer <i>· DecisionAxis</i></span><span class="meta">2025 – now</span></li>
+        <li><span class="what">Director, Partner Platform Tech <i>· Zalando</i></span><span class="meta">2022 – 2025</span></li>
+        <li><span class="what">Senior Director, Fintech &amp; Payments <i>· Flipkart</i></span><span class="meta">2018 – 2022</span></li>
+        <li><span class="what">Chief Product Officer <i>· FundsIndia</i></span><span class="meta">2017 – 2018</span></li>
+        <li><span class="what">VP, Head of Product <i>· HolidayIQ</i></span><span class="meta">2015 – 2016</span></li>
+        <li><span class="what">Head of Product &amp; Growth Engineering <i>· eBay India</i></span><span class="meta">2010 – 2015</span></li>
+        <li><span class="what">Earlier <i>· Aricent, AOL, Cognizant, Satyam</i></span><span class="meta">2000 – 2010</span></li>
+      </ol>
+    </section>
 
-      <section class="column" id="products" aria-labelledby="products-title">
-        <span class="anchor" id="b2b-saas" aria-hidden="true"></span>
-        <span class="anchor" id="ecommerce-product-consulting" aria-hidden="true"></span>
-        <span class="anchor" id="ai-first-experiences" aria-hidden="true"></span>
-        <span class="anchor" id="full-stack-product-builder" aria-hidden="true"></span>
-        <h2 id="products-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>Products</h2>
-        <ul>
-          <li><a href="/analytics"><span class="title">Meridian</span><span class="note">eCommerce analytics you can talk to</span></a></li>
-          <li><a href="/commerce/"><span class="title">Loop</span><span class="note">Voice search and browse for online stores</span></a></li>
-          <li><a href="/feedback/"><span class="title">Live usability feedback</span><span class="note">Hear shoppers think aloud on your store</span></a></li>
-          <li><a href="/crm"><span class="title">Micro CRM</span><span class="note">Prospects and follow-ups from your inbox, in pilot</span></a></li>
-          <li><a href="/leadgen"><span class="title">Lead generator</span><span class="note">Public questions your product can answer</span></a></li>
-        </ul>
-      </section>
+    <section class="block" id="services" aria-labelledby="services-title">
+      <span class="anchor" id="common-services" aria-hidden="true"></span>
+      <span class="anchor" id="training" aria-hidden="true"></span>
+      <h2 id="services-title">Services</h2>
+      <div class="rows">
+        <a href="/services/organizational-structure-advisory.html"><span class="what">AI operating model and org design</span><span class="meta">Ownership, decision rights, AI roles</span></a>
+        <a href="/services/ai-agent-integration.html"><span class="what">AI agent integration</span><span class="meta">In your product, or in ChatGPT via MCP</span></a>
+        <a href="/services/ai-enable-your-teams.html"><span class="what">AI enablement for teams</span><span class="meta">Workflows, context and skills</span></a>
+      </div>
+    </section>
 
-      <section class="column" id="articles" aria-labelledby="articles-title">
-        <span class="anchor" id="work" aria-hidden="true"></span>
-        <span class="anchor" id="maven-lesson" aria-hidden="true"></span>
-        <h2 id="articles-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 8h3M9 12h7M9 16h7"/></svg>Articles</h2>
-        <ul>
-          <li><a href="/projects/agent-harness.html"><span class="title">Agent harness setup: what does it actually mean?</span></a></li>
-          <li><a href="/projects/asana/"><span class="title">AI product teardown: Asana and the operating system for work</span></a></li>
-          <li><a href="/projects/analytics.html"><span class="title">What if your analyst could join the call?</span></a></li>
-          <li><a href="/projects/surface.html"><span class="title">Defining a new commerce surface</span></a></li>
-          <li><a href="/projects/shelf-to-sell.html"><span class="title">What’s my wardrobe worth? The missed opportunity of C2C selling</span></a></li>
-        </ul>
-        <a class="more" href="https://decisionaxis.substack.com/">More on Substack <span aria-hidden="true">↗</span></a>
-      </section>
-    </div>
+    <section class="block" id="writing" aria-labelledby="writing-title">
+      <span class="anchor" id="articles" aria-hidden="true"></span>
+      <span class="anchor" id="maven-lesson" aria-hidden="true"></span>
+      <h2 id="writing-title">Writing</h2>
+      <div class="rows">
+        <a href="/projects/agent-harness.html"><span class="what">Agent harness setup: what does it actually mean?</span><span class="meta">Guide</span></a>
+        <a href="/projects/asana/"><span class="what">AI product teardown: Asana and the operating system for work</span><span class="meta">Teardown</span></a>
+        <a href="https://decisionaxis.substack.com/p/is-todoist-the-underdog-for-creating"><span class="what">The Todoist concept</span><span class="meta">Substack</span></a>
+      </div>
+      <a class="more" href="https://decisionaxis.substack.com/">More on Substack ↗</a>
+    </section>
+
+    <section class="block" id="case-studies" aria-labelledby="cases-title">
+      <span class="anchor" id="products" aria-hidden="true"></span>
+      <span class="anchor" id="work" aria-hidden="true"></span>
+      <span class="anchor" id="b2b-saas" aria-hidden="true"></span>
+      <span class="anchor" id="ecommerce-product-consulting" aria-hidden="true"></span>
+      <span class="anchor" id="ai-first-experiences" aria-hidden="true"></span>
+      <span class="anchor" id="full-stack-product-builder" aria-hidden="true"></span>
+      <h2 id="cases-title">Case studies</h2>
+      <div class="rows">
+        <a href="/projects/analytics.html"><span class="what">Meridian</span><span class="meta">eCommerce analytics you can talk to</span></a>
+        <a href="/projects/commerce.html"><span class="what">Loop</span><span class="meta">Voice search and browse for stores</span></a>
+        <a href="/projects/shelf-to-sell.html"><span class="what">Shelf to Sell</span><span class="meta">Assisted C2C selling</span></a>
+        <a href="/projects/surface.html"><span class="what">A new commerce surface</span><span class="meta">Shopping that follows the conversation</span></a>
+        <a href="/projects/live-feedback.html"><span class="what">Live usability feedback</span><span class="meta">Hear shoppers think aloud</span></a>
+        <a href="/projects/micro-crm.html"><span class="what">Micro CRM</span><span class="meta">Follow-ups from your inbox · pilot</span></a>
+      </div>
+      <a class="more" href="/case-studies.html">All case studies →</a>
+    </section>
   </main>
 
+  <figure class="art">
+    <img src="/assets/illustrations/fork.png" alt="Line drawing of a person standing where a path forks across open hills, a blue dot at the fork" width="1200" height="250" loading="lazy">
+  </figure>
+
   <footer class="foot" id="contact">
-    <span class="anchor" id="about" aria-hidden="true"></span>
-    <span>DecisionAxis · Berlin</span>
-    <a href="mailto:aditya@decisionos.me">aditya@decisionos.me</a>
+    <span>© 2026 DecisionAxis · Berlin</span>
+    <nav aria-label="Contact"><a href="https://www.linkedin.com/in/adityavithaldas">LinkedIn</a><a href="https://decisionaxis.substack.com/">Substack</a><a href="mailto:aditya@decisionos.me">Email</a></nav>
   </footer>
 </div>
 </body>

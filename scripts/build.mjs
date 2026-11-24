@@ -25,7 +25,7 @@ for(const name of ['crm-live.js','crm.js']){
   await writeFile(`dist/assets/${name}`,source);
   versions[name]=createHash('sha256').update(source).digest('hex').slice(0,10);
 }
-const siteHeader = `<header class="site-header"><a class="wordmark" href="/" aria-label="DecisionAxis, home"><span class="monogram">d<span>↗</span></span><span class="wordmark-name">DecisionAxis<span class="wordmark-sub">Structure · Product · Agents</span></span></a><nav aria-label="Main navigation"><a href="/#services">Services</a><a href="/#products">Products</a><a href="/#articles">Articles</a><a class="contact-button" href="/#contact">Contact <span aria-hidden="true">↗</span></a></nav></header>`;
+const siteHeader = `<header class="site-header"><a class="wordmark" href="/" aria-label="DecisionAxis, home"><span class="monogram">d<span>↗</span></span><span class="wordmark-name">DecisionAxis<span class="wordmark-sub">Structure · Product · Agents</span></span></a><nav aria-label="Main navigation"><a href="/#services">Services</a><a href="/#case-studies">Case studies</a><a href="/#writing">Writing</a><a class="contact-button" href="/#contact">Contact <span aria-hidden="true">↗</span></a></nav></header>`;
 async function versionPages(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const path = `${dir}/${entry.name}`;
