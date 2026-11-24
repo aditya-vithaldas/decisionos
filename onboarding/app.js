@@ -72,7 +72,15 @@ class Live {
         this.onMessage(m);
       };
       this.ws.onerror = () => { clearTimeout(timer); reject(Error('Could not reach Gemini. Please try again.')); };
-      this.ws.onclose = () => { clearTimeout(timer); if (!this.closed) { reject(Error('The connection closed.')); this.h.closed(); } };
+      this.ws.onclose = ev => {
+        clearTimeout(timer);
+        if (this.closed) return;
+        // Billing and quota failures arrive as a close reason; say so plainly instead of "connection closed".
+        if (ev.reason) console.warn('Gemini closed the session:', ev.code, ev.reason);
+        const unavailable = /credit|quota|billing|exhausted/i.test(ev.reason || '');
+        reject(Error(unavailable ? 'Voice interviews are unavailable right now. Please try again later.' : 'The connection closed. Please try again.'));
+        this.h.closed(unavailable);
+      };
     });
   }
   onMessage(m) {
@@ -214,7 +222,7 @@ async function start() {
     turnDone: () => { newTurn = true; },
     drained: () => { if (endAfterTurn) stop(); else setStatus('listening'); },
     tool: onTool,
-    closed: () => { if (!state.done) $('said').textContent = 'The connection dropped. Start again to continue.'; stop(); },
+    closed: unavailable => { if (!state.done) $('said').textContent = unavailable ? 'Voice interviews are unavailable right now. Please try again later.' : 'The connection dropped. Start again to continue.'; stop(); },
   });
   try {
     await live.connect();
