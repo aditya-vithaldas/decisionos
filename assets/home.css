@@ -1,5 +1,5 @@
 /* Homepage: white, ink and the logo blue. Light type, three lists of links. */
-:root { color-scheme: light; --ink: #111318; --muted: #5b616c; --accent: #204dff; --line: #e3e5e9; --display: 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif; --text: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+:root { color-scheme: light; --ink: #111318; --muted: #5b616c; --accent: #204dff; --accent-dark: #1233c4; --line: #e3e5e9; --display: 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif; --text: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
 * { box-sizing: border-box; min-width: 0; }
 html { scroll-behavior: smooth; scroll-padding-top: 24px; }
 body { margin: 0; background: #fff; color: var(--ink); font: 300 17px/1.6 var(--text); -webkit-font-smoothing: antialiased; overflow-x: clip; }
@@ -18,8 +18,8 @@ main:focus { outline: none; }
 .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; padding: 28px 0; }
 .brand { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font: 400 20px/1 var(--display); letter-spacing: -0.02em; }
 .brand img { display: block; width: 34px; height: 34px; }
-.link { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; color: var(--accent); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
-.link:hover { text-decoration-thickness: 2px; }
+.link { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; color: var(--accent); }
+.link:hover { color: var(--accent-dark); }
 
 .hero { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 24px 48px; padding: clamp(24px, 5vw, 64px) 0 clamp(40px, 6vw, 80px); }
 .hero-copy { flex: 999 1 520px; }
@@ -33,15 +33,15 @@ h1 { font: 300 clamp(44px, 6.4vw, 86px)/1.02 var(--display); letter-spacing: -0.
 .column h2 svg { flex: none; width: 28px; height: 28px; fill: none; stroke: var(--accent); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
 .column ul { list-style: none; padding: 0; }
 .column li a { display: block; padding: 12px 0; }
-.title { color: var(--accent); font-weight: 400; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
-.column li a:hover .title { text-decoration-thickness: 2px; }
+.title { color: var(--accent); font-weight: 400; transition: color .15s ease; }
+.column li a:hover .title { color: var(--accent-dark); }
 .note { display: block; margin-top: 2px; font-size: 15px; color: var(--muted); }
 .more { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 15px; color: var(--muted); }
 .more:hover { color: var(--accent); }
 
 .foot { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 20px 0 32px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
-.foot a { text-decoration: underline; text-underline-offset: 3px; }
-.foot a:hover { color: var(--accent); }
+.foot a { color: var(--accent); }
+.foot a:hover { color: var(--accent-dark); }
 
 @media (max-width: 720px) {
   .hero-art { max-width: 240px; }
