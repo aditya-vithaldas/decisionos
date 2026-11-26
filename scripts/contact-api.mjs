@@ -4,8 +4,14 @@ const recipient = 'aditya.vithaldas@gmail.com';
 const allowedOrigins = new Set([
   'https://decisionaxis.co', 'https://www.decisionaxis.co',
   'https://decisionos.me', 'https://www.decisionos.me',
+  'https://knowhow.build', 'https://www.knowhow.build',
   'http://localhost:4173', 'http://127.0.0.1:4173',
 ]);
+// Sites hosted elsewhere (e.g. knowhow.build on GitHub Pages) post here cross-origin.
+const crossSiteOrigins = new Set(['https://knowhow.build', 'https://www.knowhow.build']);
+const corsHeaders = req => crossSiteOrigins.has(req.headers.origin)
+  ? { 'Access-Control-Allow-Origin': req.headers.origin, Vary: 'Origin' }
+  : {};
 const attempts = new Map();
 let cachedToken;
 let tokenExpires = 0;
@@ -19,7 +25,7 @@ const escapeHTML = value => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;
 
 function reply(req, res, status, body) {
   if (wantsJSON(req)) {
-    res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...corsHeaders(req) });
     res.end(JSON.stringify(body));
   } else if (status < 300 && body.saved) {
     res.writeHead(303, { Location: '/thanks.html', 'Cache-Control': 'no-store' });
@@ -92,7 +98,7 @@ export async function notifyContact(entry, id) {
     body: JSON.stringify({
       from: process.env.CONTACT_FROM_EMAIL,
       to: [recipient],
-      subject: 'New Decision Axis website inquiry',
+      subject: entry.sourceHost.endsWith('knowhow.build') ? 'New Knowhow inquiry' : 'New Decision Axis website inquiry',
       text: `Name: ${entry.name}\nCompany: ${entry.company}\nEmail: ${entry.email}\nSource: ${entry.sourceHost}\n\nInquiry:\n${entry.inquiry}\n\nReference: ${id}`,
     }),
     signal: AbortSignal.timeout(10000),
@@ -105,6 +111,10 @@ export async function notifyContact(entry, id) {
 
 export function createContactHandler({ save = saveContact, notify = notifyContact, markNotified = markContactNotified, configured = () => Boolean(process.env.RESEND_API_KEY && process.env.CONTACT_FROM_EMAIL) } = {}) {
   return async function contactHandler(req, res) {
+    if (req.method === 'OPTIONS' && crossSiteOrigins.has(req.headers.origin)) {
+      res.writeHead(204, { ...corsHeaders(req), 'Access-Control-Allow-Methods': 'POST', 'Access-Control-Allow-Headers': 'Content-Type, Accept', 'Access-Control-Max-Age': '86400' });
+      return res.end();
+    }
     if (req.method !== 'POST') return reply(req, res, 405, { error: 'Use POST.' });
     if (!allowedOrigins.has(req.headers.origin)) return reply(req, res, 403, { error: 'Invalid origin.' });
     if (!(req.headers['content-type'] || '').startsWith('application/x-www-form-urlencoded')) return reply(req, res, 415, { error: 'Unsupported form format.' });
@@ -119,7 +129,7 @@ export function createContactHandler({ save = saveContact, notify = notifyContac
       const entry = {
         name: clean(params.get('name'), 120), company: clean(params.get('company'), 160),
         email: clean(params.get('email'), 254), inquiry: clean(params.get('inquiry'), 5000),
-        sourceHost: clean((req.headers.host || '').split(':')[0], 255),
+        sourceHost: clean(crossSiteOrigins.has(req.headers.origin) ? new URL(req.headers.origin).hostname : (req.headers.host || '').split(':')[0], 255),
       };
       if (!entry.name || entry.name.length > 120 || !entry.company || entry.company.length > 160 || !entry.email || entry.email.length > 254 || !emailValid(entry.email) || !entry.inquiry || entry.inquiry.length > 5000) {
         return reply(req, res, 400, { error: 'Please complete all fields with a valid email address.' });

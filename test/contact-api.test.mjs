@@ -106,3 +106,24 @@ test('keeps a stored inquiry when notification fails', async () => {
     assert.match(result.message, /inquiry has been received/);
   });
 });
+
+test('accepts knowhow.build cross-origin and tags the source', async () => {
+  let saved;
+  await withServer({ save: async entry => { saved = entry; return 'kh-1'; }, notify: async () => 'email-kh', markNotified: async () => {}, configured: () => true }, async base => {
+    const response = await submit(base, {}, { Origin: 'https://knowhow.build' });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('access-control-allow-origin'), 'https://knowhow.build');
+    assert.equal((await response.json()).saved, true);
+    const preflight = await fetch(`${base}/api/contact`, { method: 'OPTIONS', headers: { Origin: 'https://knowhow.build', 'Access-Control-Request-Method': 'POST' } });
+    assert.equal(preflight.status, 204);
+    assert.equal(preflight.headers.get('access-control-allow-origin'), 'https://knowhow.build');
+  });
+  assert.equal(saved.sourceHost, 'knowhow.build');
+});
+
+test('does not send CORS headers to the decisionos origins', async () => {
+  await withServer({ save: async () => 'id', notify: async () => 'e', markNotified: async () => {}, configured: () => true }, async base => {
+    const response = await submit(base);
+    assert.equal(response.headers.get('access-control-allow-origin'), null);
+  });
+});
